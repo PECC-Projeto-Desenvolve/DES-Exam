@@ -145,13 +145,13 @@ function MultiCheckboxes({fontSize}: IMultiCheckboxesProps):JSX.Element {
               key={checkbox.id}
               className={`${
                 checkbox.saved
-                  ? 'bg-question-saved-300 border-question-saved-200'
+                  ? 'bg-question-saved-300 border-question-saved-200 hover:border-question-saved-100'
                   : checkbox.selected
-                    ? 'bg-question-selected-300 border-question-selected-200'
+                    ? 'bg-question-selected-300 border-question-selected-200 hover:border-question-selected-100'
                     : checkbox.scratched
-                      ? 'bg-question-scratched-300 border-question-scratched-400'
+                      ? 'bg-question-scratched-300 border-question-scratched-400 hover:border-question-scratched-300'
                       : 'bg-modal-heading border-transparent'
-              } border-2 rounded-md px-2 py-3 items-center cursor-pointer w-full hover:border-gray-400 flex gap-3 text-white`}
+              } border-2 rounded-md px-2 py-3 items-center cursor-pointer w-full hover:border-gray-400 flex gap-3 text-white transition ease-in-out`}
               onMouseDown={(event) => handleCheckboxChange(checkbox.id, event)}
               onContextMenu={(e) => {
                 e.preventDefault();
