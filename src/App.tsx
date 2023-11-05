@@ -1,10 +1,11 @@
-import React from "react";
+import React from 'react';
+import { Home } from './pages';
 
 function App() {
   return (
-    <div className="bg-black">
-      <h1>hue</h1>
-    </div>
+    <>
+      <Home />
+    </>
   );
 }
 
