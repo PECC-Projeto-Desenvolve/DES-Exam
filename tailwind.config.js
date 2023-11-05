@@ -28,7 +28,37 @@ export default withMT({
           500: '#0081DF',
         },
 
-        light: '#eee',
+        question: {
+          saved: {
+            100: '#C16D04',
+            200: '#6C4727',
+            300: '#553C2D'
+          },
+          selected : {
+            100: '#48D9BC',
+            200: '#3A6363',
+            300: '#37454D'
+          },
+          scratched: {
+            100: '#C2C9D1',
+            200: '#C2C9D1',
+            300: '#ffffff10',
+            400: '#1b1b1b80'
+          }
+        },
+
+        black: '#1b1b1b',
+
+        light: '#fafafa',
+
+        border: '#c4c4c460',
+
+        blurred: '#ffffff10',
+
+        modal: {
+          bg: '#2E2937',
+          heading: '#4D4955',
+        }
       },
       keyframes: {
         'fade-in-down': {
