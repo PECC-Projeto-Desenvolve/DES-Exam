@@ -7,7 +7,6 @@ interface ContextMenuProps {
   top: number;
   left: number;
   label: string;
-  onClose?: () => void;
 }
 
 interface IMenuItemProps {
@@ -27,11 +26,11 @@ const MenuItem = ({label, icon}: IMenuItemProps) => {
 };
 
 
-const ContextMenu: React.FC<ContextMenuProps> = ({ top, left, label, onClose }) => {
+const ContextMenu: React.FC<ContextMenuProps> = ({ top, left, label }) => {
 
   return (
     <div
-      className="fixed z-50 bg-white border border-gray-300 p-2 shadow-2xl rounded-md flex flex-col gap-1"
+      className="fixed z-50 bg-white border border-gray-300 p-2 shadow-2xl rounded-md flex flex-col gap-1 animate-fade-in-down"
       style={{ top, left }}
 
     >

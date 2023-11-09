@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import ContextMenu from './ContextMenu';
+import { savedStyle, savedText, scratchedStyle, scratchedText, selectedStyle, selectedText } from '../styles/question-container-styles';
 
 interface CheckboxItem {
   id: number;
@@ -145,11 +146,11 @@ function MultiCheckboxes({fontSize}: IMultiCheckboxesProps):JSX.Element {
               key={checkbox.id}
               className={`${
                 checkbox.saved
-                  ? 'bg-question-saved-300 border-question-saved-200 hover:border-question-saved-100'
+                  ? `${savedStyle}`
                   : checkbox.selected
-                    ? 'bg-question-selected-300 border-question-selected-200 hover:border-question-selected-100'
+                    ? `${selectedStyle}`
                     : checkbox.scratched
-                      ? 'bg-question-scratched-300 border-question-scratched-400 hover:border-question-scratched-300'
+                      ? `${scratchedStyle}`
                       : 'bg-modal-heading border-transparent'
               } border-2 rounded-md px-2 py-3 items-center cursor-pointer w-full hover:border-gray-400 flex gap-3 text-white transition ease-in-out`}
               onMouseDown={(event) => handleCheckboxChange(checkbox.id, event)}
@@ -160,15 +161,15 @@ function MultiCheckboxes({fontSize}: IMultiCheckboxesProps):JSX.Element {
             >
               <div className={`${
                 checkbox.saved
-                  ? 'bg-question-saved-100'
+                  ? `${savedText}`
                   : checkbox.selected
-                    ? 'bg-question-selected-100'
+                    ? `${selectedText}`
                     : checkbox.scratched
-                      ? 'bg-question-scratched-100 text-question-scratched-400'
-                      : 'bg-white text-black'}  w-8 h-8 rounded-full flex items-center justify-center`}>
+                      ? `${scratchedText}`
+                      : 'bg-white text-black'}  w-8 h-8 rounded-full flex items-center justify-center select-none`}>
                 {String.fromCharCode(64 + checkbox.id)}
               </div>
-              <p style={{ fontSize: fontSize }} className={`label ${checkbox.scratched ? 'line-through' : 'none'}`}>
+              <p style={{ fontSize: fontSize }} className={`label select-none ${checkbox.scratched ? 'line-through' : 'none'}`}>
                 {checkbox.label}
               </p>
             </div>
@@ -177,8 +178,8 @@ function MultiCheckboxes({fontSize}: IMultiCheckboxesProps):JSX.Element {
 
         {contextMenu && (
           <>
-            <ContextMenu label={answer} top={contextMenu.mouseY} left={contextMenu.mouseX} onClose={handleClose} />
-            <div className="backdrop-blur-sm absolute top-0 left-0 w-full h-full flex justify-center items-center bg-blurred" onClick={handleClose} />
+            <ContextMenu label={answer} top={contextMenu.mouseY} left={contextMenu.mouseX} />
+            <div className="backdrop-blur-sm absolute top-0 left-0 w-full h-full flex justify-center items-center bg-blurred animate-fade-in-down" onClick={handleClose} />
           </>
 
         )}

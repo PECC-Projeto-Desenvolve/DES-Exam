@@ -1,9 +1,6 @@
 import React from 'react';
 import { Navbar, Typography,   Button,
   Dialog,
-  DialogHeader,
-  DialogBody,
-  DialogFooter,
   Input,
   Card,
   CardBody,
@@ -47,7 +44,6 @@ function Home() {
             </Typography>
             <Input label="Token do tutor" size="lg" value={token} onChange={event => setToken(event.target.value)} />
           </CardBody>
-
           <CardFooter className='flex justify-between'>
             <Button
               variant="text"

@@ -4,6 +4,7 @@ const withMT = require('@material-tailwind/react/utils/withMT');
 export default withMT({
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   darkMode: 'class',
+  important: true,
   theme: {
     extend: {
       colors: {
@@ -71,9 +72,19 @@ export default withMT({
             transform: 'translateY(0)',
           },
         },
+        'float': {
+          '0%': {
+            transform: 'translateY(0)',
+          },
+          '50%': {
+            transform: 'translateY(-10px)',
+          },
+        },
+
       },
       animation: {
         'fade-in-down': 'fade-in-down 0.5s ease-out',
+        'float': 'float 1s',
       },
     },
   },
