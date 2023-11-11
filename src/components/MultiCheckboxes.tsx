@@ -179,7 +179,7 @@ function MultiCheckboxes({fontSize}: IMultiCheckboxesProps):JSX.Element {
         {contextMenu && (
           <>
             <ContextMenu label={answer} top={contextMenu.mouseY} left={contextMenu.mouseX} />
-            <div className="backdrop-blur-sm absolute top-0 left-0 w-full h-full flex justify-center items-center bg-blurred animate-fade-in-down" onClick={handleClose} />
+            <div className="backdrop-blur-sm absolute top-0 left-0 w-full h-full flex justify-center items-center bg-blurred" onClick={handleClose} />
           </>
 
         )}

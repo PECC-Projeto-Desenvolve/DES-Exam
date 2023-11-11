@@ -61,7 +61,7 @@ function Home() {
 
       </Dialog>
 
-      <Navbar className="flex items-center justify-between">
+      <Navbar fullWidth className='rounded-md flex items-center justify-between mx-auto p-4 mb-10'>
         <Typography variant="h5" color="black">
           Desenvolve
         </Typography>
@@ -71,7 +71,7 @@ function Home() {
         </Button>
       </Navbar>
 
-      <div className="mt-4 grid h-32 w-full grid-cols-2 gap-4">
+      <div className="mt-4 grid h-32 w-full grid-cols-2 gap-4 ">
         <Banner title="Aquecimento" content={lore} buttonLabel='praticar' onClick={() => navigate('/practice')}/>
         <Banner title="Prova" content={lore} buttonLabel='iniciar prova' hasCountdown={false} schedule='12:00' onClick={handleOpen}/>
       </div>

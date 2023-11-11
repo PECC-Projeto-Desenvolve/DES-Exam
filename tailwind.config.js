@@ -83,7 +83,7 @@ export default withMT({
 
       },
       animation: {
-        'fade-in-down': 'fade-in-down 0.5s ease-out',
+        'fade-in-down': 'fade-in-down 0.2s ease-out',
         'float': 'float 1s',
       },
     },

@@ -67,7 +67,7 @@ function MapDialog({
 
             <div className='w-full min-h-[10rem] rounded-lg grid grid-cols-9 p-2 border border-border gap-x-2 gap-y-3 '>
               {questionItems.map((_, index) => (
-                <QuestionItem key={index} index={index} answer={getRandomLetter()} questionState={4}/>
+                <QuestionItem key={index} index={index} answer={''} questionState={4}/>
               ))}
             </div>
 
