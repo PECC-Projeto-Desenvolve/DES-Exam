@@ -10,20 +10,20 @@ interface IQuestionContainerProps {
 function QuestionContainer({ fontSize }: IQuestionContainerProps): JSX.Element {
   return (
     <>
-      <section className="w-full h-74vh bg-modal-bg rounded-lg overflow-hidden shadow-lg border border-border">
-        <div className="h-20 w-full bg-modal-heading flex items-center justify-between px-8 select-none">
-          <p className="text-white text-2xl select-none">Texto do cabeçalho</p>
+      <section className="h-74vh w-full overflow-hidden rounded-lg border border-border bg-modal-bg shadow-lg">
+        <div className="flex h-20 w-full select-none items-center justify-between bg-modal-heading px-8">
+          <p className="select-none text-2xl text-white">Texto do cabeçalho</p>
           <SaveButton />
         </div>
 
-        <div className="w-full p-8 space-y-8">
-          <p className="text-white select-none" style={{ fontSize: fontSize }}>
+        <div className="w-full space-y-8 p-8">
+          <p className="select-none text-white" style={{ fontSize: fontSize }}>
             {question.statement}
           </p>
-          <p className="text-white select-none"  style={{ fontSize: fontSize }}>{question.cta}</p>
+          <p className="select-none text-white"  style={{ fontSize: fontSize }}>{question.cta}</p>
         </div>
 
-        <div className='w-full px-8 mb-8'>
+        <div className='mb-8 w-full px-8'>
           <MultiCheckboxes fontSize={fontSize}/>
         </div>
       </section>

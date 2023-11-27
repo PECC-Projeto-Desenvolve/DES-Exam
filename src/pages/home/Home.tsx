@@ -6,7 +6,7 @@ import { Navbar, Typography,   Button,
   CardBody,
   CardFooter,
 } from '@material-tailwind/react';
-import { LogOut } from 'lucide-react';
+import { LogOut, Settings } from 'lucide-react';
 import { Banner } from '../../components';
 import { useNavigate  } from 'react-router-dom';
 
@@ -42,7 +42,7 @@ function Home() {
             >
                 Confirme o token do seu tutor para iniciar a prova
             </Typography>
-            <Input label="Token do tutor" size="lg" value={token} onChange={event => setToken(event.target.value)} />
+            <Input crossOrigin={''} label="Token do tutor" size="lg" value={token} onChange={event => setToken(event.target.value)} />
           </CardBody>
           <CardFooter className='flex justify-between'>
             <Button
@@ -61,7 +61,7 @@ function Home() {
 
       </Dialog>
 
-      <Navbar fullWidth className='rounded-md flex items-center justify-between mx-auto p-4 mb-10'>
+      <Navbar fullWidth className='mx-auto mb-5 flex items-center justify-between rounded-md p-4'>
         <Typography variant="h5" color="black">
           Desenvolve
         </Typography>
@@ -71,8 +71,33 @@ function Home() {
         </Button>
       </Navbar>
 
+      <div className='h-fit w-full rounded-md border bg-white shadow-md'>
+
+        <div className='flex w-full items-end justify-end '>
+          <span className="relative -mr-1 -mt-2 flex h-4 w-4">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-gray-200 opacity-75"></span>
+            <span className="relative inline-flex h-4 w-4 rounded-full bg-blue-gray-500"></span>
+          </span>
+        </div>
+
+        <div className='w-full p-4'>
+          <Typography variant="h5" color="black">
+          Configurações
+          </Typography>
+
+          <Typography variant='paragraph' className='mt-2'>Complete as configurações para que você tenha uma boa experiência </Typography>
+          <div className='mt-4 flex w-full items-end justify-end'>
+            <Button className='flex items-center justify-center gap-2' onClick={() => navigate('/settings')}>
+                Configurações
+              <Settings />
+            </Button>
+          </div>
+        </div>
+
+      </div>
+
       <div className="mt-4 grid h-32 w-full grid-cols-2 gap-4 ">
-        <Banner title="Aquecimento" content={lore} buttonLabel='praticar' onClick={() => navigate('/practice')}/>
+        <Banner title="Simulado" content={lore} buttonLabel='praticar' onClick={() => navigate('/practice')}/>
         <Banner title="Prova" content={lore} buttonLabel='iniciar prova' hasCountdown={false} schedule='12:00' onClick={handleOpen}/>
       </div>
     </>

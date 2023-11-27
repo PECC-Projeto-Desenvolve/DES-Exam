@@ -151,8 +151,8 @@ function MultiCheckboxes({fontSize}: IMultiCheckboxesProps):JSX.Element {
                     ? `${selectedStyle}`
                     : checkbox.scratched
                       ? `${scratchedStyle}`
-                      : 'bg-modal-heading border-transparent'
-              } border-2 rounded-md px-2 py-3 items-center cursor-pointer w-full hover:border-gray-400 flex gap-3 text-white transition ease-in-out`}
+                      : 'border-transparent bg-modal-heading'
+              } flex w-full cursor-pointer items-center gap-3 rounded-md border-2 px-2 py-3 text-white transition ease-in-out hover:border-gray-400`}
               onMouseDown={(event) => handleCheckboxChange(checkbox.id, event)}
               onContextMenu={(e) => {
                 e.preventDefault();
@@ -166,7 +166,7 @@ function MultiCheckboxes({fontSize}: IMultiCheckboxesProps):JSX.Element {
                     ? `${selectedText}`
                     : checkbox.scratched
                       ? `${scratchedText}`
-                      : 'bg-white text-black'}  w-8 h-8 rounded-full flex items-center justify-center select-none`}>
+                      : 'bg-white text-black'}  flex h-8 w-8 select-none items-center justify-center rounded-full`}>
                 {String.fromCharCode(64 + checkbox.id)}
               </div>
               <p style={{ fontSize: fontSize }} className={`label select-none ${checkbox.scratched ? 'line-through' : 'none'}`}>
@@ -179,7 +179,7 @@ function MultiCheckboxes({fontSize}: IMultiCheckboxesProps):JSX.Element {
         {contextMenu && (
           <>
             <ContextMenu label={answer} top={contextMenu.mouseY} left={contextMenu.mouseX} />
-            <div className="backdrop-blur-sm absolute top-0 left-0 w-full h-full flex justify-center items-center bg-blurred" onClick={handleClose} />
+            <div className="absolute left-0 top-0 flex h-full w-full items-center justify-center bg-blurred backdrop-blur-sm" onClick={handleClose} />
           </>
 
         )}
