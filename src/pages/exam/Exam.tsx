@@ -1,7 +1,6 @@
 import React from 'react';
 import { QuestionContainer } from '../../components';
 import { Button, Typography } from '@material-tailwind/react';
-// import { Button, ButtonGroup } from '@material-tailwind/react';
 import { ChevronRight, ChevronLeft, Map, Settings } from 'lucide-react';
 import { AccessibilityDialog } from '../../components/AccessibilityDialog';
 import { MapDialog } from '../../components/MapDialog';
