@@ -36,6 +36,8 @@ function MultiCheckboxes({fontSize}: IMultiCheckboxesProps):JSX.Element {
     setContextMenu(null);
   };
 
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+
   const [checkboxes, setCheckboxes] = useState<CheckboxItem[]>([
     {
       id: 1,
@@ -136,14 +138,33 @@ function MultiCheckboxes({fontSize}: IMultiCheckboxesProps):JSX.Element {
     setLastClickTime(currentTime);
   };
 
+  const simulateDoubleClick = (id) => {
+    console.log('Simulando duplo clique para o ID:', id);
+
+    const updatedCheckboxes = checkboxes.map((checkbox) => {
+      if (checkbox.id === id) {
+        return {
+          ...checkbox,
+          selected: false,
+          scratched: false,
+          saved: true,
+        };
+      } else {
+        return { ...checkbox, saved: false };
+      }
+    });
+    setCheckboxes(updatedCheckboxes);
+  };
+
+
   return (
     <>
       <div onContextMenu={handleContextMenu} className="flex flex-col items-center gap-2 overflow-hidden">
 
-        {checkboxes.map((checkbox) => (
+        {checkboxes.map((checkbox, index) => (
           <>
             <div
-              key={checkbox.id}
+              key={index}
               className={`${
                 checkbox.saved
                   ? `${savedStyle}`
@@ -157,6 +178,7 @@ function MultiCheckboxes({fontSize}: IMultiCheckboxesProps):JSX.Element {
               onContextMenu={(e) => {
                 e.preventDefault();
                 setAnswer(String.fromCharCode(64 + checkbox.id));
+                setSelectedId(checkbox.id);
               }}
             >
               <div className={`${
@@ -178,7 +200,19 @@ function MultiCheckboxes({fontSize}: IMultiCheckboxesProps):JSX.Element {
 
         {contextMenu && (
           <>
-            <ContextMenu label={answer} top={contextMenu.mouseY} left={contextMenu.mouseX} />
+            <ContextMenu
+              label={answer}
+              top={contextMenu.mouseY}
+              left={contextMenu.mouseX}
+              onSave={() => {
+                if (selectedId !== null) {
+                  simulateDoubleClick(selectedId);
+                }
+                setTimeout(() => {
+                  handleClose();
+                }, 200);
+              }}
+            />
             <div className="absolute left-0 top-0 flex h-full w-full items-center justify-center bg-blurred backdrop-blur-sm" onClick={handleClose} />
           </>
 

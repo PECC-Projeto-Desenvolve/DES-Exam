@@ -39,8 +39,8 @@ function AccessibilityDialog({
               Acessibilidade e afins
             </Typography>
 
-            <div className='flex flex-col gap-3 border p-2 rounded-md'>
-              <div className='flex items justify-between'>
+            <div className='flex flex-col gap-3 rounded-md border p-2'>
+              <div className='items flex justify-between'>
                 <Typography variant='lead'>Tamanho da fonte</Typography>
                 <ButtonGroup>
                   <Button onClick={handleDecreaseFont}>-</Button>
@@ -48,10 +48,10 @@ function AccessibilityDialog({
                   <Button onClick={handleIncreaseFont}>+</Button>
                 </ButtonGroup>
               </div>
-              <div className='w-full p-4 bg-modal-bg border rounded-lg'>
+              <div className='w-full rounded-lg border bg-modal-bg p-4'>
                 <p className='text-white' style={{ fontSize: fontSize}}>Este é um exemplo</p>
               </div>
-              <div className='w-full flex flex-row-reverse'>
+              <div className='flex w-full flex-row-reverse'>
                 <Button onClick={handleFontSizeConfirm}>Confirmar</Button>
               </div>
             </div>

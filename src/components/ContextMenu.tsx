@@ -7,6 +7,7 @@ interface ContextMenuProps {
   top: number;
   left: number;
   label: string;
+  onSave: () => void;
 }
 
 interface IMenuItemProps {
@@ -14,10 +15,10 @@ interface IMenuItemProps {
     icon: React.ReactNode
 }
 
-const MenuItem = ({label, icon}: IMenuItemProps) => {
+const MenuItem = ({ label, icon, onClick }: IMenuItemProps & { onClick?: () => void }) => {
   return (
     <>
-      <Button className='flex items-center gap-4'>
+      <Button className='flex items-center gap-4' onClick={onClick}>
         {icon}
         {label}
       </Button>
@@ -26,11 +27,11 @@ const MenuItem = ({label, icon}: IMenuItemProps) => {
 };
 
 
-const ContextMenu: React.FC<ContextMenuProps> = ({ top, left, label }) => {
+const ContextMenu: React.FC<ContextMenuProps> = ({ top, left, label, onSave }) => {
 
   return (
     <div
-      className="fixed z-50 bg-white border border-gray-300 p-2 shadow-2xl rounded-md flex flex-col gap-1 animate-fade-in-down"
+      className="fixed z-50 flex animate-fade-in-down flex-col gap-1 rounded-md border border-gray-300 bg-white p-2 shadow-2xl"
       style={{ top, left }}
 
     >
@@ -41,7 +42,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ top, left, label }) => {
       </Typography>
       <MenuItem label="marcar" icon={<CheckCircle2 />}/>
       <MenuItem label="razurar" icon={<Scissors />}/>
-      <MenuItem label="salvar" icon={<Bookmark />}/>
+      <MenuItem label="salvar" icon={<Bookmark />} onClick={onSave}/>
     </div>
 
   );

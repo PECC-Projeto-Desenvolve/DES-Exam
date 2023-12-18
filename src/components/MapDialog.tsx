@@ -10,30 +10,49 @@ import {
 import { Clock } from 'lucide-react';
 
 import { QuestionItem } from '.';
+import { stringResizer } from '../utils/StringResizer';
+
+import Aos from 'aos';
+import 'aos/dist/aos.css';
+
+type IQuestionTypes = {
+    id: number;
+    title: string;
+    statement: string;
+    rightAnswer: string;
+    difficulty: number;
+    createdAt: string;
+    updatedAt: string;
+    deletedAt: string | null;
+}
 
 interface IMapDialogProps {
     handleOpen: () => void;
     open: boolean;
+    questions: IQuestionTypes[];
+    isMapOpened: number
 }
 
 function MapDialog({
   handleOpen,
   open,
+  questions,
+  isMapOpened,
 }: IMapDialogProps): JSX.Element {
-  const questionItems = Array(45).fill(null);
+  const [mapIsAlreadyOpened, setMapIsAlreadyOpened] = React.useState(localStorage.getItem('mapOpened'));
 
-  const getRandomLetter = () => {
-    const letters = ['A', 'B', 'C', 'D', 'E'];
-    const randomIndex = Math.floor(Math.random() * letters.length);
-    return letters[randomIndex];
-  };
+  React.useEffect(() => {
+    Aos.init({duration: 400});
+
+
+  }, []);
 
   return (
     <>
       <Dialog
         open={open}
         handler={handleOpen}
-        className="bg-transparent shadow-2xl select-none"
+        className="select-none bg-transparent shadow-2xl"
       >
         <Card className="mx-auto w-fit max-w-[50rem]">
           <CardBody className="flex flex-col gap-4">
@@ -65,9 +84,13 @@ function MapDialog({
               </div>
             </div>
 
-            <div className='w-full min-h-[10rem] rounded-lg grid grid-cols-9 p-2 border border-border gap-x-2 gap-y-3 '>
-              {questionItems.map((_, index) => (
-                <QuestionItem key={index} index={index} answer={''} questionState={4}/>
+            <div className='grid min-h-[10rem] w-full grid-cols-9 gap-x-2 gap-y-3 rounded-lg border border-border p-2 '>
+              {questions && questions.map((question, index) => (
+                <>
+                  <span data-aos={localStorage.getItem('mapOpened') != '1' && 'fade-down'} data-aos-delay={50 * index}>
+                    <QuestionItem key={index} index={index} answer={''} questionState={4} statement={`${stringResizer(question.statement, 50)} ...`}/>
+                  </span>
+                </>
               ))}
             </div>
 

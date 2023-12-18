@@ -2,10 +2,13 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Home, Exam } from '../pages';
 import RedirectComponent from '../components/RedirectComponent';
+import { Simulation } from '../pages/simulation/Simulation';
+import { SpeedDialWithTextOutside } from '../components/Development/SpeedDial';
 
 function AppRoutes(): JSX.Element {
   return (
     <div className="flex h-screen w-full flex-col items-center justify-center bg-light px-2 sm:px-2 md:px-8 lg:px-64">
+      <SpeedDialWithTextOutside />
       <Routes>
         <Route path="/" element={<RedirectComponent />} />
         <Route path='/home' element={
@@ -17,6 +20,9 @@ function AppRoutes(): JSX.Element {
         }/>
         <Route path='/exam' element={
           <Exam />
+        }/>
+        <Route path='/practice' element={
+          <Simulation />
         }/>
       </Routes>
     </div>

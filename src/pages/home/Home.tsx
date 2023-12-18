@@ -9,12 +9,21 @@ import { Navbar, Typography,   Button,
 import { LogOut, Settings } from 'lucide-react';
 import { Banner } from '../../components';
 import { useNavigate  } from 'react-router-dom';
+import { AccessibilityDialog } from '../../components/AccessibilityDialog';
 
 function Home() {
   const navigate = useNavigate();
   const lore = 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sint totam odio enim. Laudantium velit recusandae ex non veniam cumque, eum sint quod quasi, autem nesciunt. Et voluptatem esse necessitatibus vel.';
   const [open, setOpen] = React.useState<boolean>(false);
   const [token, setToken] = React.useState<string>('');
+
+  const [openSettings, setOpenSettings] = React.useState<boolean>(false);
+
+  const [fontSize, setFontSize] = React.useState(16);
+
+  const [confirmedFont, setConfirmedFont] = React.useState<number>(
+    () => parseInt(localStorage.getItem('confirmedFont') || '16', 10)
+  );
 
   const handleDisable = () => {
     if (token.length >= 5) {
@@ -28,8 +37,46 @@ function Home() {
     setToken('');
   };
 
+
+  const handleOpenSettings = () => {
+    setFontSize(confirmedFont);
+    setOpenSettings(!openSettings);
+  };
+
+  const handleIncreaseFont = () => {
+    setFontSize(fontSize + 1);
+  };
+
+  const handleDecreaseFont = () => {
+    setFontSize(fontSize - 1);
+  };
+
+  const handleResetFontSize = () => {
+    setFontSize(16);
+  };
+
+  const handleFontSizeConfirm = () => {
+    setConfirmedFont(fontSize);
+    handleOpenSettings();
+  };
+
+  React.useEffect(() => {
+    localStorage.setItem('confirmedFont', confirmedFont.toString());
+  }, [confirmedFont]);
+
   return (
     <>
+      <AccessibilityDialog
+        fontSize={fontSize}
+        handleResetFontSize={handleResetFontSize}
+        handleDecreaseFont={handleDecreaseFont}
+        handleFontSizeConfirm={handleFontSizeConfirm}
+        handleIncreaseFont={handleIncreaseFont}
+        handleOpen={handleOpenSettings}
+        open={openSettings}
+      />
+
+
       <Dialog open={open} handler={handleOpen} className='bg-transparent shadow-none'>
         <Card className='mx-auto w-full max-w-[40rem]'>
           <CardBody className="flex flex-col gap-4">
@@ -85,9 +132,9 @@ function Home() {
           Configurações
           </Typography>
 
-          <Typography variant='paragraph' className='mt-2'>Complete as configurações para que você tenha uma boa experiência </Typography>
+          <p className='mt-2' style={{ fontSize: confirmedFont }}>Complete as configurações para que você tenha uma boa experiência </p>
           <div className='mt-4 flex w-full items-end justify-end'>
-            <Button className='flex items-center justify-center gap-2' onClick={() => navigate('/settings')}>
+            <Button className='flex items-center justify-center gap-2' onClick={handleOpenSettings}>
                 Configurações
               <Settings />
             </Button>

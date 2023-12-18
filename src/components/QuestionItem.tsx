@@ -6,9 +6,10 @@ interface IQuestionItemProps {
     index: number;
     answer: string;
     questionState?: number;
+    statement: string;
 }
 
-function QuestionItem({ index, answer, questionState }: IQuestionItemProps): JSX.Element {
+function QuestionItem({ index, answer, questionState, statement }: IQuestionItemProps): JSX.Element {
   const [questionStatus, setQuestionStatus] = React.useState({ saved: false, selected: false, scratched: false });
 
   useEffect(() => {
@@ -40,17 +41,17 @@ function QuestionItem({ index, answer, questionState }: IQuestionItemProps): JSX
               color="blue-gray"
               className="font-normal opacity-80"
             >
-               Lorem ipsum dolor sit, amet consectetur adipisicing elit. Odit omnis, modi dolor nisi quis eum earum! Perferendis
+              {statement}
             </Typography>
           </div>
         }
       >
-        <div className={'bg-modal-heading border-transparent hover:border-[#c4c4c4] border-2 w-fit rounded-md p-3 flex flex-col items-center justify-center gap-1 cursor-pointer transition ease-in-out'}>
+        <div className={'flex w-fit cursor-pointer flex-col items-center justify-center gap-1 rounded-md border-2 border-transparent bg-modal-heading p-3 transition ease-in-out hover:border-[#c4c4c4]'}>
 
           <Typography variant='h5' className='text-white'>{index + 1}</Typography>
 
-          <div className='p-2 bg-white h-9 w-9 flex justify-center items-center rounded-full'>
-            <p className='shadow-sm text-black font-bold'>{answer}</p>
+          <div className='flex h-9 w-9 items-center justify-center rounded-full bg-white p-2'>
+            <p className='font-bold text-black shadow-sm'>{answer}</p>
           </div>
         </div>
       </Tooltip>
