@@ -2,28 +2,23 @@ import React from 'react';
 import { QuestionContainer } from '../../components';
 import { Button } from '@material-tailwind/react';
 import { ChevronRight, ChevronLeft, Map, Settings } from 'lucide-react';
-import { AccessibilityDialog } from '../../components/AccessibilityDialog';
 import { MapDialog } from '../../components/MapDialog';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { populateExam } from '../../store/slices/examSlice';
 import { RootState } from '../../store/store';
+import { AccessibilityDialog } from '../../components/AccessibilityDialog';
 
 function Simulation(): JSX.Element {
-  const [fontSize, setFontSize] = React.useState(14);
-  const [confirmedFont, setConfirmedFont] = React.useState(14);
   const [open, setOpen] = React.useState(false);
   const [openMap, setOpenMap] = React.useState(false);
 
-  const [isMapOpened, setIsMapOpened] = React.useState(0);
-
-  const [exam, setExam] = React.useState({});
   const [questions, setQuestions] = React.useState([]);
 
   const [examPosition, setExamPosition] = React.useState(0);
 
   const dispatch = useDispatch();
-  const examId = '817ed206-8ce5-44ff-81ae-d2e835d7ead1';
+  const examId = '0114a10c-1860-4f11-a690-3da65458059d';
 
   React.useEffect(() => {
     fetch(`http://localhost:3000/exams/${examId}`)
@@ -43,17 +38,6 @@ function Simulation(): JSX.Element {
 
   }, [examState]);
 
-  React.useEffect(() => {
-    console.log(questions[0]);
-  }, [questions]);
-
-
-  React.useEffect(() => {
-    const fontSize = localStorage.getItem('confirmedFont');
-    setConfirmedFont(Number(fontSize));
-  }, []);
-
-
   const handleOpen = () => setOpen((cur) => !cur);
 
   const handleOpenMap = () => {
@@ -61,43 +45,23 @@ function Simulation(): JSX.Element {
 
     setTimeout(() => {
       localStorage.setItem('mapOpened', '1');
-    }, 3500);
-  };
-
-  const handleIncreaseFont = () => {
-    setFontSize(fontSize + 1);
-  };
-
-  const handleDecreaseFont = () => {
-    setFontSize(fontSize - 1);
-  };
-
-  const handleResetFontSize = () => {
-    setFontSize(14);
-  };
-
-  const handleFontSizeConfirm = () => {
-    setConfirmedFont(fontSize);
-    handleOpen();
+    }, 200);
   };
 
   return (
     <>
+
       <AccessibilityDialog
-        fontSize={fontSize}
-        handleResetFontSize={handleResetFontSize}
-        handleDecreaseFont={handleDecreaseFont}
-        handleFontSizeConfirm={handleFontSizeConfirm}
-        handleIncreaseFont={handleIncreaseFont}
         handleOpen={handleOpen}
         open={open}
+        confirm={handleOpen}
       />
+
 
       <MapDialog
         open={openMap}
         handleOpen={handleOpenMap}
         questions={questions}
-        isMapOpened={isMapOpened}
       />
 
       <div className='flex w-full flex-col gap-4'>

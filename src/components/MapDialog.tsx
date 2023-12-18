@@ -30,21 +30,16 @@ interface IMapDialogProps {
     handleOpen: () => void;
     open: boolean;
     questions: IQuestionTypes[];
-    isMapOpened: number
 }
 
 function MapDialog({
   handleOpen,
   open,
   questions,
-  isMapOpened,
 }: IMapDialogProps): JSX.Element {
-  const [mapIsAlreadyOpened, setMapIsAlreadyOpened] = React.useState(localStorage.getItem('mapOpened'));
 
   React.useEffect(() => {
     Aos.init({duration: 400});
-
-
   }, []);
 
   return (
@@ -87,7 +82,7 @@ function MapDialog({
             <div className='grid min-h-[10rem] w-full grid-cols-9 gap-x-2 gap-y-3 rounded-lg border border-border p-2 '>
               {questions && questions.map((question, index) => (
                 <>
-                  <span data-aos={localStorage.getItem('mapOpened') != '1' && 'fade-down'} data-aos-delay={50 * index}>
+                  <span key={index + question.id} data-aos={localStorage.getItem('mapOpened') != '1' && 'fade-down'} data-aos-delay={50 * index}>
                     <QuestionItem key={index} index={index} answer={''} questionState={4} statement={`${stringResizer(question.statement, 50)} ...`}/>
                   </span>
                 </>

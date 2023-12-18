@@ -9,22 +9,46 @@ import {
 
 interface IAccessibilityDialogProps {
     handleOpen: () => void;
-    handleDecreaseFont: () => void;
-    handleResetFontSize: () => void;
-    handleIncreaseFont: () => void;
-    fontSize: number;
-    handleFontSizeConfirm: () => void;
     open: boolean;
+    confirm: () => void;
 }
 
 function AccessibilityDialog({
-  fontSize,
-  handleDecreaseFont,
-  handleFontSizeConfirm,
-  handleIncreaseFont,
   handleOpen,
   open,
-  handleResetFontSize}: IAccessibilityDialogProps): JSX.Element {
+  confirm,
+}: IAccessibilityDialogProps): JSX.Element {
+  const [fontSize, setFontSize] = React.useState(16);
+
+  const [confirmedFont, setConfirmedFont] = React.useState<number>(
+    () => parseInt(localStorage.getItem('confirmedFont') || '16', 10)
+  );
+
+  React.useEffect(() => {
+    const font = localStorage.getItem('confirmedFont');
+    setFontSize(Number(font));
+  }, []);
+
+  const handleIncreaseFont = () => {
+    setFontSize(fontSize + 1);
+  };
+
+  const handleDecreaseFont = () => {
+    setFontSize(fontSize - 1);
+  };
+
+  const handleResetFontSize = () => {
+    setFontSize(16);
+  };
+
+  const handleFontSizeConfirm = () => {
+    setConfirmedFont(fontSize);
+  };
+
+  React.useEffect(() => {
+    localStorage.setItem('confirmedFont', confirmedFont.toString());
+  }, [confirmedFont]);
+
   return (
     <>
       <Dialog
@@ -40,7 +64,7 @@ function AccessibilityDialog({
             </Typography>
 
             <div className='flex flex-col gap-3 rounded-md border p-2'>
-              <div className='items flex justify-between'>
+              <div className='flex justify-between'>
                 <Typography variant='lead'>Tamanho da fonte</Typography>
                 <ButtonGroup>
                   <Button onClick={handleDecreaseFont}>-</Button>
@@ -52,7 +76,7 @@ function AccessibilityDialog({
                 <p className='text-white' style={{ fontSize: fontSize}}>Este é um exemplo</p>
               </div>
               <div className='flex w-full flex-row-reverse'>
-                <Button onClick={handleFontSizeConfirm}>Confirmar</Button>
+                <Button onClick={() => {handleFontSizeConfirm(); confirm();}} color='green'>Confirmar</Button>
               </div>
             </div>
           </CardBody>

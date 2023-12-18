@@ -1,7 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import ContextMenu from './ContextMenu';
 import { savedStyle, savedText, scratchedStyle, scratchedText, selectedStyle, selectedText } from '../styles/question-container-styles';
 
+/**
+ * @typedef {Object} CheckboxItem
+ * @property {number} id - The unique identifier for the checkbox item.
+ * @property {string} label - The text label displayed next to the checkbox.
+ * @property {boolean} selected - Indicates if the checkbox is selected.
+ * @property {boolean} scratched - Indicates if the checkbox is scratched.
+ * @property {boolean} saved - Indicates if the checkbox is saved.
+ */
 interface CheckboxItem {
   id: number;
   label: string;
@@ -11,213 +19,120 @@ interface CheckboxItem {
 }
 
 interface IMultiCheckboxesProps {
-    fontSize: number | undefined;
+  fontSize: number | undefined;
+  alternatives: CheckboxItem[];
 }
 
-function MultiCheckboxes({fontSize}: IMultiCheckboxesProps):JSX.Element {
-  const [contextMenu, setContextMenu] = useState<{
-    mouseX: number;
-    mouseY: number;
-  } | null>(null);
-
-  const handleContextMenu = (event: React.MouseEvent) => {
-    event.preventDefault();
-    setContextMenu(
-      contextMenu === null
-        ? {
-          mouseX: event.clientX + 2,
-          mouseY: event.clientY - 6,
-        }
-        : null
-    );
-  };
-
-  const handleClose = () => {
-    setContextMenu(null);
-  };
-
-  const [selectedId, setSelectedId] = useState<number | null>(null);
-
-  const [checkboxes, setCheckboxes] = useState<CheckboxItem[]>([
-    {
-      id: 1,
-      label: 'Capacidade de transporte de oxigênio para os tecidos.',
-      selected: false,
-      scratched: false,
-      saved: false,
-    },
-    {
-      id: 2,
-      label: 'Produção de hormônios anabólicos.',
-      selected: false,
-      scratched: false,
-      saved: false,
-    },
-    {
-      id: 3,
-      label: 'Agilidade e coordenação motora.',
-      selected: false,
-      scratched: false,
-      saved: false,
-    },
-    {
-      id: 4,
-      label: 'Velocidade de recuperação pós-exercício.',
-      selected: false,
-      scratched: false,
-      saved: false,
-    },
-    {
-      id: 5,
-      label: 'Força e potência muscular.',
-      selected: false,
-      scratched: false,
-      saved: false,
-    },
-  ]);
-
+/**
+ * Component representing multiple checkboxes with different states and actions.
+ *
+ * @param {object} props - The properties for the MultiCheckboxes component.
+ * @param {number | undefined} props.fontSize - The font size for the checkbox labels.
+ * @param {CheckboxItem[]} props.alternatives - An array of checkbox items, each with an id, label, and state indicators.
+ * @returns {JSX.Element} A React component rendering a list of checkboxes with associated actions.
+ */
+function MultiCheckboxes({ fontSize, alternatives }: IMultiCheckboxesProps): JSX.Element {
+  const [contextMenu, setContextMenu] = useState<{ mouseX: number; mouseY: number; } | null>(null);
+  const [checkboxes, setCheckboxes] = useState<CheckboxItem[]>(alternatives);
   const [lastClickTime, setLastClickTime] = useState(0);
-  const [answer, setAnswer] = useState<string>('');
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [selectedLabel, setSelectedLabel] = useState<string>('');
 
-  const handleCheckboxChange = (id: number, event: React.MouseEvent) => {
+  React.useEffect(() => {
+    setCheckboxes(alternatives);
+  }, [alternatives]);
+
+
+  const handleClose = useCallback(() => {
+    setContextMenu(null);
+  }, []);
+
+  const handleContextMenu = useCallback((event: React.MouseEvent, id: number, label: string) => {
+    event.preventDefault();
+    setSelectedId(id);
+    setSelectedLabel(label);
+    setContextMenu({ mouseX: event.clientX + 2, mouseY: event.clientY - 100 });
+  }, []);
+
+  const updateCheckboxState = useCallback((id: number, newState: Partial<CheckboxItem>) => {
+
+    setCheckboxes(checkboxes => checkboxes.map(checkbox => {
+      if (checkbox.id === id) {
+        return { ...checkbox, ...newState };
+      }
+
+      if (newState.selected || newState.saved) {
+        return { ...checkbox, selected: false, saved: false };
+      }
+
+      return checkbox;
+    }));
+
+    handleClose();
+  }, []);
+
+  const handleCheckboxChange = useCallback((id: number, event: React.MouseEvent) => {
     const currentTime = new Date().getTime();
     const doubleClickThreshold = 300;
 
-    if (event.button === 2) {
-      // Verifica se o botão pressionado foi o botão direito do mouse (código 2)
-      return;
-    }
-
+    if (event.button === 2) return;
     if (currentTime - lastClickTime < doubleClickThreshold) {
-      // Double-click
-      const updatedCheckboxes = checkboxes.map((checkbox) => {
-        if (checkbox.id === id) {
-          return {
-            ...checkbox,
-            selected: false,
-            scratched: false,
-            saved: true,
-          };
-        } else {
-          return { ...checkbox, saved: false };
-        }
-      });
-      setCheckboxes(updatedCheckboxes);
+      updateCheckboxState(id, { selected: false, scratched: false, saved: true });
     } else if (event.button === 1) {
-      // Middle button
       event.preventDefault();
-      const updatedCheckboxes = checkboxes.map((checkbox) => {
-        if (checkbox.id === id) {
-          return {
-            ...checkbox,
-            selected: false,
-            saved: false,
-            scratched: true,
-          };
-        }
-        return checkbox;
-      });
-      setCheckboxes(updatedCheckboxes);
+      updateCheckboxState(id, { selected: false, scratched: true, saved: false });
     } else {
-      // Single-click
-      const updatedCheckboxes = checkboxes.map((checkbox) => {
-        if (checkbox.id === id) {
-          return {
-            ...checkbox,
-            selected: true,
-            scratched: false,
-            saved: false,
-          };
-        } else {
-          return { ...checkbox, selected: false };
-        }
-      });
-      setCheckboxes(updatedCheckboxes);
+      updateCheckboxState(id, { selected: true, scratched: false, saved: false });
     }
-
     setLastClickTime(currentTime);
-  };
-
-  const simulateDoubleClick = (id) => {
-    console.log('Simulando duplo clique para o ID:', id);
-
-    const updatedCheckboxes = checkboxes.map((checkbox) => {
-      if (checkbox.id === id) {
-        return {
-          ...checkbox,
-          selected: false,
-          scratched: false,
-          saved: true,
-        };
-      } else {
-        return { ...checkbox, saved: false };
-      }
-    });
-    setCheckboxes(updatedCheckboxes);
-  };
-
+  }, [lastClickTime, updateCheckboxState]);
 
   return (
     <>
-      <div onContextMenu={handleContextMenu} className="flex flex-col items-center gap-2 overflow-hidden">
-
+      <div className="flex flex-col items-center gap-2 overflow-hidden">
         {checkboxes.map((checkbox, index) => (
-          <>
-            <div
-              key={index}
-              className={`${
-                checkbox.saved
-                  ? `${savedStyle}`
-                  : checkbox.selected
-                    ? `${selectedStyle}`
-                    : checkbox.scratched
-                      ? `${scratchedStyle}`
-                      : 'border-transparent bg-modal-heading'
-              } flex w-full cursor-pointer items-center gap-3 rounded-md border-2 px-2 py-3 text-white transition ease-in-out hover:border-gray-400`}
-              onMouseDown={(event) => handleCheckboxChange(checkbox.id, event)}
-              onContextMenu={(e) => {
-                e.preventDefault();
-                setAnswer(String.fromCharCode(64 + checkbox.id));
-                setSelectedId(checkbox.id);
-              }}
-            >
-              <div className={`${
-                checkbox.saved
-                  ? `${savedText}`
-                  : checkbox.selected
-                    ? `${selectedText}`
-                    : checkbox.scratched
-                      ? `${scratchedText}`
-                      : 'bg-white text-black'}  flex h-8 w-8 select-none items-center justify-center rounded-full`}>
-                {String.fromCharCode(64 + checkbox.id)}
-              </div>
-              <p style={{ fontSize: fontSize }} className={`label select-none ${checkbox.scratched ? 'line-through' : 'none'}`}>
-                {checkbox.label}
-              </p>
+          <div
+            key={index}
+            className={`${
+              checkbox.saved
+                ? `${savedStyle}`
+                : checkbox.selected
+                  ? `${selectedStyle}`
+                  : checkbox.scratched
+                    ? `${scratchedStyle}`
+                    : 'border-transparent bg-modal-heading'
+            } flex w-full cursor-pointer items-center gap-3 rounded-md border-2 px-2 py-3 text-white transition ease-in-out hover:border-gray-400`}
+            onMouseDown={(event) => handleCheckboxChange(checkbox.id, event)}
+            onContextMenu={(e) => handleContextMenu(e, checkbox.id, index.toString())}
+          >
+            <div className={`${
+              checkbox.saved
+                ? `${savedText}`
+                : checkbox.selected
+                  ? `${selectedText}`
+                  : checkbox.scratched
+                    ? `${scratchedText}`
+                    : 'bg-white text-black'}  flex h-8 w-8 select-none items-center justify-center rounded-full`}>
+              {String.fromCharCode(64 + index + 1)}
             </div>
-          </>
+            <p style={{ fontSize: fontSize }} className={`select-none ${checkbox.scratched ? 'line-through' : ''}`}>
+              {checkbox.label}
+            </p>
+          </div>
         ))}
-
         {contextMenu && (
           <>
             <ContextMenu
-              label={answer}
+              label={selectedLabel}
               top={contextMenu.mouseY}
               left={contextMenu.mouseX}
-              onSave={() => {
-                if (selectedId !== null) {
-                  simulateDoubleClick(selectedId);
-                }
-                setTimeout(() => {
-                  handleClose();
-                }, 200);
-              }}
+              onSave={() => updateCheckboxState(selectedId, { selected: false, scratched: false, saved: true })}
+              onSelect={() => updateCheckboxState(selectedId, { selected: true, scratched: false, saved: false })}
+              onScratch={() => updateCheckboxState(selectedId, { selected: false, scratched: true, saved: false })}
             />
-            <div className="absolute left-0 top-0 flex h-full w-full items-center justify-center bg-blurred backdrop-blur-sm" onClick={handleClose} />
+            <div className="absolute left-0 top-0 flex h-full w-full items-center justify-center bg-black/30 backdrop-blur-[3px]" onClick={handleClose} />
           </>
-
         )}
-
       </div>
     </>
   );

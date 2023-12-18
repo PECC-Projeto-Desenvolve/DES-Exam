@@ -16,14 +16,14 @@ function Home() {
   const lore = 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sint totam odio enim. Laudantium velit recusandae ex non veniam cumque, eum sint quod quasi, autem nesciunt. Et voluptatem esse necessitatibus vel.';
   const [open, setOpen] = React.useState<boolean>(false);
   const [token, setToken] = React.useState<string>('');
+  const [font, setFont] = React.useState(14);
 
   const [openSettings, setOpenSettings] = React.useState<boolean>(false);
 
-  const [fontSize, setFontSize] = React.useState(16);
-
-  const [confirmedFont, setConfirmedFont] = React.useState<number>(
-    () => parseInt(localStorage.getItem('confirmedFont') || '16', 10)
-  );
+  React.useEffect(() => {
+    const newFont = localStorage.getItem('confirmedFont');
+    setFont(Number(newFont));
+  }, [localStorage.getItem('confirmedFont')]);
 
   const handleDisable = () => {
     if (token.length >= 5) {
@@ -39,41 +39,15 @@ function Home() {
 
 
   const handleOpenSettings = () => {
-    setFontSize(confirmedFont);
     setOpenSettings(!openSettings);
   };
-
-  const handleIncreaseFont = () => {
-    setFontSize(fontSize + 1);
-  };
-
-  const handleDecreaseFont = () => {
-    setFontSize(fontSize - 1);
-  };
-
-  const handleResetFontSize = () => {
-    setFontSize(16);
-  };
-
-  const handleFontSizeConfirm = () => {
-    setConfirmedFont(fontSize);
-    handleOpenSettings();
-  };
-
-  React.useEffect(() => {
-    localStorage.setItem('confirmedFont', confirmedFont.toString());
-  }, [confirmedFont]);
 
   return (
     <>
       <AccessibilityDialog
-        fontSize={fontSize}
-        handleResetFontSize={handleResetFontSize}
-        handleDecreaseFont={handleDecreaseFont}
-        handleFontSizeConfirm={handleFontSizeConfirm}
-        handleIncreaseFont={handleIncreaseFont}
         handleOpen={handleOpenSettings}
         open={openSettings}
+        confirm={handleOpenSettings}
       />
 
 
@@ -132,7 +106,7 @@ function Home() {
           Configurações
           </Typography>
 
-          <p className='mt-2' style={{ fontSize: confirmedFont }}>Complete as configurações para que você tenha uma boa experiência </p>
+          <p className='mt-2' style={{ fontSize: font }}>Complete as configurações para que você tenha uma boa experiência </p>
           <div className='mt-4 flex w-full items-end justify-end'>
             <Button className='flex items-center justify-center gap-2' onClick={handleOpenSettings}>
                 Configurações
