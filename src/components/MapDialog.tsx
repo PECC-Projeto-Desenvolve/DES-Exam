@@ -17,6 +17,22 @@ import { stringResizer } from '../utils/StringResizer';
 import Aos from 'aos';
 import 'aos/dist/aos.css';
 
+/**
+ * Type definition for question-related properties.
+ *
+ * @typedef {Object} IQuestionTypes
+ * @property {number} id - Unique identifier for the question.
+ * @property {string} title - Title of the question.
+ * @property {string} statement - Full statement of the question.
+ * @property {string} rightAnswer - The correct answer for the question.
+ * @property {number} difficulty - Difficulty rating of the question.
+ * @property {string} createdAt - Timestamp of when the question was created.
+ * @property {string} updatedAt - Timestamp of when the question was last updated.
+ * @property {string|null} deletedAt - Timestamp of when the question was deleted, null if not deleted.
+ * @property {boolean} saved - Indicates if the question state is saved.
+ * @property {boolean} selected - Indicates if the question is currently selected.
+ * @property {number} index - Index of the question in the list.
+ */
 type IQuestionTypes = {
     id: number;
     title: string;
@@ -31,6 +47,15 @@ type IQuestionTypes = {
     index: number,
 }
 
+/**
+ * Defines the prop types for the MapDialog component.
+ *
+ * @typedef {Object} IMapDialogProps
+ * @property {function} handleOpen - Function to handle opening or closing the dialog.
+ * @property {boolean} open - State variable indicating if the dialog is open.
+ * @property {IQuestionTypes[]} questions - Array of question objects to be displayed.
+ * @property {function} handleQuestionIndex - Function to handle setting the index of the currently selected question.
+ */
 interface IMapDialogProps {
     handleOpen: () => void;
     open: boolean;
@@ -38,6 +63,15 @@ interface IMapDialogProps {
     handleQuestionIndex: (questionIndex: number) => void;
 }
 
+/**
+ * MapDialog component is a React component that provides an interface for displaying and interacting with a list of questions.
+ * It allows users to view a map of questions and select a specific question to focus on.
+ *
+ * @param {IMapDialogProps} props - The props for the MapDialog component.
+ * @returns {JSX.Element} A JSX element representing the map of questions dialog.
+ *
+ * @component
+ */
 function MapDialog({
   open,
   questions,

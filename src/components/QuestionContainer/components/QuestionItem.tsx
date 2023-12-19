@@ -1,6 +1,15 @@
 import { Tooltip, Typography } from '@material-tailwind/react';
 import { savedStyle, selectedStyle } from '../../../styles/question-container-styles';
 
+/**
+ * Defines the prop types for the QuestionItem component.
+ *
+ * @typedef {Object} IQuestionItemProps
+ * @property {number} index - The index of the question in the list.
+ * @property {number} answer - The answer index for the question.
+ * @property {number} [questionState] - Optional state of the question, affecting its styling.
+ * @property {string} statement - The statement text of the question.
+ */
 interface IQuestionItemProps {
     index: number;
     answer: number;
@@ -8,6 +17,15 @@ interface IQuestionItemProps {
     statement: string;
 }
 
+/**
+ * QuestionItem component is a React component that displays a question item with an interactive tooltip.
+ * The component shows the question number and answer, and provides additional information on hover.
+ *
+ * @param {IQuestionItemProps} props - The props for the QuestionItem component.
+ * @returns {JSX.Element} A JSX element representing an individual question item with a tooltip.
+ *
+ * @component
+ */
 function QuestionItem({ index, answer, questionState, statement }: IQuestionItemProps): JSX.Element {
   return (
     <>

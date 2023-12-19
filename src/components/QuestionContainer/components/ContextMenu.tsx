@@ -4,6 +4,17 @@ import React from 'react';
 import { Scissors, CheckCircle2, Bookmark } from 'lucide-react';
 import { color } from '@material-tailwind/react/types/components/alert';
 
+/**
+ * Defines the prop types for the ContextMenu component.
+ *
+ * @typedef {Object} ContextMenuProps
+ * @property {number} top - The top position of the context menu in pixels.
+ * @property {number} left - The left position of the context menu in pixels.
+ * @property {string} label - The label to be displayed in the context menu.
+ * @property {function} onSave - Callback function to be executed when the 'Save' action is selected.
+ * @property {function} onSelect - Callback function to be executed when the 'Select' action is selected.
+ * @property {function} onScratch - Callback function to be executed when the 'Scratch' action is selected.
+ */
 interface ContextMenuProps {
   top: number;
   left: number;
@@ -13,6 +24,14 @@ interface ContextMenuProps {
   onScratch: () => void;
 }
 
+/**
+ * Defines the prop types for individual menu items within a context menu or similar component.
+ *
+ * @typedef {Object} IMenuItemProps
+ * @property {string|number} label - The label for the menu item.
+ * @property {React.ReactNode} icon - The icon to be displayed alongside the menu item.
+ * @property {color} color - The color of the menu item.
+ */
 interface IMenuItemProps {
     label: string | number;
     icon: React.ReactNode;

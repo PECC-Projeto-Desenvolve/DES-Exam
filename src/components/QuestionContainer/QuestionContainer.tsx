@@ -25,11 +25,29 @@ interface IQuestionTypes {
     deletedAt: string | null;
 }
 
+/**
+ * Defines the prop types for the QuestionContainer component.
+ *
+ * @typedef {Object} IQuestionContainerProps
+ * @property {IQuestionTypes[]} question - Array of questions to be displayed.
+ * @property {number} questionIndex - The index of the current question being displayed.
+ */
 interface IQuestionContainerProps {
     question: IQuestionTypes[];
     questionIndex: number;
 }
 
+/**
+ * Represents the structure of an alternative item associated with a question.
+ *
+ * @typedef {Object} AlternativeItem
+ * @property {number} id - Unique identifier for the alternative item.
+ * @property {string} text - The text content of the alternative.
+ * @property {number} questionId - Identifier of the question to which this alternative belongs.
+ * @property {string} createdAt - Timestamp of when the alternative was created.
+ * @property {string} updatedAt - Timestamp of when the alternative was last updated.
+ * @property {string|null} deletedAt - Timestamp of when the alternative was deleted, null if not deleted.
+ */
 interface AlternativeItem {
     id: number;
     text: string;
@@ -51,9 +69,7 @@ function QuestionContainer({ question, questionIndex }: IQuestionContainerProps)
 
   const [alternatives, setAlternatives] = React.useState([]);
   // const [alternativeState, setAlternativeState] = React.useState();
-
   const { fontSize } = useFontSize();
-
   const currentQuestion = question[questionIndex];
 
   React.useEffect(() => {
@@ -77,6 +93,13 @@ function QuestionContainer({ question, questionIndex }: IQuestionContainerProps)
     }
   }, [currentQuestion]);
 
+  /**
+ * Handles state changes for checkboxes related to a question.
+ * Updates the state of a specific checkbox and stores it in localStorage.
+ *
+ * @param {number} id - The ID of the checkbox being updated.
+ * @param {object} state - The new state of the checkbox, including selected and saved properties.
+ */
   const handleCheckboxStateChange = (id, state) => {
     const currentQuestionId = currentQuestion.id;
     const checkboxState = { id, selected: state.selected, saved: state.saved };
@@ -89,6 +112,12 @@ function QuestionContainer({ question, questionIndex }: IQuestionContainerProps)
     localStorage.setItem('questionStates', JSON.stringify(questionStates));
   };
 
+  /**
+ * Memoized MultiCheckboxes component to optimize rendering.
+ * Creates an instance of the MultiCheckboxes component with specific props and memoizes it to prevent unnecessary re-renders.
+ *
+ * @returns {JSX.Element} Memoized instance of the MultiCheckboxes component.
+ */
   const memoizedMultiCheckboxes = React.useMemo(() => (
     <MultiCheckboxes
       fontSize={`${fontSize}px`}
@@ -98,6 +127,12 @@ function QuestionContainer({ question, questionIndex }: IQuestionContainerProps)
     />
   ), [fontSize, alternatives, handleCheckboxStateChange]);
 
+  /**
+ * Conditional rendering based on the availability of the current question.
+ * Returns a loading message if the current question is not available.
+ *
+ * @returns {JSX.Element|String} The MultiCheckboxes component or a loading message.
+ */
   if (!currentQuestion) {
     return <div>Carregando questão...</div>;
   }
