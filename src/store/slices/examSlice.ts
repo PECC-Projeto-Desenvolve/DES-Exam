@@ -25,10 +25,10 @@ interface IExam {
 
 
 interface IExamSlice {
-    exam: IExam[] | null;
+    exam: IExam | null;
 }
 
-const initialState: IExamSlice = { exam:[] };
+const initialState: IExamSlice = { exam: null };
 
 
 export const examSlice = createSlice({
@@ -36,7 +36,7 @@ export const examSlice = createSlice({
 
   initialState,
   reducers: {
-    populateExam: (state, action: PayloadAction<IExam[]>) => {
+    populateExam: (state, action: PayloadAction<IExam>) => {
       state.exam = action.payload;
     }
   },

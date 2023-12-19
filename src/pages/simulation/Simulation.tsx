@@ -25,6 +25,7 @@ function Simulation(): JSX.Element {
       .then(response => response.json())
       .then(data => {
         dispatch(populateExam(data));
+        localStorage.setItem('exam_simulation', JSON.stringify(data));
       })
       .catch(error => console.error('Erro ao buscar exames:', error));
   }, [dispatch]);
@@ -35,8 +36,8 @@ function Simulation(): JSX.Element {
     if (examState && examState.__questions__) {
       setQuestions(examState.__questions__);
     }
-
   }, [examState]);
+
 
   const handleOpen = () => setOpen((cur) => !cur);
 
@@ -56,7 +57,6 @@ function Simulation(): JSX.Element {
         open={open}
         confirm={handleOpen}
       />
-
 
       <MapDialog
         open={openMap}

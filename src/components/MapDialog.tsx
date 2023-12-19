@@ -24,6 +24,8 @@ type IQuestionTypes = {
     createdAt: string;
     updatedAt: string;
     deletedAt: string | null;
+    saved: false,
+    selected: false,
 }
 
 interface IMapDialogProps {
@@ -37,10 +39,18 @@ function MapDialog({
   open,
   questions,
 }: IMapDialogProps): JSX.Element {
+  const [questionStates, setQuestionStates] = React.useState({});
 
   React.useEffect(() => {
-    Aos.init({duration: 400});
+    Aos.init({ duration: 400 });
   }, []);
+
+  React.useEffect(() => {
+    if (open) {
+      const storedStates = JSON.parse(localStorage.getItem('questionStates') || '{}');
+      setQuestionStates(storedStates);
+    }
+  }, [open]);
 
   return (
     <>
@@ -49,11 +59,11 @@ function MapDialog({
         handler={handleOpen}
         className="select-none bg-transparent shadow-2xl"
       >
-        <Card className="mx-auto w-fit max-w-[50rem]">
+        <Card className="mx-auto w-fit max-w-[50rem] bg-modal-bg">
           <CardBody className="flex flex-col gap-4">
             <div>
 
-              <Typography variant="h4" color="blue-gray">
+              <Typography variant="h4" className='text-blue-gray-100'>
               Mapa de prova
               </Typography>
 
@@ -79,14 +89,30 @@ function MapDialog({
               </div>
             </div>
 
-            <div className='grid min-h-[10rem] w-full grid-cols-9 gap-x-2 gap-y-3 rounded-lg border border-border p-2 '>
-              {questions && questions.map((question, index) => (
-                <>
-                  <span key={index + question.id} data-aos={localStorage.getItem('mapOpened') != '1' && 'fade-down'} data-aos-delay={50 * index}>
-                    <QuestionItem key={index} index={index} answer={''} questionState={4} statement={`${stringResizer(question.statement, 50)} ...`}/>
+            <div className='grid min-h-[10rem] grid-cols-5 gap-x-4 gap-y-3 rounded-lg border border-border bg-black/20 p-2 lg:grid-cols-9'>
+              {questions && questions.map((question, index) => {
+                const currentQuestionState = questionStates[question.id];
+                let questionState = 3;
+
+                if (currentQuestionState) {
+                  if (currentQuestionState.saved) {
+                    questionState = 1;
+                  } else if (currentQuestionState.selected) {
+                    questionState = 2;
+                  }
+                }
+
+                return (
+                  <span key={question.id} data-aos={localStorage.getItem('mapOpened') != '1' && 'fade-down'} data-aos-delay={50 * index}>
+                    <QuestionItem
+                      index={index}
+                      answer={0}
+                      questionState={questionState}
+                      statement={`${stringResizer(question.statement, 50)} ...`}
+                    />
                   </span>
-                </>
-              ))}
+                );
+              })}
             </div>
 
           </CardBody>

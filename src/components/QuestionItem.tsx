@@ -1,28 +1,14 @@
 import { Tooltip, Typography } from '@material-tailwind/react';
-import React, { useEffect } from 'react';
-import { savedStyle, scratchedStyle, selectedStyle } from '../styles/question-container-styles';
+import { savedStyle, selectedStyle } from '../styles/question-container-styles';
 
 interface IQuestionItemProps {
     index: number;
-    answer: string;
+    answer: number;
     questionState?: number;
     statement: string;
 }
 
 function QuestionItem({ index, answer, questionState, statement }: IQuestionItemProps): JSX.Element {
-  const [questionStatus, setQuestionStatus] = React.useState({ saved: false, selected: false, scratched: false });
-
-  useEffect(() => {
-    if (questionState === 1) {
-      setQuestionStatus({ saved: true, selected: false, scratched: false });
-    } else if (questionState === 2) {
-      setQuestionStatus({ saved: false, selected: true, scratched: false });
-    } else if (questionState === 3) {
-      setQuestionStatus({ saved: false, selected: false, scratched: true });
-    }
-  }, [questionState]);
-
-
   return (
     <>
       <Tooltip
@@ -46,12 +32,16 @@ function QuestionItem({ index, answer, questionState, statement }: IQuestionItem
           </div>
         }
       >
-        <div className={'flex w-fit cursor-pointer flex-col items-center justify-center gap-1 rounded-md border-2 border-transparent bg-modal-heading p-3 transition ease-in-out hover:border-[#c4c4c4]'}>
+        <div
+          className={`
+          ${questionState == 1 ? `${savedStyle}` : questionState == 2 ? `${selectedStyle}` : 'border-transparent bg-modal-heading'}
+          flex w-fit cursor-pointer flex-col items-center justify-center gap-1 rounded-md border-2 p-3 transition ease-in-out hover:border-[#c4c4c4] `}
+        >
 
           <Typography variant='h5' className='text-white'>{index + 1}</Typography>
 
           <div className='flex h-9 w-9 items-center justify-center rounded-full bg-white p-2'>
-            <p className='font-bold text-black shadow-sm'>{answer}</p>
+            <p className='font-bold text-black shadow-sm'>{String.fromCharCode(64 + answer + 1)}</p>
           </div>
         </div>
       </Tooltip>

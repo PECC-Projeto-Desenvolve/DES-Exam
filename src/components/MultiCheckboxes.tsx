@@ -1,14 +1,16 @@
-import React, { useState, useCallback } from 'react';
+import React from 'react';
 import ContextMenu from './ContextMenu';
 import { savedStyle, savedText, scratchedStyle, scratchedText, selectedStyle, selectedText } from '../styles/question-container-styles';
 
 /**
+ * Represents the structure of a single checkbox item.
+ *
  * @typedef {Object} CheckboxItem
- * @property {number} id - The unique identifier for the checkbox item.
- * @property {string} label - The text label displayed next to the checkbox.
+ * @property {number} id - Unique identifier for the checkbox item.
+ * @property {string} label - Display label for the checkbox item.
  * @property {boolean} selected - Indicates if the checkbox is selected.
  * @property {boolean} scratched - Indicates if the checkbox is scratched.
- * @property {boolean} saved - Indicates if the checkbox is saved.
+ * @property {boolean} saved - Indicates if the checkbox state is saved.
  */
 interface CheckboxItem {
   id: number;
@@ -18,60 +20,134 @@ interface CheckboxItem {
   saved: boolean;
 }
 
+/**
+ * Defines the prop types for the MultiCheckboxes component.
+ *
+ * @typedef {Object} IMultiCheckboxesProps
+ * @property {number|undefined} fontSize - The font size to be used for checkbox labels.
+ * @property {CheckboxItem[]} alternatives - Array of CheckboxItem objects.
+ * @property {function} onCheckboxStateChange - Callback function called when the state of a checkbox changes.
+ * @property {Object} questionId - Object containing the ID of the associated question.
+ */
 interface IMultiCheckboxesProps {
   fontSize: number | undefined;
   alternatives: CheckboxItem[];
+  onCheckboxStateChange: (id: number, state: { selected: boolean; scratched: boolean; saved: boolean }) => void;
+  questionId: { id: number };
 }
 
 /**
- * Component representing multiple checkboxes with different states and actions.
+ * MultiCheckboxes component is a React component that renders a list of checkboxes with custom styles and behaviors.
+ * The component allows for selecting, scratching, and saving states for each checkbox. It also supports a context menu for each checkbox.
  *
- * @param {object} props - The properties for the MultiCheckboxes component.
- * @param {number | undefined} props.fontSize - The font size for the checkbox labels.
- * @param {CheckboxItem[]} props.alternatives - An array of checkbox items, each with an id, label, and state indicators.
- * @returns {JSX.Element} A React component rendering a list of checkboxes with associated actions.
+ * @param {object} props - The props for the MultiCheckboxes component.
+ * @param {number|undefined} props.fontSize - The font size for the checkbox labels.
+ * @param {CheckboxItem[]} props.alternatives - Array of checkbox items to display.
+ * @param {function} props.onCheckboxStateChange - Callback function invoked when the state of any checkbox changes.
+ * @param {object} props.questionId - Object containing the ID of the question.
+ * @returns {JSX.Element} A JSX element representing a list of styled checkboxes with a context menu.
+ *
+ * @component
  */
-function MultiCheckboxes({ fontSize, alternatives }: IMultiCheckboxesProps): JSX.Element {
-  const [contextMenu, setContextMenu] = useState<{ mouseX: number; mouseY: number; } | null>(null);
-  const [checkboxes, setCheckboxes] = useState<CheckboxItem[]>(alternatives);
-  const [lastClickTime, setLastClickTime] = useState(0);
-  const [selectedId, setSelectedId] = useState<number | null>(null);
-  const [selectedLabel, setSelectedLabel] = useState<string>('');
+function MultiCheckboxes({ fontSize, alternatives, questionId, onCheckboxStateChange }: IMultiCheckboxesProps): JSX.Element {
+  const [contextMenu, setContextMenu] = React.useState<{ mouseX: number; mouseY: number; } | null>(null);
+  const [checkboxes, setCheckboxes] = React.useState<CheckboxItem[]>(alternatives);
+  const [lastClickTime, setLastClickTime] = React.useState(0);
+  const [selectedId, setSelectedId] = React.useState<number | null>(null);
+  const [selectedLabel, setSelectedLabel] = React.useState<string>('');
 
+  /**
+ * Effect hook to initialize the state of checkboxes based on stored values in localStorage.
+ * On component mount or when the `alternatives` or `questionId` props change, this effect retrieves
+ * the saved state of checkboxes from localStorage and updates the state of checkboxes accordingly.
+ */
   React.useEffect(() => {
-    setCheckboxes(alternatives);
-  }, [alternatives]);
+    const storedStates = JSON.parse(localStorage.getItem('questionStates') || '{}');
+    const questionStates = storedStates[questionId.id];
 
+    const updatedAlternatives = alternatives.map(alt => {
+      if (questionStates && alt.id === questionStates.id) {
+        return {
+          ...alt,
+          selected: questionStates.selected,
+          saved: questionStates.saved,
+          scratched: false
+        };
+      }
+      return {
+        ...alt,
+        selected: false,
+        saved: false,
+        scratched: false
+      };
+    });
 
-  const handleClose = useCallback(() => {
+    setCheckboxes(updatedAlternatives);
+  }, [alternatives, questionId]);
+
+  /**
+ * Closes the context menu.
+ * This function resets the state related to the context menu, effectively closing it.
+ * @callback
+ */
+  const handleClose = React.useCallback(() => {
     setContextMenu(null);
   }, []);
 
-  const handleContextMenu = useCallback((event: React.MouseEvent, id: number, label: string) => {
+  /**
+ * Handles the opening of the context menu for a checkbox.
+ * This function is triggered by a right-click event on a checkbox and sets the position and details for the context menu.
+ *
+ * @param {React.MouseEvent} event - The mouse event that triggered the context menu.
+ * @param {number} id - The ID of the checkbox for which the context menu is being opened.
+ * @param {string} label - The label of the checkbox for which the context menu is being opened.
+ * @callback
+ */
+  const handleContextMenu = React.useCallback((event: React.MouseEvent, id: number, label: string) => {
     event.preventDefault();
     setSelectedId(id);
     setSelectedLabel(label);
     setContextMenu({ mouseX: event.clientX + 2, mouseY: event.clientY - 100 });
   }, []);
 
-  const updateCheckboxState = useCallback((id: number, newState: Partial<CheckboxItem>) => {
-
+  /**
+ * Updates the state of a specific checkbox and manages the state of all checkboxes accordingly.
+ * This function is called to change the selected, scratched, or saved status of a checkbox.
+ * It also ensures that the changes are propagated correctly to other checkboxes if needed.
+ *
+ * @param {number} id - The ID of the checkbox to be updated.
+ * @param {Partial<CheckboxItem>} newState - The new state to apply to the checkbox.
+ * @callback
+ */
+  const updateCheckboxState = React.useCallback((id: number, newState: Partial<CheckboxItem>) => {
     setCheckboxes(checkboxes => checkboxes.map(checkbox => {
       if (checkbox.id === id) {
+        onCheckboxStateChange(id, {
+          selected: newState.selected !== undefined ? newState.selected : checkbox.selected,
+          scratched: newState.scratched !== undefined ? newState.scratched : checkbox.scratched,
+          saved: newState.saved !== undefined ? newState.saved : checkbox.saved
+        });
         return { ...checkbox, ...newState };
       }
-
       if (newState.selected || newState.saved) {
         return { ...checkbox, selected: false, saved: false };
       }
-
       return checkbox;
     }));
 
     handleClose();
-  }, []);
+  }, [handleClose, onCheckboxStateChange]);
 
-  const handleCheckboxChange = useCallback((id: number, event: React.MouseEvent) => {
+  /**
+ * Handles changes to the state of a checkbox based on user interactions.
+ * This function determines the new state of a checkbox based on the type of mouse event.
+ * It supports different actions for left-click, middle-click, right-click, and double-click events.
+ *
+ * @param {number} id - The ID of the checkbox being interacted with.
+ * @param {React.MouseEvent} event - The mouse event that triggered the change.
+ * @callback
+ */
+  const handleCheckboxChange = React.useCallback((id: number, event: React.MouseEvent) => {
     const currentTime = new Date().getTime();
     const doubleClickThreshold = 300;
 

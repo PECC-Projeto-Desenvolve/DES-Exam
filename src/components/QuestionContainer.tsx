@@ -49,6 +49,7 @@ interface AlternativeItem {
 function QuestionContainer({ question, questionIndex }: IQuestionContainerProps): JSX.Element {
   const confirmedFontFromLocalStorage = parseInt(localStorage.getItem('confirmedFont') || '14', 10);
   const [alternatives, setAlternatives] = React.useState([]);
+  // const [alternativeState, setAlternativeState] = React.useState();
 
   const fontSize = confirmedFontFromLocalStorage;
 
@@ -75,6 +76,30 @@ function QuestionContainer({ question, questionIndex }: IQuestionContainerProps)
     }
   }, [currentQuestion]);
 
+  const handleCheckboxStateChange = (id, state) => {
+    console.log(`Checkbox ${id} - Selected: ${state.selected}, Scratched: ${state.scratched}, Saved: ${state.saved}`);
+    console.log(`${currentQuestion.id}`);
+
+    const currentQuestionId = currentQuestion.id;
+    const checkboxState = { id, selected: state.selected, saved: state.saved };
+
+    const storedState = localStorage.getItem('questionStates');
+    const questionStates = storedState ? JSON.parse(storedState) : {};
+
+    questionStates[currentQuestionId] = checkboxState;
+
+    localStorage.setItem('questionStates', JSON.stringify(questionStates));
+  };
+
+  const memoizedMultiCheckboxes = React.useMemo(() => (
+    <MultiCheckboxes
+      fontSize={fontSize}
+      alternatives={alternatives}
+      onCheckboxStateChange={handleCheckboxStateChange}
+      questionId={currentQuestion}
+    />
+  ), [fontSize, alternatives, handleCheckboxStateChange]);
+
   if (!currentQuestion) {
     return <div>Carregando questão...</div>;
   }
@@ -99,11 +124,9 @@ function QuestionContainer({ question, questionIndex }: IQuestionContainerProps)
             </div>
           </div>
           <div className=' flex h-fit w-full flex-col justify-end px-8'>
-            <MultiCheckboxes fontSize={fontSize} alternatives={alternatives}/>
+            {memoizedMultiCheckboxes}
           </div>
         </div>
-
-
       </section>
     </>
   );
