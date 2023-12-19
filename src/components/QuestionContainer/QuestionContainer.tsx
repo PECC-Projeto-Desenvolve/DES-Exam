@@ -1,6 +1,7 @@
 import React from 'react';
 import { MultiCheckboxes } from './components/MultiCheckboxes';
 import { SaveButton } from '../SaveButton';
+import { useFontSize } from '../../context/FontSize';
 
 /**
  * @typedef {Object} IQuestionTypes
@@ -47,11 +48,11 @@ interface AlternativeItem {
  * @returns {JSX.Element} A React component rendering the current question, its statement, and alternatives.
  */
 function QuestionContainer({ question, questionIndex }: IQuestionContainerProps): JSX.Element {
-  const confirmedFontFromLocalStorage = parseInt(localStorage.getItem('confirmedFont') || '14', 10);
+
   const [alternatives, setAlternatives] = React.useState([]);
   // const [alternativeState, setAlternativeState] = React.useState();
 
-  const fontSize = confirmedFontFromLocalStorage;
+  const { fontSize } = useFontSize();
 
   const currentQuestion = question[questionIndex];
 
@@ -90,7 +91,7 @@ function QuestionContainer({ question, questionIndex }: IQuestionContainerProps)
 
   const memoizedMultiCheckboxes = React.useMemo(() => (
     <MultiCheckboxes
-      fontSize={fontSize}
+      fontSize={`${fontSize}px`}
       alternatives={alternatives}
       onCheckboxStateChange={handleCheckboxStateChange}
       questionId={currentQuestion}
@@ -107,15 +108,14 @@ function QuestionContainer({ question, questionIndex }: IQuestionContainerProps)
         <div className='flex h-full flex-col justify-between pb-8'>
           <div className='h-fit'>
             <div className="flex h-20 w-full select-none items-center justify-between bg-modal-heading px-8">
-              <p className="select-none text-white" style={{ fontSize: fontSize + 4}}>
+              <p className="select-none text-white" style={{ fontSize: `${fontSize}px`}}>
                 {currentQuestion.title}
-
               </p>
               <SaveButton />
             </div>
 
             <div className="w-full space-y-8 p-8">
-              <p className="select-none text-white" style={{ fontSize: fontSize }}>
+              <p className="select-none text-white" style={{ fontSize: `${fontSize}px` }}>
                 {currentQuestion.statement}
               </p>
             </div>

@@ -35,7 +35,7 @@ function QuestionItem({ index, answer, questionState, statement }: IQuestionItem
         <div
           className={`
           ${questionState == 1 ? `${savedStyle}` : questionState == 2 ? `${selectedStyle}` : 'border-transparent bg-modal-heading'}
-          flex w-fit cursor-pointer flex-col items-center justify-center gap-1 rounded-md border-2 p-3 transition ease-in-out hover:border-[#c4c4c4] `}
+          flex w-full cursor-pointer flex-col items-center justify-center gap-1 rounded-md border-2 p-[0.8rem] transition ease-in-out hover:border-[#c4c4c4] `}
         >
 
           <Typography variant='h5' className='text-white'>{index + 1}</Typography>

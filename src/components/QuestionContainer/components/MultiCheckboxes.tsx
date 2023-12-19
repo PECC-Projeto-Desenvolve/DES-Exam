@@ -30,7 +30,7 @@ interface CheckboxItem {
  * @property {Object} questionId - Object containing the ID of the associated question.
  */
 interface IMultiCheckboxesProps {
-  fontSize: number | undefined;
+  fontSize: number | undefined | string;
   alternatives: CheckboxItem[];
   onCheckboxStateChange: (id: number, state: { selected: boolean; scratched: boolean; saved: boolean }) => void;
   questionId: { id: number };

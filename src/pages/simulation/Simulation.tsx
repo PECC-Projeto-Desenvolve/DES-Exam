@@ -38,7 +38,6 @@ function Simulation(): JSX.Element {
     }
   }, [examState]);
 
-
   const handleOpen = () => setOpen((cur) => !cur);
 
   const handleOpenMap = () => {
@@ -47,6 +46,11 @@ function Simulation(): JSX.Element {
     setTimeout(() => {
       localStorage.setItem('mapOpened', '1');
     }, 200);
+  };
+
+  const handleQuestionIndex = (index) => {
+    setExamPosition(index);
+    handleOpenMap();
   };
 
   return (
@@ -62,6 +66,7 @@ function Simulation(): JSX.Element {
         open={openMap}
         handleOpen={handleOpenMap}
         questions={questions}
+        handleQuestionIndex={handleQuestionIndex}
       />
 
       <div className='flex w-full flex-col gap-4'>
@@ -71,7 +76,7 @@ function Simulation(): JSX.Element {
             <Button variant='outlined' size="md">Abandonar</Button>
           </div>
           <div>
-            <Button size='md' className='flex items-center gap-3' onClick={handleOpen}><Settings /> Ajustes</Button>
+            <Button size='md' className='flex items-center gap-3' onClick={handleOpen} ><Settings /> Ajustes</Button>
           </div>
         </div>
         <QuestionContainer question={questions} questionIndex={examPosition}/>
