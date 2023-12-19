@@ -1,6 +1,6 @@
 import React from 'react';
-import { MultiCheckboxes } from './MultiCheckboxes';
-import { SaveButton } from './SaveButton';
+import { MultiCheckboxes } from './components/MultiCheckboxes';
+import { SaveButton } from '../SaveButton';
 
 /**
  * @typedef {Object} IQuestionTypes
@@ -77,9 +77,6 @@ function QuestionContainer({ question, questionIndex }: IQuestionContainerProps)
   }, [currentQuestion]);
 
   const handleCheckboxStateChange = (id, state) => {
-    console.log(`Checkbox ${id} - Selected: ${state.selected}, Scratched: ${state.scratched}, Saved: ${state.saved}`);
-    console.log(`${currentQuestion.id}`);
-
     const currentQuestionId = currentQuestion.id;
     const checkboxState = { id, selected: state.selected, saved: state.saved };
 

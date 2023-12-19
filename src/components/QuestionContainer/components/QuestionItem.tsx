@@ -1,5 +1,5 @@
 import { Tooltip, Typography } from '@material-tailwind/react';
-import { savedStyle, selectedStyle } from '../styles/question-container-styles';
+import { savedStyle, selectedStyle } from '../../../styles/question-container-styles';
 
 interface IQuestionItemProps {
     index: number;

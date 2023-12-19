@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   IconButton,
   SpeedDial,
@@ -33,6 +32,10 @@ export function SpeedDialWithTextOutside() {
           <SpeedDialAction className="relative bg-white" onClick={() => localStorage.removeItem('mapOpened')} >
             <Trash className="h-5 w-5 shadow-xl" />
             <Typography {...labelProps}>LocalStorage: <strong>mapOpened</strong></Typography>
+          </SpeedDialAction>
+          <SpeedDialAction className="relative bg-white" onClick={() => localStorage.removeItem('questionStates')} >
+            <Trash className="h-5 w-5 shadow-xl" />
+            <Typography {...labelProps}>LocalStorage: <strong>questionStates</strong></Typography>
           </SpeedDialAction>
         </SpeedDialContent>
       </SpeedDial>

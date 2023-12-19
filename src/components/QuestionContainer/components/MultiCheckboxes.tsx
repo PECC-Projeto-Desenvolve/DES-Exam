@@ -1,6 +1,6 @@
 import React from 'react';
 import ContextMenu from './ContextMenu';
-import { savedStyle, savedText, scratchedStyle, scratchedText, selectedStyle, selectedText } from '../styles/question-container-styles';
+import { savedStyle, savedText, scratchedStyle, scratchedText, selectedStyle, selectedText } from '../../../styles/question-container-styles';
 
 /**
  * Represents the structure of a single checkbox item.

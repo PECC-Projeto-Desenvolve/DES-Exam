@@ -26,6 +26,7 @@ type IQuestionTypes = {
     deletedAt: string | null;
     saved: false,
     selected: false,
+    index: number,
 }
 
 interface IMapDialogProps {
@@ -106,7 +107,7 @@ function MapDialog({
                   <span key={question.id} data-aos={localStorage.getItem('mapOpened') != '1' && 'fade-down'} data-aos-delay={50 * index}>
                     <QuestionItem
                       index={index}
-                      answer={0}
+                      answer={1}
                       questionState={questionState}
                       statement={`${stringResizer(question.statement, 50)} ...`}
                     />
