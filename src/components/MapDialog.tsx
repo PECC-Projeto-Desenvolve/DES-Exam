@@ -16,6 +16,7 @@ import { stringResizer } from '../utils/StringResizer';
 
 import Aos from 'aos';
 import 'aos/dist/aos.css';
+import Timer from './Time';
 
 /**
  * Type definition for question-related properties.
@@ -117,11 +118,11 @@ function MapDialog({
                   unmount: { scale: 0, y: 25 },
                 }}
               >
-
-                <Typography variant='lead' className='flex items-center text-blue-gray-200'>
-                  <Clock size={20} className='mr-2'/>
-                    02 <span className='animate-blink mx-[2px]'> : </span> 30
-                </Typography>
+                <Timer />
+                {/* <Typography variant='lead' className='flex items-center text-blue-gray-200'> */}
+                {/* <Clock size={20} className='mr-2'/> */}
+                {/* 02 <span className='animate-blink mx-[2px]'> : </span> 30 */}
+                {/* </Typography> */}
               </Tooltip>
             </div>
           </div>
