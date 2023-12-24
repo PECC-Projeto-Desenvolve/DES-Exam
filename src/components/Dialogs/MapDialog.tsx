@@ -2,21 +2,18 @@ import React from 'react';
 import {
   Dialog,
   Typography,
-  Tooltip,
   DialogBody,
   DialogHeader,
   DialogFooter,
   Button,
 } from '@material-tailwind/react';
 
-import { Clock } from 'lucide-react';
-
-import { QuestionItem } from '.';
-import { stringResizer } from '../utils/StringResizer';
+import { QuestionItem } from '..';
+import { stringResizer } from '../../utils/StringResizer';
 
 import Aos from 'aos';
 import 'aos/dist/aos.css';
-import Timer from './Time';
+import Timer from '../Time';
 
 /**
  * Type definition for question-related properties.
@@ -110,27 +107,16 @@ function MapDialog({
             Processo seletivo <strong className='text-blue-gray-300'>cidade</strong> - data
               </Typography>
 
-              <Tooltip
-                content="Tempo decorrido de prova"
-                className="master-z-index text-blue-gray-300"
-                animate={{
-                  mount: { scale: 1, y: 0 },
-                  unmount: { scale: 0, y: 25 },
-                }}
-              >
+              <>
                 <Timer />
-                {/* <Typography variant='lead' className='flex items-center text-blue-gray-200'> */}
-                {/* <Clock size={20} className='mr-2'/> */}
-                {/* 02 <span className='animate-blink mx-[2px]'> : </span> 30 */}
-                {/* </Typography> */}
-              </Tooltip>
+              </>
+
             </div>
           </div>
         </DialogHeader>
 
         <DialogBody className=''>
           <div className='grid grid-cols-9 gap-2'>
-            {/* <div className='grid grid-cols-5 gap-x-3 gap-y-3 rounded-lg border border-border bg-black/20 lg:grid-cols-9'> */}
             {questions && questions.map((question, index) => {
               const currentQuestionState = questionStates[question.id];
               let questionState = 3;

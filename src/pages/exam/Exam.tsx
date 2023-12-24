@@ -2,8 +2,8 @@ import React from 'react';
 import { QuestionContainer } from '../../components';
 import { Button, Typography } from '@material-tailwind/react';
 import { ChevronRight, ChevronLeft, Map, Settings } from 'lucide-react';
-import { AccessibilityDialog } from '../../components/AccessibilityDialog';
-import { MapDialog } from '../../components/MapDialog';
+import { AccessibilityDialog } from '../../components/Dialogs/AccessibilityDialog';
+import { MapDialog } from '../../components/Dialogs/MapDialog';
 import { useNavigate } from 'react-router-dom';
 
 function Exam(): JSX.Element {

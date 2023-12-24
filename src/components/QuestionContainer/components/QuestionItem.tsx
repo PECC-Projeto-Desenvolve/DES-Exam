@@ -58,7 +58,7 @@ function QuestionItem({ index, answer, questionState, statement }: IQuestionItem
 
           <Typography variant='h5' className='text-white'>{index + 1}</Typography>
 
-          <div className='flex h-9 w-9 items-center justify-center rounded-full bg-white p-2'>
+          <div className='flex h-8 w-8 items-center justify-center rounded-full bg-white p-2'>
             <p className='font-bold text-black shadow-sm'>{String.fromCharCode(64 + answer + 1)}</p>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import ContextMenu from './ContextMenu';
+import ContextMenu from './ContextMenuQuestionAction';
 import { savedStyle, savedText, scratchedStyle, scratchedText, selectedStyle, selectedText } from '../../../styles/question-container-styles';
 
 /**

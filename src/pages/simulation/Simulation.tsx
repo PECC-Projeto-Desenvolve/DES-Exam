@@ -2,23 +2,27 @@ import React from 'react';
 import { QuestionContainer } from '../../components';
 import { Button } from '@material-tailwind/react';
 import { ChevronRight, ChevronLeft, Map, Settings } from 'lucide-react';
-import { MapDialog } from '../../components/MapDialog';
+import { MapDialog } from '../../components/Dialogs/MapDialog';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { populateExam } from '../../store/slices/examSlice';
 import { RootState } from '../../store/store';
-import { AccessibilityDialog } from '../../components/AccessibilityDialog';
+import { AccessibilityDialog } from '../../components/Dialogs/AccessibilityDialog';
+import { FinishDialog } from '../../components/Dialogs/FinishDialog';
+import { AbandonDialog } from '../../components/Dialogs/AbandonDialog';
 
 function Simulation(): JSX.Element {
   const [open, setOpen] = React.useState(false);
   const [openMap, setOpenMap] = React.useState(false);
+  const [openFinishDialog, setOpenFinishDialog] = React.useState(false);
+  const [openAbandonDialog, setOpenAbandonDialog] = React.useState(false);
 
   const [questions, setQuestions] = React.useState([]);
 
   const [examPosition, setExamPosition] = React.useState(0);
 
   const dispatch = useDispatch();
-  const examId = '0114a10c-1860-4f11-a690-3da65458059d';
+  const examId = '01b92066-e100-4c0a-8ce8-c95018fde325';
 
   React.useEffect(() => {
     fetch(`http://localhost:3000/exams/${examId}`)
@@ -40,6 +44,10 @@ function Simulation(): JSX.Element {
 
   const handleOpen = () => setOpen((cur) => !cur);
 
+  const handleOpenFinishDialog = () => setOpenFinishDialog((cur) => !cur);
+
+  const handleOpenAbandonDialog = () => setOpenAbandonDialog((cur) => !cur);
+
   const handleOpenMap = () => {
     setOpenMap((cur) => !cur);
 
@@ -49,8 +57,35 @@ function Simulation(): JSX.Element {
   };
 
   const handleQuestionIndex = (index) => {
+    if (onEnd) {
+      setOnEnd(false);
+    }
+
+    if (openFinishDialog) {
+      setOpenFinishDialog(false);
+    }
+
+    if (openMap) {
+      handleOpenMap();
+    }
+
     setExamPosition(index);
-    handleOpenMap();
+  };
+
+  const [onEnd, setOnEnd] = React.useState<boolean>(false);
+
+  const handleEnd = () => {
+    console.log('no fim porra');
+    setOnEnd(!onEnd);
+  };
+
+  const handleBackButton = () => {
+    if (onEnd) {
+      setOnEnd(false);
+      setExamPosition(examPosition - 1);
+    }
+
+    setExamPosition(examPosition - 1);
   };
 
   return (
@@ -69,34 +104,61 @@ function Simulation(): JSX.Element {
         handleQuestionIndex={handleQuestionIndex}
       />
 
+      <FinishDialog
+        open={openFinishDialog}
+        handleOpen={handleOpenFinishDialog}
+        questions={questions}
+        handleQuestionIndex={handleQuestionIndex}
+      />
+
+      <AbandonDialog
+        open={openAbandonDialog}
+        handleOpen={handleOpenAbandonDialog}
+      />
+
       <div className='flex w-full flex-col gap-4'>
         <div className='flex justify-between'>
           <div className='flex gap-2'>
-            <Button variant='outlined' size="md">Finalizar</Button>
-            <Button variant='outlined' size="md">Abandonar</Button>
+            <Button variant='filled' size="sm" color='orange'>Finalizar</Button>
+            <Button variant='filled' size="sm" color='red' onClick={() => handleOpenAbandonDialog()}>Abandonar</Button>
           </div>
           <div>
-            <Button size='md' className='flex items-center gap-3' onClick={handleOpen} ><Settings /> Ajustes</Button>
+            <Button size='sm' color='blue' className='flex items-center gap-3' onClick={handleOpen} ><Settings /> Ajustes</Button>
           </div>
         </div>
-        <QuestionContainer question={questions} questionIndex={examPosition}/>
+        <QuestionContainer question={questions} questionIndex={examPosition} onLastQuestion={() => handleEnd()}/>
         <div className='flex w-full justify-between'>
           <Button
             variant="text"
             className='flex items-center gap-2'
             size="md"
             disabled={examPosition == 0}
-            onClick={() => setExamPosition(examPosition - 1)}> <ChevronLeft /> Voltar</Button>
+            onClick={() => handleBackButton()}> <ChevronLeft /> Voltar</Button>
           <Button className='flex items-center gap-3' size="md" onClick={handleOpenMap}>
             <Map />
               Mapa
           </Button>
-          <Button
-            variant="text"
-            className='flex items-center gap-2'
-            size="md"
-            onClick={() => setExamPosition(examPosition + 1)}
-          >Avançar <ChevronRight /></Button>
+          {onEnd ? (
+            <>
+              <Button
+                variant="filled"
+                className='flex items-center px-6'
+                size="sm"
+                color='orange'
+                onClick={() => handleOpenFinishDialog()}
+              >Finalizar</Button>
+            </>
+          ):(
+            <>
+              <Button
+                variant="text"
+                className='flex items-center gap-2'
+                size="sm"
+                onClick={() => setExamPosition(examPosition + 1)}
+              >Avançar <ChevronRight /></Button>
+            </>
+          )}
+
         </div>
       </div>
     </>

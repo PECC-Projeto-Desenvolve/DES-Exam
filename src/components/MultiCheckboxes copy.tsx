@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ContextMenu from './ContextMenu';
+import ContextMenu from './QuestionContainer/components/ContextMenuQuestionAction';
 import { savedStyle, savedText, scratchedStyle, scratchedText, selectedStyle, selectedText } from '../styles/question-container-styles';
 
 interface CheckboxItem {
@@ -257,7 +257,7 @@ function MultiCheckboxes({fontSize}: IMultiCheckboxesProps):JSX.Element {
                 }, 200);
               }}
             />
-            <div className="absolute left-0 top-0 flex h-full w-full items-center justify-center bg-blurred backdrop-blur-sm" onClick={handleClose} />
+            <div className="absolute left-0 top-0 z-40 flex h-full w-full items-center justify-center bg-blurred backdrop-blur-sm" onClick={handleClose} />
           </>
 
         )}

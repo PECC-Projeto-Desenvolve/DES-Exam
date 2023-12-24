@@ -1,5 +1,5 @@
 import { Button, Dialog, Card, CardBody, Typography, ButtonGroup } from '@material-tailwind/react';
-import { useFontSize } from '../context/FontSize';
+import { useFontSize } from '../../context/FontSize';
 
 interface IAccessibilityDialogProps {
   handleOpen: () => void;
@@ -44,10 +44,10 @@ function AccessibilityDialog({
 
   /**
  * Resets the font size to its default value.
- * This function is invoked to reset the font size to a standard default value (e.g., 14).
+ * This function is invoked to reset the font size to a standard default value (e.g., 16).
  */
   const handleResetFontSize = () => {
-    setFontSize(14); // Valor padrão
+    setFontSize(16); // Valor padrão
   };
 
   /**

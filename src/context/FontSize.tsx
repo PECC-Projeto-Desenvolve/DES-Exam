@@ -16,9 +16,9 @@ type FontSizeContextType = {
 /**
  * Default font size, retrieved from localStorage or set to a default value.
  * Parses the 'confirmedFont' item from localStorage to get the previously confirmed font size,
- * or defaults to 14 if not available.
+ * or defaults to 16 if not available.
  */
-const defaultFontSize = parseInt(localStorage.getItem('confirmedFont') || '14', 10);
+const defaultFontSize = parseInt(localStorage.getItem('confirmedFont') || '16', 10);
 
 /**
  * FontSizeContext is a React context for providing and consuming font size settings.
@@ -26,7 +26,8 @@ const defaultFontSize = parseInt(localStorage.getItem('confirmedFont') || '14', 
  */
 const FontSizeContext = createContext<FontSizeContextType>({
   fontSize: defaultFontSize,
-  setFontSize: size => {}
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  setFontSize: _size => {}
 });
 
 /**

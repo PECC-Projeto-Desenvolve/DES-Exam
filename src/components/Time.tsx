@@ -1,45 +1,13 @@
-import { Typography } from '@material-tailwind/react';
-import { Clock } from 'lucide-react';
-import React from 'react';
+// Timer.tsx
+import React, { useContext } from 'react';
+import { TimerContext } from '../context/TimerContext';
 
-const Timer = () => {
-  const [time, setTime] = React.useState(0);
+const Timer: React.FC = () => {
+  const { time } = useContext(TimerContext);
 
-  React.useEffect(() => {
-    const interval = setInterval(() => {
-      setTime(prevTime => {
-        if (prevTime < 3599) {
-          return prevTime + 1;
-        } else {
-          clearInterval(interval);
-          return 3599;
-        }
-      });
-    }, 1000);
+  const formattedTime = `${Math.floor(time / 60).toString().padStart(2, '0')}:${(time % 60).toString().padStart(2, '0')}`;
 
-    return () => clearInterval(interval);
-  }, []);
-
-  const formatTime = () => {
-    const minutes = Math.floor(time / 60);
-    const seconds = time % 60;
-
-    return (
-      <span>
-        {minutes.toString().padStart(2, '0')}
-        <strong className='animate-blink mx-[4px]'>:</strong>
-        {seconds.toString().padStart(2, '0')}
-      </span>
-    );
-  };
-
-  return (
-    <>
-      <Typography variant='lead' className='flex items-center text-blue-gray-200'>
-        <Clock size={20} className='mr-2'/>
-        {formatTime()}</Typography>
-    </>
-  );
+  return <div>{formattedTime}</div>;
 };
 
 export default Timer;

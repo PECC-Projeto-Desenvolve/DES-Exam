@@ -21,7 +21,7 @@ export function SpeedDialWithTextOutside() {
 
   return (
 
-    <div className="absolute bottom-0 right-0 mb-10 mr-10">
+    <div className="absolute bottom-0 right-0 z-50 mb-10 mr-10">
       <SpeedDial>
         <SpeedDialHandler>
           <IconButton size="lg" className="rounded-full">

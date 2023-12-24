@@ -7,7 +7,7 @@ import { SpeedDialWithTextOutside } from '../components/Development/SpeedDial';
 
 function AppRoutes(): JSX.Element {
   return (
-    <div className="flex h-screen w-full flex-col items-center justify-center bg-light px-2 md:px-8 lg:px-40">
+    <div className="flex h-screen w-full flex-col items-center justify-center bg-[#CCEAFF] px-2 md:px-8 lg:px-40">
       <SpeedDialWithTextOutside />
       <Routes>
         <Route path="/" element={<RedirectComponent />} />

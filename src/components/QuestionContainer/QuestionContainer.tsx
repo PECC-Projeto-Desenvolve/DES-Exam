@@ -35,6 +35,7 @@ interface IQuestionTypes {
 interface IQuestionContainerProps {
     question: IQuestionTypes[];
     questionIndex: number;
+    onLastQuestion: () => void;
 }
 
 /**
@@ -63,13 +64,16 @@ interface AlternativeItem {
  * @param {object} props - The properties for the QuestionContainer component.
  * @param {IQuestionTypes[]} props.question - An array of question objects.
  * @param {number} props.questionIndex - The index of the current question to display.
+ * @param {function} props.onLastQuestion - Function to handle the last question of exam.
  * @returns {JSX.Element} A React component rendering the current question, its statement, and alternatives.
  */
-function QuestionContainer({ question, questionIndex }: IQuestionContainerProps): JSX.Element {
+function QuestionContainer({ question, questionIndex, onLastQuestion }: IQuestionContainerProps): JSX.Element {
 
   const [alternatives, setAlternatives] = React.useState([]);
   // const [alternativeState, setAlternativeState] = React.useState();
   const { fontSize } = useFontSize();
+  const [hasCalledLastQuestion, setHasCalledLastQuestion] = React.useState(false);
+
   const currentQuestion = question[questionIndex];
 
   React.useEffect(() => {
@@ -92,6 +96,17 @@ function QuestionContainer({ question, questionIndex }: IQuestionContainerProps)
         });
     }
   }, [currentQuestion]);
+
+  React.useEffect(() => {
+    if (questionIndex === question.length - 1 && !hasCalledLastQuestion) {
+      onLastQuestion();
+      setHasCalledLastQuestion(true);
+    }
+
+    if (questionIndex !== question.length - 1 && hasCalledLastQuestion) {
+      setHasCalledLastQuestion(false);
+    }
+  }, [questionIndex, question.length, hasCalledLastQuestion, onLastQuestion]);
 
   /**
  * Handles state changes for checkboxes related to a question.
@@ -139,8 +154,8 @@ function QuestionContainer({ question, questionIndex }: IQuestionContainerProps)
 
   return (
     <>
-      <section className="h-[74vh] w-full overflow-hidden rounded-lg border border-border bg-modal-bg shadow-lg">
-        <div className='flex h-full flex-col justify-between pb-8'>
+      <section className="h-[74vh] w-full overflow-y-scroll rounded-lg border border-border bg-modal-bg pb-8 shadow-lg">
+        <div className='flex h-full flex-col justify-between'>
           <div className='h-fit'>
             <div className="flex h-20 w-full select-none items-center justify-between bg-modal-heading px-8">
               <p className="select-none text-white" style={{ fontSize: `${fontSize}px`}}>

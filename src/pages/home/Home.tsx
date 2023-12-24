@@ -9,7 +9,7 @@ import { Navbar, Typography,   Button,
 import { LogOut, Settings } from 'lucide-react';
 import { Banner } from '../../components';
 import { useNavigate  } from 'react-router-dom';
-import { AccessibilityDialog } from '../../components/AccessibilityDialog';
+import { AccessibilityDialog } from '../../components/Dialogs/AccessibilityDialog';
 
 function Home() {
   const navigate = useNavigate();
