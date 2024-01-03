@@ -1,18 +1,94 @@
 import React from 'react';
 import { QuestionContainer } from '../../components';
+import { useSelector, useDispatch } from 'react-redux';
 import { Button, Typography } from '@material-tailwind/react';
-import { ChevronRight, ChevronLeft, Map, Settings } from 'lucide-react';
 import { AccessibilityDialog } from '../../components/Dialogs/AccessibilityDialog';
 import { MapDialog } from '../../components/Dialogs/MapDialog';
 import { useNavigate } from 'react-router-dom';
+import { FinishDialog } from '../../components/Dialogs/FinishDialog';
+import { AbandonDialog } from '../../components/Dialogs/AbandonDialog';
+import { populateExam } from '../../store/slices/examSlice';
+import { RootState } from '../../store/store';
+import { ChevronLeft, ChevronRight, Map, Settings } from 'lucide-react';
 
 function Exam(): JSX.Element {
-  const [hasTabChanged, setHasTabChanged] = React.useState(false);
-
-  const [fontSize, setFontSize] = React.useState(14);
-  const [confirmedFont, setConfirmedFont] = React.useState(14);
   const [open, setOpen] = React.useState(false);
   const [openMap, setOpenMap] = React.useState(false);
+  const [openFinishDialog, setOpenFinishDialog] = React.useState(false);
+  const [openAbandonDialog, setOpenAbandonDialog] = React.useState(false);
+
+  const [questions, setQuestions] = React.useState([]);
+
+  const [examPosition, setExamPosition] = React.useState(0);
+
+  const dispatch = useDispatch();
+  const examId = '01b92066-e100-4c0a-8ce8-c95018fde325';
+
+  React.useEffect(() => {
+    fetch(`http://localhost:3000/exams/${examId}`)
+      .then(response => response.json())
+      .then(data => {
+        dispatch(populateExam(data));
+        localStorage.setItem('exam_simulation', JSON.stringify(data));
+      })
+      .catch(error => console.error('Erro ao buscar exames:', error));
+  }, [dispatch]);
+
+  const examState = useSelector((state: RootState) => state.exam.exam);
+
+  React.useEffect(() => {
+    if (examState && examState.__questions__) {
+      setQuestions(examState.__questions__);
+    }
+  }, [examState]);
+
+  const handleOpen = () => setOpen((cur) => !cur);
+
+  const handleOpenFinishDialog = () => setOpenFinishDialog((cur) => !cur);
+
+  const handleOpenAbandonDialog = () => setOpenAbandonDialog((cur) => !cur);
+
+  const handleOpenMap = () => {
+    setOpenMap((cur) => !cur);
+
+    setTimeout(() => {
+      localStorage.setItem('mapOpened', '1');
+    }, 200);
+  };
+
+  const handleQuestionIndex = (index) => {
+    if (onEnd) {
+      setOnEnd(false);
+    }
+
+    if (openFinishDialog) {
+      setOpenFinishDialog(false);
+    }
+
+    if (openMap) {
+      handleOpenMap();
+    }
+
+    setExamPosition(index);
+  };
+
+  const [onEnd, setOnEnd] = React.useState<boolean>(false);
+
+  const handleEnd = () => {
+    console.log('no fim porra');
+    setOnEnd(!onEnd);
+  };
+
+  const handleBackButton = () => {
+    if (onEnd) {
+      setOnEnd(false);
+      setExamPosition(examPosition - 1);
+    }
+
+    setExamPosition(examPosition - 1);
+  };
+
+  const [hasTabChanged, setHasTabChanged] = React.useState(false);
   const navigate = useNavigate();
 
   React.useEffect(() => {
@@ -47,35 +123,12 @@ function Exam(): JSX.Element {
     };
   }, [navigate]);
 
-
-  const handleOpen = () => setOpen((cur) => !cur);
-
-  const handleOpenMap = () => setOpenMap((cur) => !cur);
-
-  const handleIncreaseFont = () => {
-    setFontSize(fontSize + 1);
-  };
-
-  const handleDecreaseFont = () => {
-    setFontSize(fontSize - 1);
-  };
-
-  const handleResetFontSize = () => {
-    setFontSize(14);
-  };
-
-  const handleFontSizeConfirm = () => {
-    setConfirmedFont(fontSize);
-    handleOpen();
-  };
-
-
   return (
     <>
       {hasTabChanged ? (
         <>
           <div className='h-full w-full px-12 py-48'>
-            <div className='flex h-full w-full flex-col items-center justify-center rounded-md bg-[#eee]'>
+            <div className='flex h-full w-full flex-col items-center justify-center rounded-xl bg-white/50'>
               <Typography variant='h4'>
         Infelizmente você mudou de aba, portanto você está desclassificado.
               </Typography>
@@ -87,39 +140,76 @@ function Exam(): JSX.Element {
         </>
       ) : (
         <>
-          <AccessibilityDialog
-            fontSize={fontSize}
-            handleResetFontSize={handleResetFontSize}
-            handleDecreaseFont={handleDecreaseFont}
-            handleFontSizeConfirm={handleFontSizeConfirm}
-            handleIncreaseFont={handleIncreaseFont}
-            handleOpen={handleOpen}
-            open={open}
-          />
+          <div>
+            <AccessibilityDialog
+              handleOpen={handleOpen}
+              open={open}
+              confirm={handleOpen}
+            />
 
-          <MapDialog
-            open={openMap}
-            handleOpen={handleOpenMap}
-          />
+            <MapDialog
+              open={openMap}
+              handleOpen={handleOpenMap}
+              questions={questions}
+              handleQuestionIndex={handleQuestionIndex}
+            />
+
+            <FinishDialog
+              open={openFinishDialog}
+              handleOpen={handleOpenFinishDialog}
+              questions={questions}
+              handleQuestionIndex={handleQuestionIndex}
+            />
+
+            <AbandonDialog
+              open={openAbandonDialog}
+              handleOpen={handleOpenAbandonDialog}
+            />
+          </div>
 
           <div className='flex w-full flex-col gap-4'>
             <div className='flex justify-between'>
               <div className='flex gap-2'>
-                <Button variant='outlined' size="md">Finalizar</Button>
-                <Button variant='outlined' size="md">Abandonar</Button>
+                <Button variant='filled' size="sm" color='orange'>Finalizar</Button>
+                <Button variant='filled' size="sm" color='red' onClick={() => handleOpenAbandonDialog()}>Abandonar</Button>
               </div>
               <div>
-                <Button size='md' className='flex items-center gap-3' onClick={handleOpen}><Settings /> Ajustes</Button>
+                <Button size='sm' color='blue' className='flex items-center gap-3' onClick={handleOpen} ><Settings /> Ajustes</Button>
               </div>
             </div>
-            <QuestionContainer fontSize={confirmedFont}/>
+            <QuestionContainer question={questions} questionIndex={examPosition} onLastQuestion={() => handleEnd()}/>
             <div className='flex w-full justify-between'>
-              <Button variant="text" className='flex items-center gap-2' size="md"> <ChevronLeft /> Voltar</Button>
+              <Button
+                variant="text"
+                className='flex items-center gap-2'
+                size="md"
+                disabled={examPosition == 0}
+                onClick={() => handleBackButton()}> <ChevronLeft /> Voltar</Button>
               <Button className='flex items-center gap-3' size="md" onClick={handleOpenMap}>
                 <Map />
               Mapa
               </Button>
-              <Button variant="text" className='flex items-center gap-2' size="md">Avançar <ChevronRight /></Button>
+              {onEnd ? (
+                <>
+                  <Button
+                    variant="filled"
+                    className='flex items-center px-6'
+                    size="sm"
+                    color='orange'
+                    onClick={() => handleOpenFinishDialog()}
+                  >Finalizar</Button>
+                </>
+              ):(
+                <>
+                  <Button
+                    variant="text"
+                    className='flex items-center gap-2'
+                    size="sm"
+                    onClick={() => setExamPosition(examPosition + 1)}
+                  >Avançar <ChevronRight /></Button>
+                </>
+              )}
+
             </div>
           </div>
         </>

@@ -5,7 +5,7 @@ const RedirectComponent: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    navigate('/home');
+    navigate('/login');
   }, []);
 
   return null;
