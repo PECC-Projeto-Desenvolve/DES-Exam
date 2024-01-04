@@ -11,19 +11,21 @@
     },
     "dependencies": {
         "@heroicons/react": "^2.0.18",
-        "@material-tailwind/react": "^2.1.4",
+        "@material-tailwind/react": "2.1.0",
         "@reduxjs/toolkit": "^2.0.1",
+        "install": "^0.13.0",
         "lucide-react": "^0.288.0",
         "react": "^18.2.0",
         "react-apexcharts": "^1.4.1",
         "react-dom": "^18.2.0",
         "react-redux": "^9.0.4",
-        "react-router-dom": "^6.18.0"
+        "react-router-dom": "^6.18.0",
+        "sweetalert2": "^11.10.2"
     },
     "devDependencies": {
         "@rocketseat/eslint-config": "^2.1.0",
         "@types/node": "^20.9.0",
-        "@types/react": "^18.2.37",
+        "@types/react": "18.2.19",
         "@types/react-dom": "^18.2.15",
         "@typescript-eslint/eslint-plugin": "^6.11.0",
         "@typescript-eslint/parser": "^6.11.0",

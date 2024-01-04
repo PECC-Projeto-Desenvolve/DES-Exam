@@ -9,11 +9,14 @@ dependencies:
     specifier: ^2.0.18
     version: 2.0.18(react@18.2.0)
   '@material-tailwind/react':
-    specifier: ^2.1.4
-    version: 2.1.4(react-dom@18.2.0)(react@18.2.0)
+    specifier: 2.1.0
+    version: 2.1.0(react-dom@18.2.0)(react@18.2.0)
   '@reduxjs/toolkit':
     specifier: ^2.0.1
     version: 2.0.1(react-redux@9.0.4)(react@18.2.0)
+  install:
+    specifier: ^0.13.0
+    version: 0.13.0
   lucide-react:
     specifier: ^0.288.0
     version: 0.288.0(react@18.2.0)
@@ -28,10 +31,13 @@ dependencies:
     version: 18.2.0(react@18.2.0)
   react-redux:
     specifier: ^9.0.4
-    version: 9.0.4(@types/react@18.2.37)(react@18.2.0)(redux@5.0.0)
+    version: 9.0.4(@types/react@18.2.19)(react@18.2.0)(redux@5.0.0)
   react-router-dom:
     specifier: ^6.18.0
     version: 6.18.0(react-dom@18.2.0)(react@18.2.0)
+  sweetalert2:
+    specifier: ^11.10.2
+    version: 11.10.2
 
 devDependencies:
   '@rocketseat/eslint-config':
@@ -41,8 +47,8 @@ devDependencies:
     specifier: ^20.9.0
     version: 20.9.0
   '@types/react':
-    specifier: ^18.2.37
-    version: 18.2.37
+    specifier: 18.2.19
+    version: 18.2.19
   '@types/react-dom':
     specifier: ^18.2.15
     version: 18.2.15
@@ -686,8 +692,8 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
-  /@material-tailwind/react@2.1.4(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-dRHnC+Ka0IJ8KSfToBmlJRy9gAPv6F1oVZb+ABOPcIR8LxBhAXXhMAjtQf9ilG0nq2VK9AISsYFtyWBsr8Y88A==}
+  /@material-tailwind/react@2.1.0(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-Z1YEy5oFbMJDuJ85ArPPVPgTexM/RvhkMNc/KlmJEeCAP4pQ1ImaBuckK1BKuRXUtZex+TlpFW+r49nkaes/Rg==}
     peerDependencies:
       react: ^16 || ^17 || ^18
       react-dom: ^16 || ^17 || ^18
@@ -796,7 +802,7 @@ packages:
     dependencies:
       immer: 10.0.3
       react: 18.2.0
-      react-redux: 9.0.4(@types/react@18.2.37)(react@18.2.0)(redux@5.0.0)
+      react-redux: 9.0.4(@types/react@18.2.19)(react@18.2.0)(redux@5.0.0)
       redux: 5.0.0
       redux-thunk: 3.1.0(redux@5.0.0)
       reselect: 5.0.1
@@ -886,11 +892,11 @@ packages:
   /@types/react-dom@18.2.15:
     resolution: {integrity: sha512-HWMdW+7r7MR5+PZqJF6YFNSCtjz1T0dsvo/f1BV6HkV+6erD/nA7wd9NM00KVG83zf2nJ7uATPO9ttdIPvi3gg==}
     dependencies:
-      '@types/react': 18.2.37
+      '@types/react': 18.2.19
     dev: true
 
-  /@types/react@18.2.37:
-    resolution: {integrity: sha512-RGAYMi2bhRgEXT3f4B92WTohopH6bIXw05FuGlmJEnv/omEn190+QYEIYxIAuIBdKgboYYdVved2p1AxZVQnaw==}
+  /@types/react@18.2.19:
+    resolution: {integrity: sha512-e2S8wmY1ePfM517PqCG80CcE48Xs5k0pwJzuDZsfE8IZRRBfOMCF+XqnFxu6mWtyivum1MQm4aco+WIt6Coimw==}
     dependencies:
       '@types/prop-types': 15.7.10
       '@types/scheduler': 0.16.6
@@ -2555,6 +2561,11 @@ packages:
     resolution: {integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==}
     dev: true
 
+  /install@0.13.0:
+    resolution: {integrity: sha512-zDml/jzr2PKU9I8J/xyZBQn8rPCAY//UOYNmR01XwNwyfhEWObo2SWfSl1+0tm1u6PhxLwDnfsT/6jB7OUxqFA==}
+    engines: {node: '>= 0.10'}
+    dev: false
+
   /internal-slot@1.0.6:
     resolution: {integrity: sha512-Xj6dv+PsbtwyPpEflsejS+oIZxmMlV44zAhG479uYu89MsjcYOhCFnNyKrkJrihbsiasQyY0afoCl/9BLR65bg==}
     engines: {node: '>= 0.4'}
@@ -3389,7 +3400,7 @@ packages:
   /react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
 
-  /react-redux@9.0.4(@types/react@18.2.37)(react@18.2.0)(redux@5.0.0):
+  /react-redux@9.0.4(@types/react@18.2.19)(react@18.2.0)(redux@5.0.0):
     resolution: {integrity: sha512-9J1xh8sWO0vYq2sCxK2My/QO7MzUMRi3rpiILP/+tDr8krBHixC6JMM17fMK88+Oh3e4Ae6/sHIhNBgkUivwFA==}
     peerDependencies:
       '@types/react': ^18.2.25
@@ -3404,7 +3415,7 @@ packages:
       redux:
         optional: true
     dependencies:
-      '@types/react': 18.2.37
+      '@types/react': 18.2.19
       '@types/use-sync-external-store': 0.0.3
       react: 18.2.0
       redux: 5.0.0
@@ -3809,6 +3820,10 @@ packages:
     engines: {node: '>= 0.8.0'}
     dependencies:
       svg.js: 2.7.1
+    dev: false
+
+  /sweetalert2@11.10.2:
+    resolution: {integrity: sha512-BYlIxGw6OF9Rw2z1wlnh1U+fvHHkvtg4BGyimV9nZxQRGvCBfx9uonxgwuYpJuYqCtM+2W1KOm8iMIEb/2v7Hg==}
     dev: false
 
   /synckit@0.8.5:

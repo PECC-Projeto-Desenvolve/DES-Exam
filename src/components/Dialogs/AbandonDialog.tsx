@@ -35,17 +35,17 @@ function AbandonDialog({
       <Dialog
         open={open}
         handler={handleOpen}
-        className="border border-gray-800 bg-modal-bg"
+        className="border border-gray-800 bg-white"
       >
         <DialogHeader className='flex rounded-t-lg'>
           <div className='w-full'>
-            <Typography variant="h4" className='text-blue-gray-100'>
+            <Typography variant="h4" className='text-blue-gray-900'>
             Você deseja abandonar?
             </Typography>
 
             <div className='flex w-full justify-between' >
-              <Typography variant='lead' className='text-blue-gray-300'>
-                <strong className='text-blue-gray-300'>cidade</strong> - data
+              <Typography variant='lead' className='text-blue-gray-700'>
+                <strong className='text-blue-gray-700'>cidade</strong> - data
               </Typography>
 
             </div>

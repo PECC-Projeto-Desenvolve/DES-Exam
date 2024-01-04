@@ -59,6 +59,15 @@ function FinishDialog({
       questionStates[question.id] && questionStates[question.id].selected
     );
 
+    if (!allSelected) {
+      return (
+        <>
+          <Typography variant='paragraph' color='white' className='text-justify leading-5'>Você possui questões ainda não marcadas</Typography>
+          <Button color='orange' disabled>Finalizar</Button>
+        </>
+      );
+    }
+
     if (allSelected) {
       return (
         <>

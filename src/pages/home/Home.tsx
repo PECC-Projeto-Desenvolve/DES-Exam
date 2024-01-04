@@ -87,8 +87,16 @@ function Home() {
           Desenvolve
         </Typography>
 
-        <Button className="flex items-center gap-4">
-          Sair <LogOut size={20} />
+        <Button
+          className="flex items-center gap-4"
+          color='red'
+          onClick={() => {
+            navigate('/login');
+            localStorage.removeItem('authenticated_user');
+            localStorage.removeItem('authToken');
+          }}
+        >
+          Sair <LogOut size={18} />
         </Button>
       </Navbar>
 

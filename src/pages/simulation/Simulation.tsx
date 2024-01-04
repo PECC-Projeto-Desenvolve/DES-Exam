@@ -1,6 +1,6 @@
 import React from 'react';
 import { QuestionContainer } from '../../components';
-import { Button } from '@material-tailwind/react';
+import { Button, Tooltip } from '@material-tailwind/react';
 import { ChevronRight, ChevronLeft, Map, Settings } from 'lucide-react';
 import { MapDialog } from '../../components/Dialogs/MapDialog';
 
@@ -119,7 +119,11 @@ function Simulation(): JSX.Element {
       <div className='flex w-full flex-col gap-4'>
         <div className='flex justify-between'>
           <div className='flex gap-2'>
-            <Button variant='filled' size="sm" color='orange'>Finalizar</Button>
+            <Tooltip content='Você pode finalizar apenas quando marcar todas as questões'>
+              <span>
+                <Button variant='filled' size="sm" color='orange' className='h-full' disabled>Finalizar</Button>
+              </span>
+            </Tooltip>
             <Button variant='filled' size="sm" color='red' onClick={() => handleOpenAbandonDialog()}>Abandonar</Button>
           </div>
           <div>

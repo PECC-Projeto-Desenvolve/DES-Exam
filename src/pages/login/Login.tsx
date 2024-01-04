@@ -1,42 +1,92 @@
-import { Button, Input } from '@material-tailwind/react';
+import { Button, Input, Typography } from '@material-tailwind/react';
 import React from 'react';
 import Logo from '../../assets/logo-pd.svg';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 function Login() {
   const [cpf, setCpf] = React.useState<string>('');
   const [birthday, setBirthday] = React.useState<string>('');
+  const [cpfAlert, setCpfAlert] = React.useState<boolean>(false);
+  const [birthdayAlert, setBirthdayAlert] = React.useState<boolean>(false);
   const navigate = useNavigate();
 
   const user = {
-    cpf: '12345678900',
-    birthday: '01012000',
+    cpf: '13225040401',
+    birthday: '1998-01-26',
   };
 
   const tokenGenerate = () => {
-    const array = new Uint8Array(16); // 8 bytes = 64 bits
+    const array = new Uint8Array(16);
     window.crypto.getRandomValues(array);
     return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
   };
+
+  const formattedCPF = cpf.replace(
+    /^(\d{3})(\d{3})(\d{3})(\d{2})$/,
+    '$1.$2.$3-$4'
+  );
 
   const userVerify = () => {
     if (cpf === user.cpf && birthday === user.birthday) {
       const token = tokenGenerate();
       localStorage.setItem('authToken', token);
-      alert('authenticated');
-      navigate('/home'); // Redireciona para a página home
+
+      const authenticated_user = {
+        cpf,
+        birthday,
+        token
+      };
+
+      localStorage.setItem('authenticated_user', JSON.stringify(authenticated_user));
+      localStorage.setItem('confirmedFont', '16');
+
+      let timerInterval;
+      Swal.fire({
+        title: 'Seja bem vindo!',
+        html: 'Você será redirecionado em <b></b> millisegundos.',
+        timer: 3000,
+        icon: 'success',
+        timerProgressBar: true,
+        didOpen: () => {
+          Swal.showLoading();
+          const timer = Swal.getPopup().querySelector('b');
+          timerInterval = setInterval(() => {
+            timer.textContent = `${Swal.getTimerLeft()}`;
+          }, 100);
+        },
+        willClose: () => {
+          clearInterval(timerInterval);
+        }
+      }).then((result) => {
+        if (result.dismiss === Swal.DismissReason.timer) {
+          navigate('/home');
+        }
+      });
     } else {
-      alert('not authenticated');
+      if (!cpf || !birthday) {
+        return;
+      }
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'As credenciais estão incorretas',
+      });
     }
   };
 
   const handleLogin = () => {
-    if (cpf) {
-      localStorage.setItem('cpf', cpf);
+    if (!cpf) {
+      setCpfAlert(true);
+    } else if ( cpf ) {
+      setCpfAlert(false);
     }
 
-    if (birthday) {
-      localStorage.setItem('birth', birthday);
+    if (!birthday) {
+      setBirthdayAlert(true);
+    } else if ( cpf ) {
+      setBirthdayAlert(false);
     }
 
     userVerify();
@@ -45,23 +95,37 @@ function Login() {
   return (
     <section className='flex h-screen w-screen flex-col items-center justify-center bg-[##0094FF]'>
       <img src={Logo} className='mb-12 w-[10rem]'/>
-      <div className='flex h-fit w-fit flex-col gap-2 rounded-md bg-white p-4'>
-        <Input
-          crossOrigin={false}
-          label='CPF'
-          size='lg'
-          className='w-[25rem]'
-          value={cpf}
-          onChange={(e) => setCpf(e.target.value)}
-        />
-        <Input
-          crossOrigin={false}
-          label='Data de nascimento'
-          size='lg'
-          className='w-[25rem]'
-          value={birthday}
-          onChange={(e) => setBirthday(e.target.value)}
-        />
+      <form className='flex h-fit w-[28rem] flex-col gap-2 rounded-md bg-white p-4 transition-transform'>
+        <span className='flex flex-col transition-all'>
+          <Input
+            crossOrigin={undefined}
+            label='CPF'
+            size='lg'
+            className='w-full'
+            error={cpfAlert}
+            value={formattedCPF}
+            onChange={event =>
+              setCpf(event.target.value.replace(/[^0-9]/g, ''))
+            }
+          />
+
+          {cpfAlert && <Typography variant='small' color={'red'} className='animate-fade-in-down'>Preencha o campo com o seu <b>CPF</b>!</Typography>}
+        </span>
+
+        <span className='flex flex-col transition-all'>
+
+          <Input
+            crossOrigin={undefined}
+            label='Data de nascimento'
+            size='lg'
+            className='w-full'
+            type='date'
+            error={birthdayAlert}
+            value={birthday}
+            onChange={event => setBirthday(event.target.value)}
+          />
+          {birthdayAlert && <Typography variant='small' color={'red'} className='animate-fade-in-down'>Preencha o campo com a sua data de <b>nascimento</b>!</Typography>}
+        </span>
         <Button
           color='green'
           className='mt-6 w-full'
@@ -69,7 +133,7 @@ function Login() {
         >
             Acessar
         </Button>
-      </div>
+      </form>
     </section>
   );
 }
