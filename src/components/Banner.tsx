@@ -42,14 +42,14 @@ function Banner({ title, content, buttonLabel, hasCountdown, schedule, onClick }
             <>
               <div className='flex w-full items-end justify-between'>
                 <Typography variant='lead'>A prova irá inicar às <strong>{schedule}</strong></Typography>
-                <Button disabled className='flex items-center gap-2 bg-secondary-500 disabled:bg-secondary-200'>
+                <Button disabled className='flex items-center gap-2 bg-secondary-400 disabled:bg-secondary-200'>
                   <Timer size={20} />
                 Aguarde</Button>
               </div>
             </>
           ) : (
             <>
-              <Button onClick={onClick} className='bg-secondary-500'>{buttonLabel}</Button>
+              <Button onClick={onClick} className='bg-secondary-400'>{buttonLabel}</Button>
             </>
           )
         }

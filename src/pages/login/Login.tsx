@@ -9,12 +9,8 @@ function Login() {
   const [birthday, setBirthday] = React.useState<string>('');
   const [cpfAlert, setCpfAlert] = React.useState<boolean>(false);
   const [birthdayAlert, setBirthdayAlert] = React.useState<boolean>(false);
+  const [disbleInput, setDisableInput] = React.useState<boolean>(false);
   const navigate = useNavigate();
-
-  const user = {
-    cpf: '13225040401',
-    birthday: '1998-01-26',
-  };
 
   const tokenGenerate = () => {
     const array = new Uint8Array(16);
@@ -27,54 +23,74 @@ function Login() {
     '$1.$2.$3-$4'
   );
 
-  const userVerify = () => {
-    if (cpf === user.cpf && birthday === user.birthday) {
-      const token = tokenGenerate();
-      localStorage.setItem('authToken', token);
+  const userVerify = async () => {
+    if (!cpf || !birthday) {
+      return;
+    }
 
-      const authenticated_user = {
-        cpf,
-        birthday,
-        token
-      };
-
-      localStorage.setItem('authenticated_user', JSON.stringify(authenticated_user));
-      localStorage.setItem('confirmedFont', '16');
-
-      let timerInterval;
-      Swal.fire({
-        title: 'Seja bem vindo!',
-        html: 'Você será redirecionado em <b></b> millisegundos.',
-        timer: 3000,
-        icon: 'success',
-        timerProgressBar: true,
-        didOpen: () => {
-          Swal.showLoading();
-          const timer = Swal.getPopup().querySelector('b');
-          timerInterval = setInterval(() => {
-            timer.textContent = `${Swal.getTimerLeft()}`;
-          }, 100);
-        },
-        willClose: () => {
-          clearInterval(timerInterval);
-        }
-      }).then((result) => {
-        if (result.dismiss === Swal.DismissReason.timer) {
-          navigate('/home');
-        }
-      });
-    } else {
-      if (!cpf || !birthday) {
-        return;
+    try {
+      const response = await fetch(`http://ab25ca709e5c8435883fade949e2d194-1915188898.us-east-1.elb.amazonaws.com/form/cpf/${cpf}`);
+      if (!response.ok) {
+        throw new Error('Falha na requisição');
       }
 
+      const userData = await response.json();
+      if (userData.cpf === cpf && userData.dataNasc === birthday) {
+        const token = tokenGenerate();
+        localStorage.setItem('authToken', token);
+
+        setDisableInput(true);
+
+        const authenticated_user = {
+          cpf,
+          birthday,
+          token,
+          name: userData.nomeCompleto
+        };
+
+        localStorage.setItem('authenticated_user', JSON.stringify(authenticated_user));
+        localStorage.setItem('confirmedFont', '16');
+
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          }
+        });
+        Toast.fire({
+          icon: 'success',
+          title: 'Login realizado com sucesso',
+          text: 'Você será redirecionado em instantes',
+        }).then((result) => {
+          if (result.dismiss === Swal.DismissReason.timer) {
+            navigate('/home');
+          }
+        });
+
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'As credenciais estão incorretas',
+        });
+      }
+    } catch (error) {
+      console.error('Erro na autenticação', error);
+      // Tratar erro de requisição aqui
       Swal.fire({
         icon: 'error',
-        title: 'Oops...',
-        text: 'As credenciais estão incorretas',
+        title: 'Erro de conexão',
+        text: 'Não foi possível conectar à API',
       });
     }
   };
+
+
 
   const handleLogin = () => {
     if (!cpf) {
@@ -104,6 +120,7 @@ function Login() {
             className='w-full'
             error={cpfAlert}
             value={formattedCPF}
+            disabled={disbleInput}
             onChange={event =>
               setCpf(event.target.value.replace(/[^0-9]/g, ''))
             }
@@ -122,6 +139,7 @@ function Login() {
             type='date'
             error={birthdayAlert}
             value={birthday}
+            disabled={disbleInput}
             onChange={event => setBirthday(event.target.value)}
           />
           {birthdayAlert && <Typography variant='small' color={'red'} className='animate-fade-in-down'>Preencha o campo com a sua data de <b>nascimento</b>!</Typography>}
@@ -129,6 +147,7 @@ function Login() {
         <Button
           color='green'
           className='mt-6 w-full'
+          disabled={disbleInput}
           onClick={() => handleLogin()}
         >
             Acessar

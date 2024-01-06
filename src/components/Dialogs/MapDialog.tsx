@@ -20,6 +20,7 @@ import Timer from '../Time';
  *
  * @typedef {Object} IQuestionTypes
  * @property {number} id - Unique identifier for the question.
+ * @property {number} position - Alternative position on the array
  * @property {string} title - Title of the question.
  * @property {string} statement - Full statement of the question.
  * @property {string} rightAnswer - The correct answer for the question.
@@ -33,6 +34,7 @@ import Timer from '../Time';
  */
 type IQuestionTypes = {
     id: number;
+    position: number;
     title: string;
     statement: string;
     rightAnswer: string;
@@ -133,7 +135,7 @@ function MapDialog({
                 <span key={question.id} data-aos={localStorage.getItem('mapOpened') != '1' && 'fade-down'} data-aos-delay={50 * index} className='w-full' onClick={() => handleQuestionIndex(index)}>
                   <QuestionItem
                     index={index}
-                    answer={1}
+                    answer={currentQuestionState && currentQuestionState.position}
                     questionState={questionState}
                     statement={`${stringResizer(question.statement, 50)} ...`}
                   />

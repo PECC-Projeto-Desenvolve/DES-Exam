@@ -26,6 +26,10 @@ function AbandonDialog({
     localStorage.removeItem('mapOpened');
     localStorage.removeItem('questionStates');
 
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    }
+
     navigate('/home');
 
   };

@@ -10,6 +10,7 @@ import { RootState } from '../../store/store';
 import { AccessibilityDialog } from '../../components/Dialogs/AccessibilityDialog';
 import { FinishDialog } from '../../components/Dialogs/FinishDialog';
 import { AbandonDialog } from '../../components/Dialogs/AbandonDialog';
+import Swal from 'sweetalert2';
 
 function Simulation(): JSX.Element {
   const [open, setOpen] = React.useState(false);
@@ -21,10 +22,17 @@ function Simulation(): JSX.Element {
 
   const [examPosition, setExamPosition] = React.useState(0);
 
+  const [data, setData] = React.useState({ name: '', __questions__: [] });
+
+  const [user, serUser] = React.useState<string>('');
+
   const dispatch = useDispatch();
-  const examId = '01b92066-e100-4c0a-8ce8-c95018fde325';
+  const examId = 'adff9594-3349-4c53-9977-477ab37f5809';
 
   React.useEffect(() => {
+    const authenticatedUser = JSON.parse(localStorage.getItem('authenticated_user'));
+    serUser(authenticatedUser.name);
+
     fetch(`http://localhost:3000/exams/${examId}`)
       .then(response => response.json())
       .then(data => {
@@ -34,6 +42,7 @@ function Simulation(): JSX.Element {
       .catch(error => console.error('Erro ao buscar exames:', error));
   }, [dispatch]);
 
+  //   @ts-ignore
   const examState = useSelector((state: RootState) => state.exam.exam);
 
   React.useEffect(() => {
@@ -41,6 +50,12 @@ function Simulation(): JSX.Element {
       setQuestions(examState.__questions__);
     }
   }, [examState]);
+
+  //   React.useEffect(() => {
+  //     if (document.documentElement.requestFullscreen) {
+  //       document.documentElement.requestFullscreen();
+  //     }
+  //   }, []);
 
   const handleOpen = () => setOpen((cur) => !cur);
 
@@ -88,6 +103,44 @@ function Simulation(): JSX.Element {
     setExamPosition(examPosition - 1);
   };
 
+  React.useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState !== 'visible') {
+        Swal.fire({
+          title: 'Você mudou de aba!',
+          text: 'A troca de aba não é permitida durante esta atividade. Na realização da prova oficial você não será permitido voltar para a prova',
+          icon: 'warning',
+          confirmButtonText: 'Entendi'
+        });
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // Limpeza: remover o event listener quando o componente é desmontado
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, []);
+
+  const getUserExam = () => {
+    const storedQuestions = JSON.parse(localStorage.getItem('questionStates'));
+    const extractedQuestions = storedQuestions
+      ? Object.keys(storedQuestions).map(key => ({
+        questionId: parseInt(key, 10),
+        id: storedQuestions[key].id,
+        position: storedQuestions[key].position
+      }))
+      : [];
+
+    setData({ name: user, __questions__: extractedQuestions });
+  };
+
+  React.useEffect(() => {
+    console.log(data);
+  }, [data]);
+
+
   return (
     <>
 
@@ -109,6 +162,7 @@ function Simulation(): JSX.Element {
         handleOpen={handleOpenFinishDialog}
         questions={questions}
         handleQuestionIndex={handleQuestionIndex}
+        handleFinish={() => getUserExam()}
       />
 
       <AbandonDialog
@@ -137,8 +191,13 @@ function Simulation(): JSX.Element {
             className='flex items-center gap-2'
             size="md"
             disabled={examPosition == 0}
-            onClick={() => handleBackButton()}> <ChevronLeft /> Voltar</Button>
-          <Button className='flex items-center gap-3' size="md" onClick={handleOpenMap}>
+            color='white'
+            onClick={() => handleBackButton()}
+          >
+            <ChevronLeft />
+            Voltar
+          </Button>
+          <Button className='flex items-center gap-3' size="md" onClick={handleOpenMap} color='indigo'>
             <Map />
               Mapa
           </Button>
@@ -158,8 +217,12 @@ function Simulation(): JSX.Element {
                 variant="text"
                 className='flex items-center gap-2'
                 size="sm"
+                color='white'
                 onClick={() => setExamPosition(examPosition + 1)}
-              >Avançar <ChevronRight /></Button>
+              >
+                Avançar
+                <ChevronRight />
+              </Button>
             </>
           )}
 

@@ -1,6 +1,5 @@
 import React from 'react';
 import { MultiCheckboxes } from './components/MultiCheckboxes';
-import { SaveButton } from '../SaveButton';
 import { useFontSize } from '../../context/FontSize';
 
 /**
@@ -43,6 +42,7 @@ interface IQuestionContainerProps {
  *
  * @typedef {Object} AlternativeItem
  * @property {number} id - Unique identifier for the alternative item.
+ * @property {number} position - Alternative position on the array
  * @property {string} text - The text content of the alternative.
  * @property {number} questionId - Identifier of the question to which this alternative belongs.
  * @property {string} createdAt - Timestamp of when the alternative was created.
@@ -51,6 +51,7 @@ interface IQuestionContainerProps {
  */
 interface AlternativeItem {
     id: number;
+    position: number;
     text: string;
     questionId: number;
     createdAt: string;
@@ -68,7 +69,6 @@ interface AlternativeItem {
  * @returns {JSX.Element} A React component rendering the current question, its statement, and alternatives.
  */
 function QuestionContainer({ question, questionIndex, onLastQuestion }: IQuestionContainerProps): JSX.Element {
-
   const [alternatives, setAlternatives] = React.useState([]);
   // const [alternativeState, setAlternativeState] = React.useState();
   const { fontSize } = useFontSize();
@@ -83,6 +83,7 @@ function QuestionContainer({ question, questionIndex, onLastQuestion }: IQuestio
         .then(data => {
           const newAlternatives = data.map((item: AlternativeItem) => ({
             id: item.id,
+            position: item.position,
             label: item.text,
             selected: false,
             scratched: false,
@@ -113,11 +114,12 @@ function QuestionContainer({ question, questionIndex, onLastQuestion }: IQuestio
  * Updates the state of a specific checkbox and stores it in localStorage.
  *
  * @param {number} id - The ID of the checkbox being updated.
+ * @param {number} position - Alternative position on the checkbox
  * @param {object} state - The new state of the checkbox, including selected and saved properties.
  */
-  const handleCheckboxStateChange = (id, state) => {
+  const handleCheckboxStateChange = (id, position, state) => {
     const currentQuestionId = currentQuestion.id;
-    const checkboxState = { id, selected: state.selected, saved: state.saved };
+    const checkboxState = { id, position: position, selected: state.selected, saved: state.saved };
 
     const storedState = localStorage.getItem('questionStates');
     const questionStates = storedState ? JSON.parse(storedState) : {};
@@ -161,7 +163,7 @@ function QuestionContainer({ question, questionIndex, onLastQuestion }: IQuestio
               <p className="select-none text-white" style={{ fontSize: `${fontSize}px`}}>
                 {currentQuestion.title}
               </p>
-              <SaveButton />
+              {/* <SaveButton /> */}
             </div>
 
             <div className="w-full space-y-8 p-8">

@@ -19,3 +19,26 @@
   .animate-blink {
     animation: blink 1s step-start infinite;
   }
+
+p,
+a,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    user-select: none;
+}
+
+.carousel-arrow-left, .carousel-arrow-right {
+    color: black !important; /* Altera a cor para preto */
+  }
+
+.stroke-red {
+    stroke: red;
+}
+
+.my-carousel svg {
+    stroke: black; /* Exemplo para mudar a cor do SVG para vermelho */
+  }
