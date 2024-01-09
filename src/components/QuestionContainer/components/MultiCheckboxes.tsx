@@ -7,7 +7,7 @@ import { savedStyle, savedText, scratchedStyle, scratchedText, selectedStyle, se
  *
  * @typedef {Object} CheckboxItem
  * @property {number} id - Unique identifier for the checkbox item.
- * * @property {number} position - Alternative position on the array
+ * @property {number} position - Alternative position on the array
  * @property {string} label - Display label for the checkbox item.
  * @property {boolean} selected - Indicates if the checkbox is selected.
  * @property {boolean} scratched - Indicates if the checkbox is scratched.

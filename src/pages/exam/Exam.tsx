@@ -22,7 +22,7 @@ function Exam(): JSX.Element {
   const [examPosition, setExamPosition] = React.useState(0);
 
   const dispatch = useDispatch();
-  const examId = '7de8e700-6e0b-4dfd-9b50-ea196c2d84fb';
+  const examId = '4978f8c0-d0ad-4c2f-ab98-f0d2daa9942c';
 
   React.useEffect(() => {
     fetch(`http://localhost:3000/exams/${examId}`)

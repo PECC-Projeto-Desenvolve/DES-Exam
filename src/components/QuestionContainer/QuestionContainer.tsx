@@ -1,6 +1,7 @@
 import React from 'react';
 import { MultiCheckboxes } from './components/MultiCheckboxes';
 import { useFontSize } from '../../context/FontSize';
+import { QuestionContainerSkelleton } from '../';
 
 /**
  * @typedef {Object} IQuestionTypes
@@ -151,7 +152,9 @@ function QuestionContainer({ question, questionIndex, onLastQuestion }: IQuestio
  * @returns {JSX.Element|String} The MultiCheckboxes component or a loading message.
  */
   if (!currentQuestion) {
-    return <div>Carregando questão...</div>;
+    return (
+      <QuestionContainerSkelleton />
+    );
   }
 
   return (

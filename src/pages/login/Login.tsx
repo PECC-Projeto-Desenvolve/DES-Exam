@@ -129,7 +129,7 @@ function Login() {
           {cpfAlert && <Typography variant='small' color={'red'} className='animate-fade-in-down'>Preencha o campo com o seu <b>CPF</b>!</Typography>}
         </span>
 
-        <span className='flex flex-col transition-all'>
+        <span className='mt-2 flex flex-col transition-all'>
 
           <Input
             crossOrigin={undefined}

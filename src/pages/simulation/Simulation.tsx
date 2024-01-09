@@ -22,12 +22,12 @@ function Simulation(): JSX.Element {
 
   const [examPosition, setExamPosition] = React.useState(0);
 
-  const [data, setData] = React.useState({ name: '', __questions__: [] });
+  const [data, setData] = React.useState({ name: '', examId: '', __questions__: [] });
 
   const [user, serUser] = React.useState<string>('');
 
   const dispatch = useDispatch();
-  const examId = 'adff9594-3349-4c53-9977-477ab37f5809';
+  const examId = '4978f8c0-d0ad-4c2f-ab98-f0d2daa9942c';
 
   React.useEffect(() => {
     const authenticatedUser = JSON.parse(localStorage.getItem('authenticated_user'));
@@ -125,6 +125,7 @@ function Simulation(): JSX.Element {
 
   const getUserExam = () => {
     const storedQuestions = JSON.parse(localStorage.getItem('questionStates'));
+    const storedExamData = JSON.parse(localStorage.getItem('exam_simulation'));
     const extractedQuestions = storedQuestions
       ? Object.keys(storedQuestions).map(key => ({
         questionId: parseInt(key, 10),
@@ -133,7 +134,12 @@ function Simulation(): JSX.Element {
       }))
       : [];
 
-    setData({ name: user, __questions__: extractedQuestions });
+    setData(
+      {
+        name: user,
+        examId: storedExamData.id,
+        __questions__: extractedQuestions
+      });
   };
 
   React.useEffect(() => {

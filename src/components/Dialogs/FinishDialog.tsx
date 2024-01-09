@@ -33,7 +33,7 @@ interface IFinishDialogProps {
     open: boolean;
     questions: IQuestionTypes[];
     handleQuestionIndex: (questionIndex: number) => void;
-    handleFinish: () => void;
+    handleFinish?: () => void;
 }
 
 function FinishDialog({
