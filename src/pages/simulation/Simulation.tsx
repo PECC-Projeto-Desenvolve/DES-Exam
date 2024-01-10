@@ -27,13 +27,13 @@ function Simulation(): JSX.Element {
   const [user, serUser] = React.useState<string>('');
 
   const dispatch = useDispatch();
-  const examId = '4978f8c0-d0ad-4c2f-ab98-f0d2daa9942c';
+  //   const examId = `${import.meta.VITE_SIMULATION_ID}`;
 
   React.useEffect(() => {
     const authenticatedUser = JSON.parse(localStorage.getItem('authenticated_user'));
     serUser(authenticatedUser.name);
 
-    fetch(`http://localhost:3000/exams/${examId}`)
+    fetch(`${import.meta.env.VITE_API_URL}/exams/${import.meta.env.VITE_SIMULATION_ID}`)
       .then(response => response.json())
       .then(data => {
         dispatch(populateExam(data));

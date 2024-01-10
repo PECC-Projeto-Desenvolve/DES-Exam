@@ -25,7 +25,7 @@ function Exam(): JSX.Element {
   const examId = '4978f8c0-d0ad-4c2f-ab98-f0d2daa9942c';
 
   React.useEffect(() => {
-    fetch(`http://localhost:3000/exams/${examId}`)
+    fetch(`${import.meta.env.VITE_API_URL}/exams/${examId}`)
       .then(response => response.json())
       .then(data => {
         dispatch(populateExam(data));

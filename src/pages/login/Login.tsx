@@ -29,7 +29,7 @@ function Login() {
     }
 
     try {
-      const response = await fetch(`http://ab25ca709e5c8435883fade949e2d194-1915188898.us-east-1.elb.amazonaws.com/form/cpf/${cpf}`);
+      const response = await fetch(`${import.meta.env.VITE_LOGIN_API}/form/cpf/${cpf}`);
       if (!response.ok) {
         throw new Error('Falha na requisição');
       }

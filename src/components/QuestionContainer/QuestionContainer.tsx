@@ -79,7 +79,7 @@ function QuestionContainer({ question, questionIndex, onLastQuestion }: IQuestio
 
   React.useEffect(() => {
     if (currentQuestion && currentQuestion.id) {
-      fetch(`http://localhost:3000/alternatives/${currentQuestion.id}`)
+      fetch(`${import.meta.env.VITE_API_URL}/alternatives/${currentQuestion.id}`)
         .then(response => response.json())
         .then(data => {
           const newAlternatives = data.map((item: AlternativeItem) => ({
