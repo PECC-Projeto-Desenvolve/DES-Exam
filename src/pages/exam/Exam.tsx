@@ -75,7 +75,6 @@ function Exam(): JSX.Element {
   const [onEnd, setOnEnd] = React.useState<boolean>(false);
 
   const handleEnd = () => {
-    console.log('no fim porra');
     setOnEnd(!onEnd);
   };
 

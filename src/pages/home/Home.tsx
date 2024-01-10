@@ -41,7 +41,12 @@ function Home() {
     const newFont = localStorage.getItem('confirmedFont');
     const newUser = JSON.parse(localStorage.getItem('authenticated_user') || '{}' );
 
-    setUser(newUser);
+    if (Object.keys(newUser).length === 0) {
+      navigate('/');
+    } else {
+      setUser(newUser);
+    }
+
     setFont(Number(newFont));
   }, [localStorage.getItem('confirmedFont'), localStorage.getItem('authenticated_user')]);
 

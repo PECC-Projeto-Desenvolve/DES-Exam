@@ -10,6 +10,7 @@ import { RootState } from '../../store/store';
 import { AccessibilityDialog } from '../../components/Dialogs/AccessibilityDialog';
 import { FinishDialog } from '../../components/Dialogs/FinishDialog';
 import { AbandonDialog } from '../../components/Dialogs/AbandonDialog';
+import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 function Simulation(): JSX.Element {
@@ -18,20 +19,30 @@ function Simulation(): JSX.Element {
   const [openFinishDialog, setOpenFinishDialog] = React.useState(false);
   const [openAbandonDialog, setOpenAbandonDialog] = React.useState(false);
 
+
   const [questions, setQuestions] = React.useState([]);
 
   const [examPosition, setExamPosition] = React.useState(0);
 
   const [data, setData] = React.useState({ name: '', examId: '', __questions__: [] });
 
-  const [user, serUser] = React.useState<string>('');
+  const [user, setUser] = React.useState<string>('');
+
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
   //   const examId = `${import.meta.VITE_SIMULATION_ID}`;
 
   React.useEffect(() => {
-    const authenticatedUser = JSON.parse(localStorage.getItem('authenticated_user'));
-    serUser(authenticatedUser.name);
+    const authenticatedUserStr = localStorage.getItem('authenticated_user');
+    if (!authenticatedUserStr) {
+      navigate('/');
+      return;
+    }
+
+    const authenticatedUser = JSON.parse(authenticatedUserStr);
+
+    setUser(authenticatedUser.name);
 
     fetch(`${import.meta.env.VITE_API_URL}/exams/${import.meta.env.VITE_SIMULATION_ID}`)
       .then(response => response.json())
@@ -90,7 +101,6 @@ function Simulation(): JSX.Element {
   const [onEnd, setOnEnd] = React.useState<boolean>(false);
 
   const handleEnd = () => {
-    console.log('no fim porra');
     setOnEnd(!onEnd);
   };
 
@@ -117,7 +127,6 @@ function Simulation(): JSX.Element {
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
-    // Limpeza: remover o event listener quando o componente é desmontado
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };

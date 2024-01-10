@@ -12,6 +12,19 @@ function Login() {
   const [disbleInput, setDisableInput] = React.useState<boolean>(false);
   const navigate = useNavigate();
 
+  const checkIfMobile = () => {
+    const userAgent = navigator.userAgent || navigator.vendor;
+
+    return /android|ipad|iphone|ipod/i.test(userAgent);
+  };
+
+  React.useEffect(() => {
+    if (checkIfMobile()) {
+      navigate('/mobile');
+      return;
+    }
+  }, []);
+
   const tokenGenerate = () => {
     const array = new Uint8Array(16);
     window.crypto.getRandomValues(array);
