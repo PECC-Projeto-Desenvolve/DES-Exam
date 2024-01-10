@@ -29,7 +29,12 @@ function Login() {
     }
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_LOGIN_API}/form/cpf/${cpf}`);
+      const response = await fetch(`${import.meta.env.VITE_LOGIN_API}/form/cpf/${cpf}`, {
+        headers: {
+          'api-key': `${import.meta.env.VITE_API_KEY}`
+        }
+      });
+
       if (!response.ok) {
         throw new Error('Falha na requisição');
       }
