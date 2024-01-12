@@ -1,8 +1,12 @@
 import { Button, Input, Typography } from '@material-tailwind/react';
 import React from 'react';
-import Logo from '../../assets/logo-pd.svg';
+import Logo from '../../assets/logo-pd-colored.svg';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import BG from '../../assets/bg.png';
+
+import Aos from 'aos';
+import 'aos/dist/aos.css';
 
 function Login() {
   const [cpf, setCpf] = React.useState<string>('');
@@ -23,6 +27,10 @@ function Login() {
       navigate('/mobile');
       return;
     }
+  }, []);
+
+  React.useEffect(() => {
+    Aos.init({ duration: 5000 });
   }, []);
 
   const tokenGenerate = () => {
@@ -127,50 +135,56 @@ function Login() {
   };
 
   return (
-    <section className='flex h-screen w-screen flex-col items-center justify-center bg-[##0094FF]'>
-      <img src={Logo} className='mb-12 w-[10rem]'/>
-      <form className='flex h-fit w-[28rem] flex-col gap-2 rounded-md bg-white p-4 transition-transform'>
-        <span className='flex flex-col transition-all'>
-          <Input
-            crossOrigin={undefined}
-            label='CPF'
+    <section className='flex h-screen w-screen items-end justify-center bg-purple-300'>
+
+      <img src={BG}/>
+
+      <aside className='flex h-full w-full flex-col items-center justify-center bg-white'>
+        <img src={Logo} className='mb-12 w-[10rem]'/>
+        <form className='flex h-fit w-[28rem] flex-col gap-2 rounded-md bg-white p-4 transition-transform'>
+          <span className='flex flex-col transition-all'>
+            <Input
+              crossOrigin={undefined}
+              label='CPF'
+              size='lg'
+              className='w-full'
+              error={cpfAlert}
+              value={formattedCPF}
+              disabled={disbleInput}
+              onChange={event =>
+                setCpf(event.target.value.replace(/[^0-9]/g, ''))
+              }
+            />
+
+            {cpfAlert && <Typography variant='small' color={'red'} className='animate-fade-in-down'>Preencha o campo com o seu <b>CPF</b>!</Typography>}
+          </span>
+
+          <span className='mt-2 flex flex-col transition-all'>
+
+            <Input
+              crossOrigin={undefined}
+              label='Data de nascimento'
+              size='lg'
+              className='w-full'
+              type='date'
+              error={birthdayAlert}
+              value={birthday}
+              disabled={disbleInput}
+              onChange={event => setBirthday(event.target.value)}
+            />
+            {birthdayAlert && <Typography variant='small' color={'red'} className='animate-fade-in-down'>Preencha o campo com a sua data de <b>nascimento</b>!</Typography>}
+          </span>
+          <Button
+            data-aos='fade-up'
             size='lg'
-            className='w-full'
-            error={cpfAlert}
-            value={formattedCPF}
+            className='mt-6 w-full bg-[#8C44FF]'
             disabled={disbleInput}
-            onChange={event =>
-              setCpf(event.target.value.replace(/[^0-9]/g, ''))
-            }
-          />
-
-          {cpfAlert && <Typography variant='small' color={'red'} className='animate-fade-in-down'>Preencha o campo com o seu <b>CPF</b>!</Typography>}
-        </span>
-
-        <span className='mt-2 flex flex-col transition-all'>
-
-          <Input
-            crossOrigin={undefined}
-            label='Data de nascimento'
-            size='lg'
-            className='w-full'
-            type='date'
-            error={birthdayAlert}
-            value={birthday}
-            disabled={disbleInput}
-            onChange={event => setBirthday(event.target.value)}
-          />
-          {birthdayAlert && <Typography variant='small' color={'red'} className='animate-fade-in-down'>Preencha o campo com a sua data de <b>nascimento</b>!</Typography>}
-        </span>
-        <Button
-          color='green'
-          className='mt-6 w-full'
-          disabled={disbleInput}
-          onClick={() => handleLogin()}
-        >
+            onClick={() => handleLogin()}
+          >
             Acessar
-        </Button>
-      </form>
+          </Button>
+        </form>
+      </aside>
     </section>
   );
 }
