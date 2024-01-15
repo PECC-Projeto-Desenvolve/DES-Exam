@@ -5,8 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import BG from '../../assets/bg.png';
 
-import Aos from 'aos';
-import 'aos/dist/aos.css';
+import astronauts from '../../assets/astronauts.svg';
 
 function Login() {
   const [cpf, setCpf] = React.useState<string>('');
@@ -27,10 +26,6 @@ function Login() {
       navigate('/mobile');
       return;
     }
-  }, []);
-
-  React.useEffect(() => {
-    Aos.init({ duration: 5000 });
   }, []);
 
   const tokenGenerate = () => {
@@ -116,8 +111,6 @@ function Login() {
     }
   };
 
-
-
   const handleLogin = () => {
     if (!cpf) {
       setCpfAlert(true);
@@ -138,6 +131,8 @@ function Login() {
     <section className='flex h-screen w-screen items-end justify-center bg-purple-300'>
 
       <img src={BG}/>
+
+      <img src={astronauts} className='absolute top-0 ml-12 mt-12 animate-blob'/>
 
       <aside className='flex h-full w-full flex-col items-center justify-center bg-white'>
         <img src={Logo} className='mb-12 w-[10rem]'/>
@@ -175,7 +170,6 @@ function Login() {
             {birthdayAlert && <Typography variant='small' color={'red'} className='animate-fade-in-down'>Preencha o campo com a sua data de <b>nascimento</b>!</Typography>}
           </span>
           <Button
-            data-aos='fade-up'
             size='lg'
             className='mt-6 w-full bg-[#8C44FF]'
             disabled={disbleInput}

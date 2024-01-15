@@ -34,6 +34,7 @@ interface IFinishDialogProps {
     questions: IQuestionTypes[];
     handleQuestionIndex: (questionIndex: number) => void;
     handleFinish?: () => void;
+    disableBtn: boolean;
 }
 
 function FinishDialog({
@@ -41,7 +42,8 @@ function FinishDialog({
   questions,
   handleOpen,
   handleQuestionIndex,
-  handleFinish
+  handleFinish,
+  disableBtn,
 }: IFinishDialogProps): JSX.Element {
   const [questionStates, setQuestionStates] = React.useState({});
 
@@ -74,7 +76,7 @@ function FinishDialog({
       return (
         <>
           <Typography variant='paragraph' color='white' className='text-justify leading-5'>Ao clicar em <strong>Finalizar</strong>, você estará finalizando sua sessão de prova e enviando suas respostas para correção. <strong>Não será possível continuar a prova ou fazer alterações nas respostas após essa ação</strong>. Certifique-se de que deseja realmente finalizar a prova antes de confirmar essa ação.</Typography>
-          <Button color='orange' className='text-white' onClick={handleFinish}>Finalizar</Button>
+          <Button color='orange' className='text-white' onClick={handleFinish} disabled={disableBtn}>Finalizar</Button>
         </>
       );
     }

@@ -1,7 +1,7 @@
 import React from 'react';
 import { QuestionContainer } from '../../components';
 import { Button, Tooltip } from '@material-tailwind/react';
-import { ChevronRight, ChevronLeft, Map, Settings } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Map, Settings, HelpCircle } from 'lucide-react';
 import { MapDialog } from '../../components/Dialogs/MapDialog';
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -12,26 +12,27 @@ import { FinishDialog } from '../../components/Dialogs/FinishDialog';
 import { AbandonDialog } from '../../components/Dialogs/AbandonDialog';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { TutorialDialog } from '../../components/Dialogs/TutorialDialog';
 
 function Simulation(): JSX.Element {
   const [open, setOpen] = React.useState(false);
   const [openMap, setOpenMap] = React.useState(false);
   const [openFinishDialog, setOpenFinishDialog] = React.useState(false);
   const [openAbandonDialog, setOpenAbandonDialog] = React.useState(false);
-
+  const [openTutorial, setOpenTutorial] = React.useState<boolean>(false);
 
   const [questions, setQuestions] = React.useState([]);
 
   const [examPosition, setExamPosition] = React.useState(0);
 
-  const [data, setData] = React.useState({ name: '', examId: '', __questions__: [] });
+  const [data, setData] = React.useState({ name: '', document: '', examId: '', __questions__: [] });
 
   const [user, setUser] = React.useState<string>('');
+  const [userDocument, setUserDocument] = React.useState<string>('');
 
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
-  //   const examId = `${import.meta.VITE_SIMULATION_ID}`;
 
   React.useEffect(() => {
     const authenticatedUserStr = localStorage.getItem('authenticated_user');
@@ -43,6 +44,7 @@ function Simulation(): JSX.Element {
     const authenticatedUser = JSON.parse(authenticatedUserStr);
 
     setUser(authenticatedUser.name);
+    setUserDocument(authenticatedUser.cpf);
 
     fetch(`${import.meta.env.VITE_API_URL}/exams/${import.meta.env.VITE_SIMULATION_ID}`)
       .then(response => response.json())
@@ -61,12 +63,6 @@ function Simulation(): JSX.Element {
       setQuestions(examState.__questions__);
     }
   }, [examState]);
-
-  //   React.useEffect(() => {
-  //     if (document.documentElement.requestFullscreen) {
-  //       document.documentElement.requestFullscreen();
-  //     }
-  //   }, []);
 
   const handleOpen = () => setOpen((cur) => !cur);
 
@@ -146,18 +142,23 @@ function Simulation(): JSX.Element {
     setData(
       {
         name: user,
+        document: userDocument,
         examId: storedExamData.id,
         __questions__: extractedQuestions
       });
   };
 
-  React.useEffect(() => {
-    console.log(data);
-  }, [data]);
-
+  const handleOpenTutorial = () => {
+    setOpenTutorial(!openTutorial);
+  };
 
   return (
     <>
+
+      <TutorialDialog
+        handleOpenTutorial={handleOpenTutorial}
+        openTutorial={openTutorial}
+      />
 
       <AccessibilityDialog
         handleOpen={handleOpen}
@@ -195,7 +196,12 @@ function Simulation(): JSX.Element {
             </Tooltip>
             <Button variant='filled' size="sm" color='red' onClick={() => handleOpenAbandonDialog()}>Abandonar</Button>
           </div>
-          <div>
+          <div className='flex gap-2'>
+            <Button className='flex items-center gap-2' onClick={handleOpenTutorial} color='green'>
+              <HelpCircle size={18}/>
+            Tutorial
+            </Button>
+
             <Button size='sm' color='blue' className='flex items-center gap-3' onClick={handleOpen} ><Settings /> Ajustes</Button>
           </div>
         </div>
@@ -212,7 +218,7 @@ function Simulation(): JSX.Element {
             <ChevronLeft />
             Voltar
           </Button>
-          <Button className='flex items-center gap-3' size="md" onClick={handleOpenMap} color='indigo'>
+          <Button className='flex items-center gap-3' size="md" onClick={handleOpenMap} color='cyan'>
             <Map />
               Mapa
           </Button>

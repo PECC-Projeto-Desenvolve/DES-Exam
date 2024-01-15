@@ -17,15 +17,32 @@ function Exam(): JSX.Element {
   const [openFinishDialog, setOpenFinishDialog] = React.useState(false);
   const [openAbandonDialog, setOpenAbandonDialog] = React.useState(false);
 
+  const [user, setUser] = React.useState<string>('');
+  const [userDocument, setUserDocument] = React.useState<string>('');
+
+  //   const [data, setData] = React.useState({ name: '', document: '', examId: '', questions: [] });
+
   const [questions, setQuestions] = React.useState([]);
 
   const [examPosition, setExamPosition] = React.useState(0);
 
+  const [disableFetchButton, setDisableFetchButton] = React.useState(false);
+
   const dispatch = useDispatch();
-  const examId = '4978f8c0-d0ad-4c2f-ab98-f0d2daa9942c';
 
   React.useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/exams/${examId}`)
+    const authenticatedUserStr = localStorage.getItem('authenticated_user');
+    if (!authenticatedUserStr) {
+      navigate('/');
+      return;
+    }
+
+    const authenticatedUser = JSON.parse(authenticatedUserStr);
+
+    setUser(authenticatedUser.name);
+    setUserDocument(authenticatedUser.cpf);
+
+    fetch(`${import.meta.env.VITE_API_URL}/exams/${import.meta.env.VITE_EXAM_ID}`)
       .then(response => response.json())
       .then(data => {
         dispatch(populateExam(data));
@@ -122,6 +139,51 @@ function Exam(): JSX.Element {
     };
   }, [navigate]);
 
+  const getUserExam = () => {
+    setDisableFetchButton(!disableFetchButton);
+
+    const storedQuestions = JSON.parse(localStorage.getItem('questionStates'));
+    const storedExamData = JSON.parse(localStorage.getItem('exam_simulation'));
+    const extractedQuestions = storedQuestions
+      ? Object.keys(storedQuestions).map(key => ({
+        questionId: parseInt(key, 10),
+        id: storedQuestions[key].id,
+        position: storedQuestions[key].position
+      }))
+      : [];
+
+    const userData = {
+      name: user,
+      document: userDocument,
+      examId: storedExamData.id,
+      questions: extractedQuestions
+    };
+
+    sendUserExamData(userData);
+  };
+
+  const sendUserExamData = async (userData) => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/userexams`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData)
+      });
+
+      if (!response.ok) {
+        throw new Error(`Erro HTTP: ${response.status}`);
+      }
+
+      const responseData = await response.json();
+      console.log('Resposta recebida:', responseData);
+    } catch (error) {
+      setDisableFetchButton(disableFetchButton);
+      console.error('Erro ao enviar os dados:', error);
+    }
+  };
+
   return (
     <>
       {hasTabChanged ? (
@@ -158,6 +220,8 @@ function Exam(): JSX.Element {
               handleOpen={handleOpenFinishDialog}
               questions={questions}
               handleQuestionIndex={handleQuestionIndex}
+              handleFinish={() => getUserExam()}
+              disableBtn={disableFetchButton}
             />
 
             <AbandonDialog

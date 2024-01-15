@@ -62,6 +62,20 @@ export default withMT({
         }
       },
       keyframes: {
+        blob: {
+          '0%': {
+            transform: 'translate(0px, 0px) scale(1)',
+          },
+          '33%': {
+            transform: 'translate(0px, -50px) scale(1)',
+          },
+          '66%': {
+            transform: 'translate(0px, 20px) scale(1)',
+          },
+          '100%': {
+            transform: 'translate(0px, 0px) scale(1)',
+          }
+        },
         'fade-in-down': {
           '0%': {
             opacity: '0',
@@ -96,6 +110,7 @@ export default withMT({
         'fade-in-down': 'fade-in-down 0.2s ease-out',
         'fade-out-up': 'fade-out-up 0.2s ease-out',
         'float': 'float 1s',
+        blob: 'blob 7s infinite',
       },
     },
   },
