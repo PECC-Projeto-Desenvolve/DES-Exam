@@ -129,6 +129,8 @@ function Simulation(): JSX.Element {
     };
   }, []);
 
+  console.log(data);
+
   const getUserExam = () => {
     const storedQuestions = JSON.parse(localStorage.getItem('questionStates'));
     const storedExamData = JSON.parse(localStorage.getItem('exam_simulation'));
