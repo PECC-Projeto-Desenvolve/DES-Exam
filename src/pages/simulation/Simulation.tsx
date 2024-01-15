@@ -25,6 +25,7 @@ function Simulation(): JSX.Element {
 
   const [examPosition, setExamPosition] = React.useState(0);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = React.useState({ name: '', document: '', examId: '', __questions__: [] });
 
   const [user, setUser] = React.useState<string>('');
@@ -179,6 +180,7 @@ function Simulation(): JSX.Element {
         questions={questions}
         handleQuestionIndex={handleQuestionIndex}
         handleFinish={() => getUserExam()}
+        disableBtn={true}
       />
 
       <AbandonDialog
