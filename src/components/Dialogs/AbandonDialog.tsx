@@ -7,6 +7,7 @@ import {
   Button,
 } from '@material-tailwind/react';
 import { useNavigate } from 'react-router-dom';
+import { getActualDate } from '../../utils/GetDate';
 
 
 interface IAbandonDialogProps {
@@ -49,7 +50,7 @@ function AbandonDialog({
 
             <div className='flex w-full justify-between' >
               <Typography variant='lead' className='text-blue-gray-700'>
-                <strong className='text-blue-gray-700'>cidade</strong> - data
+                <strong className='text-blue-gray-700'>Bom Despacho</strong> - {getActualDate()}
               </Typography>
 
             </div>

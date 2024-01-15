@@ -11,7 +11,7 @@ function AppRoutes(): JSX.Element {
 
   const handleLocation = () => {
     const location = useLocation();
-    return location.pathname === '/practice' ? 'bg-[#435969]' : 'bg-[#0094FF]';
+    return location.pathname === '/practice' || location.pathname === '/exam' ? 'bg-[#435969]' : 'bg-[#0094FF]';
   };
 
   return (

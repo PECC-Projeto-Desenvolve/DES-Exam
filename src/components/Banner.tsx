@@ -18,6 +18,8 @@ interface IBannerProps {
   buttonLabel: string;
   hasCountdown?: boolean;
   schedule?: string;
+  btnDisabled?: boolean;
+  font: number;
 
   onClick?: () => void;
 }
@@ -30,12 +32,14 @@ interface IBannerProps {
  *
  * @component
  */
-function Banner({ title, content, buttonLabel, hasCountdown, schedule, onClick }: IBannerProps): JSX.Element {
+function Banner({ title, content, btnDisabled, buttonLabel, hasCountdown, schedule, onClick, font }: IBannerProps): JSX.Element {
 
   return (
-    <div className="h-full rounded-lg border border-gray-200 bg-white p-4 shadow-md transition-shadow hover:shadow-lg">
-      <Typography variant="h5">{title}</Typography>
-      <Typography variant="paragraph" className='mt-2'>{content}</Typography>
+    <div className="flex h-full flex-col justify-between rounded-lg border border-gray-200 bg-white p-4 shadow-md transition-shadow hover:shadow-lg">
+      <span>
+        <Typography variant="h5">{title}</Typography>
+        <p className='mt-2' style={{ fontSize: font }}>{content}</p>
+      </span>
       <div className="mt-4 flex w-full flex-row-reverse">
         {
           hasCountdown ? (
@@ -49,7 +53,7 @@ function Banner({ title, content, buttonLabel, hasCountdown, schedule, onClick }
             </>
           ) : (
             <>
-              <Button onClick={onClick} className='bg-secondary-400'>{buttonLabel}</Button>
+              <Button onClick={onClick} className='bg-secondary-400' disabled={btnDisabled}>{buttonLabel}</Button>
             </>
           )
         }

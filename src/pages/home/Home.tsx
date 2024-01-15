@@ -15,12 +15,15 @@ import { TutorialDialog } from '../../components/Dialogs/TutorialDialog';
 
 function Home() {
   const navigate = useNavigate();
-  const lore = 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sint totam odio enim. Laudantium velit recusandae ex non veniam cumque, eum sint quod quasi, autem nesciunt. Et voluptatem esse necessitatibus vel.';
   const [open, setOpen] = React.useState<boolean>(false);
   const [token, setToken] = React.useState<string>('');
   const [font, setFont] = React.useState<number>(14);
 
+  const [disqualified, setDisqualified] = React.useState(false);
+  const [finished, setFinished] = React.useState(false);
+
   const simulationText = 'Esta é a área de simulados, aqui você pode responder questões do mesmo modelo que da prova do processo seletivo para se habituar com a plataforma';
+  const ExamText = 'Esta é a área da prova qualificatório para estudar junto do Projeto Desenvolve.';
 
   const [user, setUser] = React.useState({
     name: ''
@@ -32,6 +35,14 @@ function Home() {
   React.useEffect(() => {
     const newFont = localStorage.getItem('confirmedFont');
     const newUser = JSON.parse(localStorage.getItem('authenticated_user') || '{}' );
+
+    if (localStorage.getItem('disqualified') == 'true') {
+      setDisqualified(true);
+    }
+
+    if (localStorage.getItem('finishedExam') === 'true') {
+      setFinished(true);
+    }
 
     if (Object.keys(newUser).length === 0) {
       navigate('/');
@@ -168,12 +179,22 @@ function Home() {
         <Banner
           title="Simulado"
           content={simulationText}
+          font={font}
           buttonLabel='praticar'
           onClick={() => {
             navigate('/practice');
             document.documentElement.requestFullscreen();
           }}/>
-        <Banner title="Prova" content={lore} buttonLabel='iniciar prova' hasCountdown={false} schedule='12:00' onClick={handleOpen}/>
+        <Banner
+          title="Prova"
+          content={ExamText}
+          font={font}
+          buttonLabel='iniciar prova'
+          hasCountdown={false}
+          schedule='12:00'
+          onClick={handleOpen}
+          btnDisabled={disqualified || finished}
+        />
       </div>
     </>
   );

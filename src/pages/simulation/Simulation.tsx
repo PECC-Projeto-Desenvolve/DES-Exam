@@ -1,6 +1,6 @@
 import React from 'react';
 import { QuestionContainer } from '../../components';
-import { Button, Tooltip } from '@material-tailwind/react';
+import { Button } from '@material-tailwind/react';
 import { ChevronRight, ChevronLeft, Map, Settings, HelpCircle } from 'lucide-react';
 import { MapDialog } from '../../components/Dialogs/MapDialog';
 
@@ -30,6 +30,8 @@ function Simulation(): JSX.Element {
 
   const [user, setUser] = React.useState<string>('');
   const [userDocument, setUserDocument] = React.useState<string>('');
+
+  const [time, setTime] = React.useState({ minutes: 0, seconds: 0 });
 
   const navigate = useNavigate();
 
@@ -155,6 +157,23 @@ function Simulation(): JSX.Element {
     setOpenTutorial(!openTutorial);
   };
 
+  React.useEffect(() => {
+    const timer = setInterval(() => {
+      setTime(prevTime => {
+        if (prevTime.seconds === 59) {
+          if (prevTime.minutes === 59) {
+            clearInterval(timer);
+            return { minutes: 59, seconds: 59 };
+          }
+          return { minutes: prevTime.minutes + 1, seconds: 0 };
+        }
+        return { ...prevTime, seconds: prevTime.seconds + 1 };
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <>
 
@@ -174,6 +193,7 @@ function Simulation(): JSX.Element {
         handleOpen={handleOpenMap}
         questions={questions}
         handleQuestionIndex={handleQuestionIndex}
+        timer={`${time.minutes} : ${time.seconds}`}
       />
 
       <FinishDialog
@@ -193,11 +213,6 @@ function Simulation(): JSX.Element {
       <div className='flex w-full flex-col gap-4'>
         <div className='flex justify-between'>
           <div className='flex gap-2'>
-            <Tooltip content='Você pode finalizar apenas quando marcar todas as questões'>
-              <span>
-                <Button variant='filled' size="sm" color='orange' className='h-full' disabled>Finalizar</Button>
-              </span>
-            </Tooltip>
             <Button variant='filled' size="sm" color='red' onClick={() => handleOpenAbandonDialog()}>Abandonar</Button>
           </div>
           <div className='flex gap-2'>

@@ -8,12 +8,13 @@ import {
   Button,
 } from '@material-tailwind/react';
 
+import {getActualDate} from '../../utils/GetDate';
+
 import { QuestionItem } from '..';
 import { stringResizer } from '../../utils/StringResizer';
 
 import Aos from 'aos';
 import 'aos/dist/aos.css';
-import Timer from '../Time';
 
 /**
  * Type definition for question-related properties.
@@ -61,6 +62,7 @@ interface IMapDialogProps {
     open: boolean;
     questions: IQuestionTypes[];
     handleQuestionIndex: (questionIndex: number) => void;
+    timer?: number | string;
 }
 
 /**
@@ -77,6 +79,7 @@ function MapDialog({
   questions,
   handleOpen,
   handleQuestionIndex,
+  timer
 }: IMapDialogProps): JSX.Element {
   const [questionStates, setQuestionStates] = React.useState({});
 
@@ -106,11 +109,13 @@ function MapDialog({
 
             <div className='flex w-full justify-between' >
               <Typography variant='lead' className='text-blue-gray-300'>
-            Processo seletivo <strong className='text-blue-gray-300'>cidade</strong> - data
+            Processo seletivo <strong className='text-blue-gray-300'>Bom Despacho</strong> - {getActualDate()}
               </Typography>
 
               <>
-                <Timer />
+                <span className='text-white'>
+                  {timer}
+                </span>
               </>
 
             </div>

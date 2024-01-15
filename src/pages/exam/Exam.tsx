@@ -20,13 +20,13 @@ function Exam(): JSX.Element {
   const [user, setUser] = React.useState<string>('');
   const [userDocument, setUserDocument] = React.useState<string>('');
 
-  //   const [data, setData] = React.useState({ name: '', document: '', examId: '', questions: [] });
-
   const [questions, setQuestions] = React.useState([]);
 
   const [examPosition, setExamPosition] = React.useState(0);
 
   const [disableFetchButton, setDisableFetchButton] = React.useState(false);
+
+  const [time, setTime] = React.useState({ minutes: 0, seconds: 0 });
 
   const dispatch = useDispatch();
 
@@ -176,24 +176,48 @@ function Exam(): JSX.Element {
         throw new Error(`Erro HTTP: ${response.status}`);
       }
 
-      const responseData = await response.json();
-      console.log('Resposta recebida:', responseData);
+      localStorage.setItem('finishedExam', 'true');
+      navigate('/home');
     } catch (error) {
       setDisableFetchButton(disableFetchButton);
       console.error('Erro ao enviar os dados:', error);
     }
   };
 
+  React.useEffect(() => {
+    const timer = setInterval(() => {
+      setTime(prevTime => {
+        if (prevTime.seconds === 59) {
+          if (prevTime.minutes === 59) {
+            clearInterval(timer);
+            return { minutes: 59, seconds: 59 };
+          }
+          return { minutes: prevTime.minutes + 1, seconds: 0 };
+        }
+        return { ...prevTime, seconds: prevTime.seconds + 1 };
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <>
       {hasTabChanged ? (
         <>
           <div className='h-full w-full px-12 py-48'>
-            <div className='flex h-full w-full flex-col items-center justify-center rounded-xl bg-white/50'>
+            <div className='flex h-full w-full flex-col items-center justify-center rounded-xl bg-white/50 text-center'>
               <Typography variant='h4'>
         Infelizmente você mudou de aba, portanto você está desclassificado.
               </Typography>
-              <Button size='lg' className='mt-6' onClick={() => navigate('/home')}>
+              <Button
+                size='lg'
+                className='mt-6'
+                onClick={() => {
+                  localStorage.setItem('disqualified', 'true');
+                  navigate('/home');
+                }}
+                color='green'>
                 Voltar para tela inicial
               </Button>
             </div>
@@ -213,6 +237,7 @@ function Exam(): JSX.Element {
               handleOpen={handleOpenMap}
               questions={questions}
               handleQuestionIndex={handleQuestionIndex}
+              timer={`${time.minutes} : ${time.seconds}`}
             />
 
             <FinishDialog
@@ -233,7 +258,6 @@ function Exam(): JSX.Element {
           <div className='flex w-full flex-col gap-4'>
             <div className='flex justify-between'>
               <div className='flex gap-2'>
-                <Button variant='filled' size="sm" color='orange'>Finalizar</Button>
                 <Button variant='filled' size="sm" color='red' onClick={() => handleOpenAbandonDialog()}>Abandonar</Button>
               </div>
               <div>
@@ -246,9 +270,10 @@ function Exam(): JSX.Element {
                 variant="text"
                 className='flex items-center gap-2'
                 size="md"
+                color='white'
                 disabled={examPosition == 0}
                 onClick={() => handleBackButton()}> <ChevronLeft /> Voltar</Button>
-              <Button className='flex items-center gap-3' size="md" onClick={handleOpenMap}>
+              <Button className='flex items-center gap-3' size="md" onClick={handleOpenMap} color='cyan'>
                 <Map />
               Mapa
               </Button>
@@ -268,6 +293,7 @@ function Exam(): JSX.Element {
                     variant="text"
                     className='flex items-center gap-2'
                     size="sm"
+                    color='white'
                     onClick={() => setExamPosition(examPosition + 1)}
                   >Avançar <ChevronRight /></Button>
                 </>

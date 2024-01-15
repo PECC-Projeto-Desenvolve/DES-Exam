@@ -13,6 +13,7 @@ import { stringResizer } from '../../utils/StringResizer';
 
 import Aos from 'aos';
 import 'aos/dist/aos.css';
+import { getActualDate } from '../../utils/GetDate';
 
 type IQuestionTypes = {
     id: number;
@@ -108,7 +109,7 @@ function FinishDialog({
 
             <div className='flex w-full justify-between' >
               <Typography variant='lead' className='text-blue-gray-300'>
-                <strong className='text-blue-gray-300'>cidade</strong> - data
+                <strong className='text-blue-gray-300'>Bom Despacho</strong> - {getActualDate()}
               </Typography>
 
             </div>
