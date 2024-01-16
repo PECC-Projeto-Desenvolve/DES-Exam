@@ -2,6 +2,7 @@ import React from 'react';
 import { MultiCheckboxes } from './components/MultiCheckboxes';
 import { useFontSize } from '../../context/FontSize';
 import { QuestionContainerSkelleton } from '../';
+import { Button, Dialog, DialogBody, DialogFooter, Typography } from '@material-tailwind/react';
 
 /**
  * @typedef {Object} IQuestionTypes
@@ -76,6 +77,7 @@ function QuestionContainer({ question, questionIndex, onLastQuestion }: IQuestio
   // const [alternativeState, setAlternativeState] = React.useState();
   const { fontSize } = useFontSize();
   const [hasCalledLastQuestion, setHasCalledLastQuestion] = React.useState(false);
+  const [openImageModal, setOpenImageModal] = React.useState(false);
 
   const currentQuestion = question[questionIndex];
 
@@ -133,6 +135,10 @@ function QuestionContainer({ question, questionIndex, onLastQuestion }: IQuestio
     localStorage.setItem('questionStates', JSON.stringify(questionStates));
   };
 
+  const handleOpenImageModal = () => {
+    setOpenImageModal(!openImageModal);
+  };
+
   /**
  * Memoized MultiCheckboxes component to optimize rendering.
  * Creates an instance of the MultiCheckboxes component with specific props and memoizes it to prevent unnecessary re-renders.
@@ -162,11 +168,25 @@ function QuestionContainer({ question, questionIndex, onLastQuestion }: IQuestio
 
   return (
     <>
+      <Dialog
+        handler={handleOpenImageModal}
+        open={openImageModal} className=''>
+        <DialogBody className='flex items-center justify-center'>
+          <img src={currentQuestion.image} className='w-[55vw]'/>
+        </DialogBody>
+        <DialogFooter>
+          <Button
+            color='red'
+            onClick={() => setOpenImageModal(false)}
+          >fechar</Button>
+        </DialogFooter>
+      </Dialog>
+
       <section className="h-[80vh] w-full overflow-y-scroll rounded-lg border border-border bg-modal-bg pb-8 shadow-lg">
         <div className='flex h-full flex-col justify-between'>
           <div className='h-fit'>
             <div className="flex h-20 w-full select-none items-center justify-between bg-modal-heading px-8">
-              <p className="select-none text-white" style={{ fontSize: `${fontSize}px`}}>
+              <p className="select-none text-white" style={{ fontSize: `${fontSize + 2}px`}}>
                 {currentQuestion.title}
               </p>
               {/* <SaveButton /> */}
@@ -177,8 +197,9 @@ function QuestionContainer({ question, questionIndex, onLastQuestion }: IQuestio
                 {currentQuestion.statement}
               </p>
             </div>
-            <div className='mb-6 w-full px-[20rem]'>
-              <img src={currentQuestion.image} className='w-[100%] rounded-lg'/>
+            <div className='mb-6 flex w-full cursor-pointer flex-col items-center px-[20rem]' onClick={() => handleOpenImageModal()}>
+              <img src={currentQuestion.image} className='w-[100%] max-w-[23rem] rounded-lg'/>
+              <Typography color="white">Clique para ampliar imagem</Typography>
             </div>
           </div>
           <div className=' flex h-fit w-full flex-col justify-end px-8'>

@@ -86,7 +86,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ top, left, label, onSave, onS
         </strong>
       </span>
       <MenuItem label="marcar" icon={<CheckCircle2 />} onClick={onSelect} color='green'/>
-      <MenuItem label="razurar" icon={<Scissors />} onClick={onScratch} color='blue-gray'/>
+      <MenuItem label="rasurar" icon={<Scissors />} onClick={onScratch} color='blue-gray'/>
       <MenuItem label="salvar" icon={<Bookmark />} onClick={onSave} color='orange'/>
     </div>
 
