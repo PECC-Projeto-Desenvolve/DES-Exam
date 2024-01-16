@@ -5,6 +5,8 @@ import { Navbar, Typography,   Button,
   Card,
   CardBody,
   CardFooter,
+  DialogBody,
+  DialogFooter,
 } from '@material-tailwind/react';
 import { HelpCircle, LogOut, Settings } from 'lucide-react';
 import { Banner } from '../../components';
@@ -21,6 +23,7 @@ function Home() {
 
   const [disqualified, setDisqualified] = React.useState(false);
   const [finished, setFinished] = React.useState(false);
+  const [finishedModal, setFinishedModal] = React.useState(false);
 
   const simulationText = 'Esta é a área de simulados, aqui você pode responder questões do mesmo modelo que da prova do processo seletivo para se habituar com a plataforma';
   const ExamText = 'Esta é a área da prova qualificatório para estudar junto do Projeto Desenvolve.';
@@ -42,6 +45,7 @@ function Home() {
 
     if (localStorage.getItem('finishedExam') === 'true') {
       setFinished(true);
+      setFinishedModal(true);
     }
 
     if (Object.keys(newUser).length === 0) {
@@ -74,6 +78,10 @@ function Home() {
     setOpenTutorial(!openTutorial);
   };
 
+  const handleFinishModal = () => {
+    setFinishedModal(false);
+  };
+
   return (
     <>
       <AccessibilityDialog
@@ -86,6 +94,22 @@ function Home() {
         handleOpenTutorial={handleOpenTutorial}
         openTutorial={openTutorial}
       />
+
+      <Dialog
+        open={finishedModal}
+        handler={handleFinishModal}
+      >
+        <DialogBody className='-mt-4'>
+          <span className='flex w-full flex-col items-center justify-center'>
+            <Typography variant="h3" className="mt-6" color="black">Você concluiu a prova!</Typography>
+            <p style={{ fontSize: 100}} className='m-0'>🎉</p>
+          </span>
+          <Typography variant="lead" className="mt-6 text-center" color="black">Avise ao responsável por aplicar a prova e em breve divulgaremos os resultados.</Typography>
+        </DialogBody>
+        <DialogFooter>
+          <Button color='red' onClick={() => handleFinishModal()}>Fechar</Button>
+        </DialogFooter>
+      </Dialog>
 
       <Dialog open={open} handler={handleOpen} className='bg-transparent shadow-none'>
         <Card className='mx-auto w-full max-w-[40rem]'>
