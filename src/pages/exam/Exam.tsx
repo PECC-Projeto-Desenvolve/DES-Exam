@@ -31,6 +31,8 @@ function Exam(): JSX.Element {
   const dispatch = useDispatch();
 
   React.useEffect(() => {
+    localStorage.removeItem('questionStates');
+    localStorage.removeItem('disqualified');
     const authenticatedUserStr = localStorage.getItem('authenticated_user');
     if (!authenticatedUserStr) {
       navigate('/');
@@ -215,6 +217,7 @@ function Exam(): JSX.Element {
                 className='mt-6'
                 onClick={() => {
                   localStorage.setItem('disqualified', 'true');
+                  localStorage.removeItem('questionStates');
                   navigate('/home');
                 }}
                 color='green'>

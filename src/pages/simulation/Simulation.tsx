@@ -131,8 +131,6 @@ function Simulation(): JSX.Element {
     };
   }, []);
 
-  console.log(data);
-
   const getUserExam = () => {
     const storedQuestions = JSON.parse(localStorage.getItem('questionStates'));
     const storedExamData = JSON.parse(localStorage.getItem('exam_simulation'));
@@ -151,6 +149,13 @@ function Simulation(): JSX.Element {
         examId: storedExamData.id,
         __questions__: extractedQuestions
       });
+
+    setTimeout(() => {
+      navigate('/home');
+      localStorage.removeItem('questionStates');
+      console.log(data);
+    }, 1000);
+
   };
 
   const handleOpenTutorial = () => {
@@ -202,7 +207,7 @@ function Simulation(): JSX.Element {
         questions={questions}
         handleQuestionIndex={handleQuestionIndex}
         handleFinish={() => getUserExam()}
-        disableBtn={true}
+        disableBtn={false}
       />
 
       <AbandonDialog

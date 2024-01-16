@@ -18,6 +18,7 @@ interface IQuestionTypes {
     id: number;
     title: string;
     statement: string;
+    image: string;
     rightAnswer: string;
     difficulty: number;
     createdAt: string;
@@ -53,6 +54,7 @@ interface IQuestionContainerProps {
 interface AlternativeItem {
     id: number;
     position: number;
+    image: string;
     text: string;
     questionId: number;
     createdAt: string;
@@ -86,6 +88,7 @@ function QuestionContainer({ question, questionIndex, onLastQuestion }: IQuestio
             id: item.id,
             position: item.position,
             label: item.text,
+            imageSrc: item.image,
             selected: false,
             scratched: false,
             saved: false
@@ -159,7 +162,7 @@ function QuestionContainer({ question, questionIndex, onLastQuestion }: IQuestio
 
   return (
     <>
-      <section className="h-[74vh] w-full overflow-y-scroll rounded-lg border border-border bg-modal-bg pb-8 shadow-lg">
+      <section className="h-[80vh] w-full overflow-y-scroll rounded-lg border border-border bg-modal-bg pb-8 shadow-lg">
         <div className='flex h-full flex-col justify-between'>
           <div className='h-fit'>
             <div className="flex h-20 w-full select-none items-center justify-between bg-modal-heading px-8">
@@ -173,6 +176,9 @@ function QuestionContainer({ question, questionIndex, onLastQuestion }: IQuestio
               <p className="select-none text-white" style={{ fontSize: `${fontSize}px` }}>
                 {currentQuestion.statement}
               </p>
+            </div>
+            <div className='mb-6 w-full px-[20rem]'>
+              <img src={currentQuestion.image} className='w-[100%] rounded-lg'/>
             </div>
           </div>
           <div className=' flex h-fit w-full flex-col justify-end px-8'>
