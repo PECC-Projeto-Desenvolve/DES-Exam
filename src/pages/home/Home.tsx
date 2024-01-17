@@ -134,7 +134,11 @@ function Home() {
             >
               <span>Cancelar</span>
             </Button>
-            <Button disabled={handleDisable()} variant="gradient" color="green" onClick={() => navigate('/exam')}>
+            <Button disabled={handleDisable()} variant="gradient" color="green" onClick={() => {
+              document.documentElement.requestFullscreen();
+              navigate('/exam');
+            }}
+            >
               <span>Confirmar</span>
             </Button>
           </CardFooter>
