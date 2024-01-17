@@ -58,7 +58,7 @@ function Home() {
   }, [localStorage.getItem('confirmedFont'), localStorage.getItem('authenticated_user')]);
 
   const handleDisable = () => {
-    if (token.length >= 5) {
+    if (token == import.meta.env.VITE_ACESS_TOKEN) {
       return false;
     }
     return true;
