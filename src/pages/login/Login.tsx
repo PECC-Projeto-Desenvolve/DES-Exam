@@ -22,6 +22,13 @@ function Login() {
   };
 
   React.useEffect(() => {
+    localStorage.removeItem('authenticated');
+    localStorage.removeItem('disqualified');
+    localStorage.removeItem('exam_simulation');
+    localStorage.removeItem('finishedExam');
+    localStorage.removeItem('authenticated_user');
+    localStorage.removeItem('auth_token');
+
     if (checkIfMobile()) {
       navigate('/mobile');
       return;

@@ -20,6 +20,7 @@ function Home() {
   const [open, setOpen] = React.useState<boolean>(false);
   const [token, setToken] = React.useState<string>('');
   const [font, setFont] = React.useState<number>(14);
+  const [bold, setBold] = React.useState<boolean>(false);
 
   const [disqualified, setDisqualified] = React.useState(false);
   const [finished, setFinished] = React.useState(false);
@@ -43,6 +44,12 @@ function Home() {
       setDisqualified(true);
     }
 
+    if (localStorage.getItem('IsBoldActive') == 'true') {
+      setBold(true);
+    } else if (localStorage.getItem('IsBoldActive') == 'false') {
+      setBold(false);
+    }
+
     if (localStorage.getItem('finishedExam') === 'true') {
       setFinished(true);
       setFinishedModal(true);
@@ -55,7 +62,7 @@ function Home() {
     }
 
     setFont(Number(newFont));
-  }, [localStorage.getItem('confirmedFont'), localStorage.getItem('authenticated_user')]);
+  }, [localStorage.getItem('confirmedFont'), localStorage.getItem('authenticated_user'), localStorage.getItem('IsBoldActive')]);
 
   const handleDisable = () => {
     if (token == import.meta.env.VITE_ACESS_TOKEN) {
@@ -182,7 +189,7 @@ function Home() {
           Configurações
           </Typography>
 
-          <p className='mt-2' style={{ fontSize: font }}>Complete as configurações para que você tenha uma boa experiência </p>
+          <p className={`mt-2 ${bold && 'font-bold'}`} style={{ fontSize: font }}>Complete as configurações para que você tenha uma boa experiência </p>
           <div className='mt-4 flex w-full items-end justify-end'>
             <Button className='flex items-center justify-center gap-2' onClick={handleOpenSettings} color='blue-gray'>
                 Configurações
@@ -208,6 +215,7 @@ function Home() {
           title="Simulado"
           content={simulationText}
           font={font}
+          bold={bold}
           buttonLabel='praticar'
           onClick={() => {
             navigate('/practice');
@@ -217,6 +225,7 @@ function Home() {
           title="Prova"
           content={ExamText}
           font={font}
+          bold={bold}
           buttonLabel='iniciar prova'
           hasCountdown={false}
           schedule='12:00'

@@ -33,6 +33,7 @@ interface CheckboxItem {
  */
 interface IMultiCheckboxesProps {
   fontSize: number | undefined | string;
+  bold: boolean;
   alternatives: CheckboxItem[];
   onCheckboxStateChange: (id: number, position: number, state: { selected: boolean; scratched: boolean; saved: boolean }) => void;
   questionId: { id: number };
@@ -51,7 +52,7 @@ interface IMultiCheckboxesProps {
  *
  * @component
  */
-function MultiCheckboxes({ fontSize, alternatives, questionId, onCheckboxStateChange }: IMultiCheckboxesProps): JSX.Element {
+function MultiCheckboxes({ fontSize, alternatives, questionId, onCheckboxStateChange, bold }: IMultiCheckboxesProps): JSX.Element {
   const [contextMenu, setContextMenu] = React.useState<{ mouseX: number; mouseY: number; } | null>(null);
   const [checkboxes, setCheckboxes] = React.useState<CheckboxItem[]>(alternatives);
   const [lastClickTime, setLastClickTime] = React.useState(0);
@@ -197,7 +198,7 @@ function MultiCheckboxes({ fontSize, alternatives, questionId, onCheckboxStateCh
                     : 'bg-white text-black'}  flex h-8 w-8 select-none items-center justify-center rounded-full`}>
               {String.fromCharCode(64 + index + 1)}
             </div>
-            <p style={{ fontSize: fontSize }} className={`select-none ${checkbox.scratched ? 'line-through' : ''}`}>
+            <p style={{ fontSize: fontSize }} className={`select-none ${checkbox.scratched ? 'line-through' : ''} ${bold && 'font-bold'}`}>
               {checkbox.label}
             </p>
           </div>

@@ -78,6 +78,7 @@ function QuestionContainer({ question, questionIndex, onLastQuestion }: IQuestio
   const { fontSize } = useFontSize();
   const [hasCalledLastQuestion, setHasCalledLastQuestion] = React.useState(false);
   const [openImageModal, setOpenImageModal] = React.useState(false);
+  const [bold, setBold] = React.useState(false);
 
   const currentQuestion = question[questionIndex];
 
@@ -115,6 +116,14 @@ function QuestionContainer({ question, questionIndex, onLastQuestion }: IQuestio
     }
   }, [questionIndex, question.length, hasCalledLastQuestion, onLastQuestion]);
 
+  React.useEffect(() => {
+    if (localStorage.getItem('IsBoldActive') == 'true') {
+      setBold(true);
+    } else if (localStorage.getItem('IsBoldActive') == 'false') {
+      setBold(false);
+    }
+  }, [localStorage.getItem('IsBoldActive')]);
+
   /**
  * Handles state changes for checkboxes related to a question.
  * Updates the state of a specific checkbox and stores it in localStorage.
@@ -151,6 +160,7 @@ function QuestionContainer({ question, questionIndex, onLastQuestion }: IQuestio
       alternatives={alternatives}
       onCheckboxStateChange={handleCheckboxStateChange}
       questionId={currentQuestion}
+      bold={bold}
     />
   ), [fontSize, alternatives, handleCheckboxStateChange]);
 
@@ -193,7 +203,7 @@ function QuestionContainer({ question, questionIndex, onLastQuestion }: IQuestio
               {/* <p className="select-none text-white" style={{ fontSize: `${fontSize + 4}px`}}>
                 {questionIndex + 1}
               </p> */}
-              <p className="select-none text-white" style={{ fontSize: `${fontSize + 2}px`}}>
+              <p className={`select-none text-white ${bold && 'font-bold'}`} style={{ fontSize: `${fontSize + 2}px`}}>
                 {currentQuestion.title}
               </p>
             </span>
@@ -203,7 +213,7 @@ function QuestionContainer({ question, questionIndex, onLastQuestion }: IQuestio
           <div className='flex h-fit w-full flex-col items-end justify-end'>
             {currentQuestion.statement.length > 5 &&
             <div className="w-full space-y-8 p-8">
-              <p className="select-none text-white" style={{ fontSize: `${fontSize}px` }}>
+              <p className={`select-none text-white ${bold && 'font-bold'}`} style={{ fontSize: `${fontSize}px` }}>
                 {currentQuestion.statement}
               </p>
             </div>

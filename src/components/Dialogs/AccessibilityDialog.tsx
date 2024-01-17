@@ -1,5 +1,6 @@
-import { Button, Dialog, Card, CardBody, Typography, ButtonGroup } from '@material-tailwind/react';
+import { Button, Dialog, Card, CardBody, Typography, ButtonGroup, Switch } from '@material-tailwind/react';
 import { useFontSize } from '../../context/FontSize';
+import React from 'react';
 
 interface IAccessibilityDialogProps {
   handleOpen: () => void;
@@ -25,6 +26,13 @@ function AccessibilityDialog({
   confirm,
 }: IAccessibilityDialogProps): JSX.Element {
   const { fontSize, setFontSize } = useFontSize();
+  const [isSwitchActive, setIsSwitchActive] = React.useState(false);
+
+  React.useEffect(() => {
+    if (localStorage.getItem('IsBoldActive') == 'true') {
+      setIsSwitchActive(true);
+    }
+  }, []);
 
   /**
  * Increases the font size in the accessibility settings.
@@ -55,7 +63,17 @@ function AccessibilityDialog({
  * This function is invoked when the user confirms their font size choice.
  */
   const handleFontSizeConfirm = () => {
+    if (isSwitchActive){
+      localStorage.setItem('IsBoldActive', 'true');
+    } else {
+      localStorage.setItem('IsBoldActive', 'false');
+
+    }
     confirm();
+  };
+
+  const handleSwitchChange = (event) => {
+    setIsSwitchActive(event.target.checked);
   };
 
   return (
@@ -82,7 +100,19 @@ function AccessibilityDialog({
                 </ButtonGroup>
               </div>
               <div className='w-full rounded-lg border bg-modal-bg p-4'>
-                <p className='text-white' style={{ fontSize: fontSize }}>Este é um exemplo</p>
+                <p className={`text-white ${isSwitchActive && 'font-bold'}`} style={{ fontSize: fontSize }}>Este é um exemplo</p>
+              </div>
+
+              <div className='h-[3rem] w-full'>
+                <Switch
+                  color='blue'
+                  label="Texto em negrito"
+                  labelProps={{
+                    className: 'font-bold text-xl',
+                  }}
+                  checked={isSwitchActive}
+                  onChange={handleSwitchChange}
+                />
               </div>
               <div className='flex w-full flex-row-reverse'>
                 <Button onClick={handleFontSizeConfirm} color='green'>Confirmar</Button>
