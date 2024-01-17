@@ -169,10 +169,14 @@ function QuestionContainer({ question, questionIndex, onLastQuestion }: IQuestio
   return (
     <>
       <Dialog
+        animate={{
+          mount: { scale: 1, y: 0 },
+          unmount: { scale: 0.9, y: -100 },
+        }}
         handler={handleOpenImageModal}
-        open={openImageModal} className=''>
+        open={openImageModal} className='' size='lg'>
         <DialogBody className='flex items-center justify-center'>
-          <img src={currentQuestion.image} className='w-[55vw]'/>
+          <img src={currentQuestion.image} className='h-full min-w-[45rem] '/>
         </DialogBody>
         <DialogFooter>
           <Button
@@ -182,27 +186,38 @@ function QuestionContainer({ question, questionIndex, onLastQuestion }: IQuestio
         </DialogFooter>
       </Dialog>
 
-      <section className="h-[80vh] w-full overflow-y-scroll rounded-lg border border-border bg-modal-bg pb-8 shadow-lg">
+      <section className="h-[80vh] w-full overflow-y-scroll rounded-lg border border-border bg-modal-bg shadow-lg">
         <div className='flex h-full flex-col justify-between'>
-          <div className='h-fit'>
-            <div className="flex h-20 w-full select-none items-center justify-between bg-modal-heading px-8">
+          <div className="flex min-h-[4rem] w-full select-none items-center justify-between bg-modal-heading px-8">
+            <span className='flex items-center gap-4'>
+              {/* <p className="select-none text-white" style={{ fontSize: `${fontSize + 4}px`}}>
+                {questionIndex + 1}
+              </p> */}
               <p className="select-none text-white" style={{ fontSize: `${fontSize + 2}px`}}>
                 {currentQuestion.title}
               </p>
-              {/* <SaveButton /> */}
-            </div>
+            </span>
+            {/* <SaveButton /> */}
+          </div>
 
+          <div className='flex h-fit w-full flex-col items-end justify-end'>
+            {currentQuestion.statement.length > 5 &&
             <div className="w-full space-y-8 p-8">
               <p className="select-none text-white" style={{ fontSize: `${fontSize}px` }}>
                 {currentQuestion.statement}
               </p>
             </div>
-            <div className='mb-6 flex w-full cursor-pointer flex-col items-center px-[20rem]' onClick={() => handleOpenImageModal()}>
-              <img src={currentQuestion.image} className='w-[100%] max-w-[23rem] rounded-lg'/>
-              <Typography color="white">Clique para ampliar imagem</Typography>
-            </div>
+            }
+            {
+              currentQuestion.image &&
+              <div className='mb-6 flex h-fit w-full cursor-pointer flex-col items-center justify-center px-[20rem] py-6' >
+                <img src={currentQuestion.image} className={`w-[100%] rounded-xl ${currentQuestion.statement.length < 5 ? 'max-w-[23rem]' : 'max-w-[32rem]'}`} onClick={() => handleOpenImageModal()}/>
+                <Typography color="white" onClick={() => handleOpenImageModal()}>Clique para ampliar imagem</Typography>
+              </div>
+            }
           </div>
-          <div className=' flex h-fit w-full flex-col justify-end px-8'>
+
+          <div className='mt-2 flex h-fit w-full flex-col justify-end px-8 pb-8'>
             {memoizedMultiCheckboxes}
           </div>
         </div>
