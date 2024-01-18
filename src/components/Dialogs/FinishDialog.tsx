@@ -35,6 +35,7 @@ interface IFinishDialogProps {
     questions: IQuestionTypes[];
     handleQuestionIndex: (questionIndex: number) => void;
     handleFinish?: () => void;
+    handlePartial?: () => void;
     disableBtn: boolean;
 }
 
@@ -44,7 +45,8 @@ function FinishDialog({
   handleOpen,
   handleQuestionIndex,
   handleFinish,
-  disableBtn,
+  handlePartial,
+//   disableBtn,
 }: IFinishDialogProps): JSX.Element {
   const [questionStates, setQuestionStates] = React.useState({});
 
@@ -68,7 +70,10 @@ function FinishDialog({
       return (
         <>
           <Typography variant='paragraph' color='white' className='text-justify leading-5'>Você possui questões ainda não marcadas</Typography>
-          <Button color='orange' disabled>Finalizar</Button>
+          <span className='flex gap-4'>
+            <Button color='cyan' onClick={handlePartial}>enviar parcial</Button>
+            <Button color='orange' disabled>Finalizar</Button>
+          </span>
         </>
       );
     }
@@ -77,7 +82,7 @@ function FinishDialog({
       return (
         <>
           <Typography variant='paragraph' color='white' className='text-justify leading-5'>Ao clicar em <strong>Finalizar</strong>, você estará finalizando sua sessão de prova e enviando suas respostas para correção. <strong>Não será possível continuar a prova ou fazer alterações nas respostas após essa ação</strong>. Certifique-se de que deseja realmente finalizar a prova antes de confirmar essa ação.</Typography>
-          <Button color='orange' className='text-white' onClick={handleFinish} disabled={disableBtn}>Finalizar</Button>
+          <Button color='orange' className='text-white' onClick={handleFinish} >Finalizar</Button>
         </>
       );
     }
@@ -88,8 +93,11 @@ function FinishDialog({
 
     return anySaved ? (
       <>
-        <Typography variant='paragraph' color='white' className='text-justify leading-5'>Você possui questões ainda não marcadas</Typography>
-        <Button color='orange' disabled>Finalizar</Button>
+        <Typography variant='paragraph' color='white' className='text-justify leading-5'>Você possui questões marcadas como &quot;salva&quot;, selecione-a para prosseguir corretamente</Typography>
+        <span className='flex gap-4'>
+          <Button color='cyan'>enviar parcial</Button>
+          <Button color='orange' disabled>Finalizar</Button>
+        </span>
       </>
     ) : '';
   };

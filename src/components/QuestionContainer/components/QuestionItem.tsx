@@ -1,5 +1,6 @@
 import { Tooltip, Typography } from '@material-tailwind/react';
 import { savedStyle, selectedStyle } from '../../../styles/question-container-styles';
+import { stringResizer } from '../../../utils/StringResizer';
 
 /**
  * Defines the prop types for the QuestionItem component.
@@ -40,13 +41,7 @@ function QuestionItem({ index, answer, questionState, statement }: IQuestionItem
             <Typography color="blue-gray" className="font-bold">
                Questão: {index + 1}
             </Typography>
-            <Typography
-              variant="small"
-              color="blue-gray"
-              className="font-normal opacity-80"
-            >
-              {statement}
-            </Typography>
+            <div dangerouslySetInnerHTML={{ __html: stringResizer(statement, 50) }} className='text-black'/>
           </div>
         }
       >

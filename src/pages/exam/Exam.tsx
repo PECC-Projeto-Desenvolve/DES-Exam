@@ -24,7 +24,7 @@ function Exam(): JSX.Element {
 
   const [examPosition, setExamPosition] = React.useState(0);
 
-  const [disableFetchButton, setDisableFetchButton] = React.useState(false);
+  const [disableFetchButton, setDisableFetchButton] = React.useState(true);
 
   const [time, setTime] = React.useState({ minutes: 0, seconds: 0 });
 
@@ -141,8 +141,53 @@ function Exam(): JSX.Element {
     };
   }, [navigate]);
 
+  const getUserPartial = () => {
+    setDisableFetchButton(true);
+
+    const storedQuestions = JSON.parse(localStorage.getItem('questionStates'));
+    const storedExamData = JSON.parse(localStorage.getItem('exam_simulation'));
+
+    const extractedQuestions = storedQuestions
+      ? Object.keys(storedQuestions).map(key => ({
+        questionId: parseInt(key, 10),
+        id: storedQuestions[key].id,
+        position: storedQuestions[key].position
+      }))
+      : [];
+
+    const examQuestionIds = storedExamData.__questions__.map((question) => question.id);
+
+    const missingIds = examQuestionIds.filter(
+      (questionId) => !extractedQuestions.some((item) => item.questionId === questionId)
+    );
+
+    missingIds.forEach((missingQuestionId) => {
+      storedQuestions[missingQuestionId] = {
+        id: null,
+        position: 8,
+        selected: true,
+        saved: false
+      };
+    });
+
+    localStorage.setItem('questionStates', JSON.stringify(storedQuestions));
+
+    const userData = {
+      name: user,
+      document: userDocument,
+      examId: storedExamData.id,
+      questions: Object.keys(storedQuestions).map((key) => ({
+        questionId: parseInt(key, 10),
+        id: storedQuestions[key].id,
+        position: storedQuestions[key].position
+      }))
+    };
+
+    sendUserExamData(userData);
+  };
+
   const getUserExam = () => {
-    setDisableFetchButton(!disableFetchButton);
+    setDisableFetchButton(true);
 
     const storedQuestions = JSON.parse(localStorage.getItem('questionStates'));
     const storedExamData = JSON.parse(localStorage.getItem('exam_simulation'));
@@ -246,6 +291,7 @@ function Exam(): JSX.Element {
             <FinishDialog
               open={openFinishDialog}
               handleOpen={handleOpenFinishDialog}
+              handlePartial={() => getUserPartial()}
               questions={questions}
               handleQuestionIndex={handleQuestionIndex}
               handleFinish={() => getUserExam()}

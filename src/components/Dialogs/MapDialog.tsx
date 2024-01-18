@@ -11,7 +11,7 @@ import {
 import {getActualDate} from '../../utils/GetDate';
 
 import { QuestionItem } from '..';
-import { stringResizer } from '../../utils/StringResizer';
+// import { stringResizer } from '../../utils/StringResizer';
 
 import Aos from 'aos';
 import 'aos/dist/aos.css';
@@ -142,7 +142,7 @@ function MapDialog({
                     index={index}
                     answer={currentQuestionState && currentQuestionState.position}
                     questionState={questionState}
-                    statement={`${stringResizer(question.statement, 50)} ...`}
+                    statement={question.statement}
                   />
                 </span>
               );

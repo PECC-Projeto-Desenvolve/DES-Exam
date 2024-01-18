@@ -213,9 +213,10 @@ function QuestionContainer({ question, questionIndex, onLastQuestion }: IQuestio
           <div className='flex h-fit w-full flex-col items-end justify-end'>
             {currentQuestion.statement.length > 5 &&
             <div className="w-full space-y-8 p-8">
-              <p className={`select-none text-white ${bold && 'font-bold'}`} style={{ fontSize: `${fontSize}px` }}>
+              <div className='select-none text-white' dangerouslySetInnerHTML={{ __html: currentQuestion.statement }}  style={{ fontSize: `${fontSize}px` }}/>
+              {/* <p className={`select-none text-white ${bold && 'font-bold'}`} style={{ fontSize: `${fontSize}px` }}>
                 {currentQuestion.statement}
-              </p>
+              </p> */}
             </div>
             }
             {

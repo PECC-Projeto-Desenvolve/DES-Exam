@@ -1,4 +1,4 @@
-import { Button, Dialog, Card, CardBody, Typography, ButtonGroup, Switch } from '@material-tailwind/react';
+import { Button, Dialog, Card, CardBody, Typography, ButtonGroup } from '@material-tailwind/react';
 import { useFontSize } from '../../context/FontSize';
 import React from 'react';
 
@@ -72,9 +72,9 @@ function AccessibilityDialog({
     confirm();
   };
 
-  const handleSwitchChange = (event) => {
-    setIsSwitchActive(event.target.checked);
-  };
+  //   const handleSwitchChange = (event) => {
+  //     setIsSwitchActive(event.target.checked);
+  //   };
 
   return (
     <>
@@ -103,7 +103,7 @@ function AccessibilityDialog({
                 <p className={`text-white ${isSwitchActive && 'font-bold'}`} style={{ fontSize: fontSize }}>Este é um exemplo</p>
               </div>
 
-              <div className='h-[3rem] w-full'>
+              {/* <div className='h-[3rem] w-full'>
                 <Switch
                   color='blue'
                   label="Texto em negrito"
@@ -113,7 +113,7 @@ function AccessibilityDialog({
                   checked={isSwitchActive}
                   onChange={handleSwitchChange}
                 />
-              </div>
+              </div> */}
               <div className='flex w-full flex-row-reverse'>
                 <Button onClick={handleFontSizeConfirm} color='green'>Confirmar</Button>
               </div>
