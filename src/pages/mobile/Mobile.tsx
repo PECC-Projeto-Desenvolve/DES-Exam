@@ -13,6 +13,7 @@ function Mobile() {
       <div className='flex h-fit w-full flex-col items-center gap-6 text-center'>
         <Typography variant="h1">Ops..</Typography>
         <Typography variant="lead" className="text-2xl">A página que você está procurando não está acessível para celulares</Typography>
+        <Typography variant="lead" className="text-2xl">Por favor acesse através de computadores e notebook</Typography>
 
         <Button size='lg' color='green' fullWidth onClick={handleClick}>Sair</Button>
       </div>
