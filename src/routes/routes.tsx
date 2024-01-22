@@ -5,6 +5,7 @@ import { Simulation } from '../pages/simulation/Simulation';
 import Login from '../pages/login/Login';
 
 import { useLocation } from 'react-router-dom';
+import Mobile from '../pages/mobile/Mobile';
 
 
 function AppRoutes(): JSX.Element {
@@ -18,6 +19,7 @@ function AppRoutes(): JSX.Element {
     <div className={`flex h-screen w-full flex-col items-center justify-center  px-2 md:px-8 lg:px-40 ${handleLocation()} transition-colors duration-200 ease-in`}>
       {/* <SpeedDialWithTextOutside /> */}
       <Routes>
+        <Route path="/mobile" element={<Mobile />}/>
         <Route path="/login" element={<Login />}/>
         <Route path="/" element={<RedirectComponent />} />
         <Route path='/home' element={
