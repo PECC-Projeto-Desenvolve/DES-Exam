@@ -1,5 +1,6 @@
-import { Button, Typography } from '@material-tailwind/react';
-import { Timer } from 'lucide-react';
+import { Button, Dialog, DialogBody, DialogFooter, DialogHeader, IconButton, Input, Typography } from '@material-tailwind/react';
+import { Lock, Timer } from 'lucide-react';
+import React from 'react';
 
 /**
  * Defines the prop types for the Banner component.
@@ -34,32 +35,68 @@ interface IBannerProps {
  * @component
  */
 function Banner({ title, content, btnDisabled, buttonLabel, hasCountdown, schedule, onClick, font, bold }: IBannerProps): JSX.Element {
+  const [open, setOpen] = React.useState(false);
+  const [token, setToken] = React.useState('');
+
+  const handleOpen = () => {
+    setOpen(!open);
+  };
 
   return (
-    <div className="flex h-full flex-col justify-between rounded-lg border border-gray-200 bg-white p-4 shadow-md transition-shadow hover:shadow-lg">
-      <span>
-        <Typography variant="h5">{title}</Typography>
-        <p className={`mt-2 ${bold && 'font-bold'}`} style={{ fontSize: font }}>{content}</p>
-      </span>
-      <div className="mt-4 flex w-full flex-row-reverse">
-        {
-          hasCountdown ? (
-            <>
-              <div className='flex w-full items-end justify-between'>
-                <Typography variant='lead'>A prova irá inicar às <strong>{schedule}</strong></Typography>
-                <Button disabled className='flex items-center gap-2 bg-secondary-400 disabled:bg-secondary-200'>
-                  <Timer size={20} />
+    <>
+      <Dialog
+        open={open}
+        handler={handleOpen}
+      >
+        <DialogHeader>
+            Liberar Candidato
+        </DialogHeader>
+
+        <DialogBody className='-mt-4'>
+          <Input label='TOKEN' onChange={(e) => setToken(e.target.value)} value={token}/>
+        </DialogBody>
+
+        <DialogFooter className='-mt-4'>
+          <Button color='green' disabled={token !== `${import.meta.env.VITE_TUTOR_CREDENTIAL}#8Z`} onClick={() => {
+            localStorage.removeItem('disqualified');
+            setOpen(false);
+            window.location.reload();
+          }}>Liberar</Button>
+        </DialogFooter>
+      </Dialog>
+
+      <div className="flex h-full flex-col justify-between rounded-lg border border-gray-200 bg-white p-4 shadow-md transition-shadow hover:shadow-lg">
+        <span>
+          <Typography variant="h5">{title}</Typography>
+          <p className={`mt-2 ${bold && 'font-bold'}`} style={{ fontSize: font }}>{content}</p>
+        </span>
+        <div className="mt-4 flex w-full flex-row-reverse">
+          {
+            hasCountdown ? (
+              <>
+                <div className='flex w-full items-end justify-between'>
+                  <Typography variant='lead'>A prova irá inicar às <strong>{schedule}</strong></Typography>
+                  <Button disabled className='flex items-center gap-2 bg-secondary-400 disabled:bg-secondary-200'>
+                    <Timer size={20} />
                 Aguarde</Button>
-              </div>
-            </>
-          ) : (
-            <>
-              <Button onClick={onClick} className='bg-secondary-400' disabled={btnDisabled}>{buttonLabel}</Button>
-            </>
-          )
-        }
+                </div>
+              </>
+            ) : (
+              <>
+                <Button onClick={onClick} className='bg-secondary-400' disabled={btnDisabled}> {buttonLabel}</Button>
+
+                {btnDisabled &&
+              <IconButton className='mx-4' color='cyan' onClick={handleOpen}>
+                <Lock />
+              </IconButton>
+                }
+              </>
+            )
+          }
+        </div>
       </div>
-    </div>
+    </>
+
   );
 }
 

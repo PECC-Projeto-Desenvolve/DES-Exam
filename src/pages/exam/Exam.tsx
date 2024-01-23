@@ -1,7 +1,7 @@
 import React from 'react';
 import { QuestionContainer } from '../../components';
 import { useSelector, useDispatch } from 'react-redux';
-import { Button, Typography } from '@material-tailwind/react';
+import { Button, Input, Typography } from '@material-tailwind/react';
 import { AccessibilityDialog } from '../../components/Dialogs/AccessibilityDialog';
 import { MapDialog } from '../../components/Dialogs/MapDialog';
 import { useNavigate } from 'react-router-dom';
@@ -17,6 +17,8 @@ function Exam(): JSX.Element {
   const [openFinishDialog, setOpenFinishDialog] = React.useState(false);
   const [openAbandonDialog, setOpenAbandonDialog] = React.useState(false);
 
+  const [token, setToken] = React.useState('');
+
   const [user, setUser] = React.useState<string>('');
   const [userDocument, setUserDocument] = React.useState<string>('');
 
@@ -28,11 +30,12 @@ function Exam(): JSX.Element {
 
   const [time, setTime] = React.useState({ minutes: 0, seconds: 0 });
 
+  const credential = `${import.meta.env.VITE_TUTOR_CREDENTIAL}#0B`;
+
   const dispatch = useDispatch();
 
   React.useEffect(() => {
-    localStorage.removeItem('questionStates');
-    localStorage.removeItem('disqualified');
+    // localStorage.removeItem('questionStates');
     const authenticatedUserStr = localStorage.getItem('authenticated_user');
     if (!authenticatedUserStr) {
       navigate('/');
@@ -48,7 +51,7 @@ function Exam(): JSX.Element {
       .then(response => response.json())
       .then(data => {
         dispatch(populateExam(data));
-        localStorage.setItem('exam_simulation', JSON.stringify(data));
+        localStorage.setItem('exam', JSON.stringify(data));
       })
       .catch(error => console.error('Erro ao buscar exames:', error));
   }, [dispatch]);
@@ -133,6 +136,7 @@ function Exam(): JSX.Element {
 
     if (sessionStorage.getItem('pageReloaded')) {
       navigate('/home');
+      localStorage.setItem('disqualified', 'true');
       sessionStorage.removeItem('pageReloaded');
     }
 
@@ -145,7 +149,7 @@ function Exam(): JSX.Element {
     setDisableFetchButton(true);
 
     const storedQuestions = JSON.parse(localStorage.getItem('questionStates'));
-    const storedExamData = JSON.parse(localStorage.getItem('exam_simulation'));
+    const storedExamData = JSON.parse(localStorage.getItem('exam'));
 
     const extractedQuestions = storedQuestions
       ? Object.keys(storedQuestions).map(key => ({
@@ -190,7 +194,7 @@ function Exam(): JSX.Element {
     setDisableFetchButton(true);
 
     const storedQuestions = JSON.parse(localStorage.getItem('questionStates'));
-    const storedExamData = JSON.parse(localStorage.getItem('exam_simulation'));
+    const storedExamData = JSON.parse(localStorage.getItem('exam'));
     const extractedQuestions = storedQuestions
       ? Object.keys(storedQuestions).map(key => ({
         questionId: parseInt(key, 10),
@@ -253,21 +257,42 @@ function Exam(): JSX.Element {
       {hasTabChanged ? (
         <>
           <div className='h-full w-full px-12 py-48'>
-            <div className='flex h-full w-full flex-col items-center justify-center rounded-xl bg-white/50 text-center'>
+            <div className='flex h-full w-full flex-col items-center justify-center rounded-xl bg-white/90 text-center'>
               <Typography variant='h4'>
-        Infelizmente você mudou de aba, portanto você está desclassificado.
+        Infelizmente você mudou de aba!
               </Typography>
-              <Button
-                size='lg'
-                className='mt-6'
-                onClick={() => {
-                  localStorage.setItem('disqualified', 'true');
-                  localStorage.removeItem('questionStates');
-                  navigate('/home');
-                }}
-                color='green'>
-                Voltar para tela inicial
-              </Button>
+
+              <Typography variant='lead'>
+Não atualize a página e peça ao responsável por aplicar a prova que venha até sua mesa
+              </Typography>
+
+              <div className='mt-12 w-[50%] rounded-lg bg-white'>
+                <Input label='TOKEN' className='' onChange={(e) => setToken(e.target.value)} value={token}/>
+              </div>
+
+              {token == credential &&
+              <div className='mt-12 flex w-[50%] justify-between'>
+                <Button color='green' onClick={() => {
+                  setHasTabChanged(false);
+                  setExamPosition(0);
+                  setOnEnd(false);
+                  setToken('');
+                }}>Liberar candidato</Button>
+                <Button
+                  color='red'
+                  onClick={() => {
+                    localStorage.setItem('disqualified', 'true');
+                    localStorage.removeItem('questionStates');
+                    navigate('/home');
+                  }}
+                >
+                    Desclassificar candidato
+                </Button>
+
+
+              </div>
+              }
+
             </div>
           </div>
         </>
