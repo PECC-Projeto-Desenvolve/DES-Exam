@@ -25,6 +25,8 @@ function Login() {
     localStorage.removeItem('authenticated');
     localStorage.removeItem('disqualified');
     localStorage.removeItem('exam_simulation');
+    localStorage.removeItem('exam');
+    localStorage.removeItem('questionStates');
     localStorage.removeItem('finishedExam');
     localStorage.removeItem('authenticated_user');
     localStorage.removeItem('auth_token');
@@ -136,12 +138,19 @@ function Login() {
 
   return (
     <section className='flex h-screen w-screen items-end justify-center bg-purple-300'>
+      <section className='relative h-full w-[70%] bg-cover bg-no-repeat'>
+        <img
+          src={BG}
+          alt="Imagem de Fundo"
+          className='absolute h-full w-full '
+        />
+        <img src={astronauts} className='absolute right-20 top-12 ml-12 mt-12 animate-blob'/>
+      </section>
 
-      <img src={BG}/>
+      {/* <img src={BG}/> */}
 
-      <img src={astronauts} className='absolute top-0 ml-12 mt-12 animate-blob'/>
 
-      <aside className='flex h-full w-full flex-col items-center justify-center bg-white'>
+      <aside className='flex h-full w-[30%] flex-col items-center justify-center bg-white'>
         <img src={Logo} className='mb-12 w-[10rem]'/>
         <form className='flex h-fit w-[28rem] flex-col gap-2 rounded-md bg-white p-4 transition-transform'>
           <span className='flex flex-col transition-all'>

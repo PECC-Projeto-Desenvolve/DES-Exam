@@ -40,6 +40,8 @@ function Home() {
     const newFont = localStorage.getItem('confirmedFont');
     const newUser = JSON.parse(localStorage.getItem('authenticated_user') || '{}' );
 
+    localStorage.setItem('mapOpened', '1');
+
     if (localStorage.getItem('disqualified') == 'true') {
       setDisqualified(true);
     }
@@ -86,6 +88,9 @@ function Home() {
   };
 
   const handleFinishModal = () => {
+    localStorage.removeItem('exam');
+    localStorage.removeItem('questionStates');
+    localStorage.removeItem('exam_simulation');
     setFinishedModal(false);
   };
 
@@ -165,6 +170,10 @@ function Home() {
             navigate('/login');
             localStorage.removeItem('authenticated_user');
             localStorage.removeItem('authToken');
+            localStorage.removeItem('exam');
+            localStorage.removeItem('questionStates');
+            localStorage.removeItem('exam_simulation');
+            localStorage.removeItem('finishedExam');
           }}
         >
           Sair <LogOut size={18} />
