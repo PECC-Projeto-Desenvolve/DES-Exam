@@ -222,7 +222,7 @@ function QuestionContainer({ question, questionIndex, onLastQuestion }: IQuestio
             {
               currentQuestion.image &&
               <div className='mb-6 flex h-fit w-full cursor-pointer flex-col items-center justify-center px-[20rem] py-6' >
-                <img src={currentQuestion.image} className={`w-[100%] rounded-xl ${currentQuestion.statement.length < 5 ? 'max-w-[23rem]' : 'max-w-[32rem]'}`} onClick={() => handleOpenImageModal()}/>
+                <img src={currentQuestion.image} className={`w-[100%] rounded ${currentQuestion.statement.length < 5 ? 'max-w-[23rem]' : 'max-w-[32rem]'}`} onClick={() => handleOpenImageModal()}/>
                 <Typography color="white" onClick={() => handleOpenImageModal()}>Clique para ampliar imagem</Typography>
               </div>
             }

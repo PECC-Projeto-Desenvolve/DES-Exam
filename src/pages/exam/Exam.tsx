@@ -36,6 +36,7 @@ function Exam(): JSX.Element {
 
   React.useEffect(() => {
     // localStorage.removeItem('questionStates');
+
     const authenticatedUserStr = localStorage.getItem('authenticated_user');
     if (!authenticatedUserStr) {
       navigate('/');
@@ -47,13 +48,19 @@ function Exam(): JSX.Element {
     setUser(authenticatedUser.name);
     setUserDocument(authenticatedUser.cpf);
 
-    fetch(`${import.meta.env.VITE_API_URL}/exams/${import.meta.env.VITE_EXAM_ID}`)
-      .then(response => response.json())
-      .then(data => {
-        dispatch(populateExam(data));
-        localStorage.setItem('exam', JSON.stringify(data));
-      })
-      .catch(error => console.error('Erro ao buscar exames:', error));
+    {!localStorage.getItem('exam') &&
+        fetch(`${import.meta.env.VITE_API_URL}/exams/${import.meta.env.VITE_EXAM_ID}`)
+          .then(response => response.json())
+          .then(data => {
+            const shuffledQuestions = data.__questions__.sort(() => Math.random() - 0.5);
+
+            const shuffledData = { ...data, __questions__: shuffledQuestions };
+
+            dispatch(populateExam(shuffledData));
+            localStorage.setItem('exam', JSON.stringify(shuffledData));
+          })
+          .catch(error => console.error('Erro ao buscar exames:', error));
+    }
   }, [dispatch]);
 
   const examState = useSelector((state: RootState) => state.exam.exam);
@@ -214,6 +221,26 @@ function Exam(): JSX.Element {
   };
 
   const sendUserExamData = async (userData) => {
+    const questionsIds = examState.__questions__.map(obj => obj.id);
+    const mirrorData = {
+      userName: user,
+      document: userDocument,
+      examId: userData.examId,
+      questionsMirror: questionsIds,
+    };
+
+    try {
+      await fetch(`${import.meta.env.VITE_API_URL}/questions-mirror`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(mirrorData)
+      });
+    } catch (error) {
+      console.error('Erro ao enviar o espelho da questão:', error);
+    }
+
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/userexams`, {
         method: 'POST',
@@ -283,6 +310,7 @@ Não atualize a página e peça ao responsável por aplicar a prova que venha at
                   onClick={() => {
                     localStorage.setItem('disqualified', 'true');
                     localStorage.removeItem('questionStates');
+                    localStorage.removeItem('exam');
                     navigate('/home');
                   }}
                 >
