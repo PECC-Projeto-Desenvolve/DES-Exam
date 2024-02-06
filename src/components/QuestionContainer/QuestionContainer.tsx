@@ -83,6 +83,8 @@ function QuestionContainer({ question, questionIndex, onLastQuestion }: IQuestio
   const currentQuestion = question[questionIndex];
 
   React.useEffect(() => {
+    let isMounted = true;
+
     if (currentQuestion && currentQuestion.id) {
       fetch(`${import.meta.env.VITE_API_URL}/alternatives/${currentQuestion.id}`)
         .then(response => response.json())
@@ -97,12 +99,18 @@ function QuestionContainer({ question, questionIndex, onLastQuestion }: IQuestio
             saved: false
           }));
 
-          setAlternatives(newAlternatives);
+          if (isMounted) {
+            setAlternatives(newAlternatives);
+          }
         })
         .catch(error => {
           console.error('Erro ao buscar alternativas:', error);
         });
     }
+
+    return () => {
+      isMounted = false;
+    };
   }, [currentQuestion]);
 
   React.useEffect(() => {

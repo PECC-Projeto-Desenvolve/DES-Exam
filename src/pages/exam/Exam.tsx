@@ -36,8 +36,6 @@ function Exam(): JSX.Element {
   const dispatch = useDispatch();
 
   React.useEffect(() => {
-    // localStorage.removeItem('questionStates');
-
     const authenticatedUserStr = localStorage.getItem('authenticated_user');
     if (!authenticatedUserStr) {
       navigate('/');
@@ -50,20 +48,29 @@ function Exam(): JSX.Element {
     setUserId(authenticatedUser.uuid);
     setUserDocument(authenticatedUser.cpf);
 
-    {!localStorage.getItem('exam') &&
-        fetch(`${import.meta.env.VITE_API_URL}/exams/${import.meta.env.VITE_EXAM_ID}`)
-          .then(response => response.json())
-          .then(data => {
-            const shuffledQuestions = data.__questions__.sort(() => Math.random() - 0.5);
+    const abortController = new AbortController();
 
-            const shuffledData = { ...data, __questions__: shuffledQuestions };
+    if (!localStorage.getItem('exam')) {
+      fetch(`${import.meta.env.VITE_API_URL}/exams/${import.meta.env.VITE_EXAM_ID}`, {
+        signal: abortController.signal
+      })
+        .then(response => response.json())
+        .then(data => {
+          const shuffledQuestions = data.__questions__.sort(() => Math.random() - 0.5);
 
-            dispatch(populateExam(shuffledData));
-            localStorage.setItem('exam', JSON.stringify(shuffledData));
-          })
-          .catch(error => console.error('Erro ao buscar exames:', error));
+          const shuffledData = { ...data, __questions__: shuffledQuestions };
+
+          dispatch(populateExam(shuffledData));
+          localStorage.setItem('exam', JSON.stringify(shuffledData));
+        })
+        .catch(error => console.error('Erro ao buscar exames:', error));
     }
+
+    return () => {
+      abortController.abort();
+    };
   }, [dispatch]);
+
 
   const examState = useSelector((state: RootState) => state.exam.exam);
 
@@ -134,6 +141,7 @@ function Exam(): JSX.Element {
       window.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, []);
+
 
   React.useEffect(() => {
     const handleBeforeUnload = (e) => {
@@ -312,7 +320,7 @@ function Exam(): JSX.Element {
               </Typography>
 
               <Typography variant='lead'>
-Não atualize a página e peça ao responsável por aplicar a prova que venha até sua mesa
+                    Não atualize a página e peça ao responsável por aplicar a prova que venha até sua mesa
               </Typography>
 
               <div className='mt-12 w-[50%] rounded-lg bg-white'>
