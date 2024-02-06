@@ -138,7 +138,8 @@ function Simulation(): JSX.Element {
       ? Object.keys(storedQuestions).map(key => ({
         questionId: parseInt(key, 10),
         id: storedQuestions[key].id,
-        position: storedQuestions[key].position
+        position: storedQuestions[key].position,
+        rightAnswer: storedQuestions[key].rightAnswer
       }))
       : [];
 
@@ -151,10 +152,10 @@ function Simulation(): JSX.Element {
       });
 
     setTimeout(() => {
-      navigate('/home');
-      localStorage.removeItem('questionStates');
+      navigate('/simulation-results');
+      //   localStorage.removeItem('questionStates');
       console.log(data);
-    }, 1000);
+    }, 200);
 
   };
 
