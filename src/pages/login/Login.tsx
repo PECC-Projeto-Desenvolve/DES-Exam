@@ -75,6 +75,7 @@ function Login() {
           cpf,
           birthday,
           token,
+          uuid: userData.id,
           name: userData.nomeCompleto
         };
 

@@ -20,6 +20,7 @@ function Exam(): JSX.Element {
   const [token, setToken] = React.useState('');
 
   const [user, setUser] = React.useState<string>('');
+  const [userId, setUserId] = React.useState<string>('');
   const [userDocument, setUserDocument] = React.useState<string>('');
 
   const [questions, setQuestions] = React.useState([]);
@@ -46,6 +47,7 @@ function Exam(): JSX.Element {
     const authenticatedUser = JSON.parse(authenticatedUserStr);
 
     setUser(authenticatedUser.name);
+    setUserId(authenticatedUser.uuid);
     setUserDocument(authenticatedUser.cpf);
 
     {!localStorage.getItem('exam') &&
@@ -239,6 +241,26 @@ function Exam(): JSX.Element {
       });
     } catch (error) {
       console.error('Erro ao enviar o espelho da questão:', error);
+    }
+
+    try {
+      const storedExamData = JSON.parse(localStorage.getItem('exam'));
+
+      const requestBody = {
+        testId: storedExamData.id,
+        absent: false,
+      };
+
+      await fetch(`${import.meta.env.VITE_LOGIN_API}/form/${userId}/prova`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'api-key': `${import.meta.env.VITE_API_KEY}`
+        },
+        body: JSON.stringify(requestBody),
+      });
+    } catch (error) {
+      console.error('Erro ao enviar os dados id/prova:', error);
     }
 
     try {
