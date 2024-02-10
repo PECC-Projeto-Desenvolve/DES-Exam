@@ -5,6 +5,7 @@ import { stringResizer } from '../../utils/StringResizer';
 
 import Aos from 'aos';
 import 'aos/dist/aos.css';
+import { Typography } from '@material-tailwind/react';
 
 interface ExamSimulation {
     id: string;
@@ -28,35 +29,37 @@ interface ExamSimulation {
     createdAt: string;
     updatedAt: string;
     deletedAt: string | null;
+    position?: number;
   }
 
-// interface QuestionInfo {
-//   currentQuestionId: number;
-//   id: number;
-//   position: number;
-//   selected: boolean;
-//   saved: boolean;
-// }
+interface QuestionInfo {
+  currentQuestionId: number;
+  id: number;
+  position: number;
+  selected: boolean;
+  saved: boolean;
+}
 
 function SimulationResult() {
   const [examSimulation, setExamSimulation] = React.useState<ExamSimulation | null>(null);
-  const [questionStates, setQuestionStates] = React.useState(null);
 
   React.useEffect(() => {
     const storedItem = localStorage.getItem('exam_simulation');
-
     const storedQuestions = localStorage.getItem('questionStates');
 
-    // setQuestionStates(JSON.parse());
-
     if (storedItem) {
-      const parsedItem = JSON.parse(storedItem);
-      setExamSimulation(parsedItem);
-    }
+      const parsedItem: ExamSimulation = JSON.parse(storedItem);
 
-    if (storedQuestions) {
-      const parsedQuestions = JSON.parse(storedQuestions);
-      setQuestionStates(parsedQuestions);
+      if (storedQuestions) {
+        const parsedQuestions: { [key: string]: QuestionInfo } = JSON.parse(storedQuestions);
+
+        parsedItem.__questions__ = parsedItem.__questions__.map(question => ({
+          ...question,
+          position: parsedQuestions[question.id]?.position,
+        }));
+      }
+
+      setExamSimulation(parsedItem);
     }
   }, []);
 
@@ -69,25 +72,30 @@ function SimulationResult() {
       <div className='overflow-hidden rounded-md shadow-lg'>
         {examSimulation && examSimulation.__questions__.map((item, index) => (
           <>
-            <div className='flex w-full items-center justify-between gap-2 border-b-2 bg-white p-4' data-aos="fade-right" data-aos-delay={100 * index}>
-              <span className='flex items-center gap-4'>
-                <p className='flex h-7 w-7 items-center justify-center rounded-md bg-blue-gray-50'>{index + 1}</p>
-                <div key={index} dangerouslySetInnerHTML={{ __html: stringResizer(item.statement, 50)}}/>
+            <div
+              className={
+                `grid w-full grid-cols-4 gap-2 border-b-2 p-4 text-white
+                ${decryptRightAnswer(item.rightAnswer) === String.fromCharCode(64 + item.position + 1) ? 'bg-green-500' : 'bg-red-500'}`}
+              data-aos="fade-right" data-aos-delay={100 * index}
+            >
+              <span className='col-span-2 flex items-center gap-4'>
+                <p className='flex h-7 w-7 items-center justify-center rounded-md bg-blue-gray-50 text-black'>{index + 1}</p>
+                <span>
+                  <Typography>{item.title}</Typography>
+                  <div key={index} dangerouslySetInnerHTML={{ __html: stringResizer(item.statement, 50)}}/>
+                </span>
               </span>
-              <span>
+              <span className='flex flex-col items-center'>
+                <Typography variant="small">Alternativa correta:</Typography>
                 <p>{decryptRightAnswer(item.rightAnswer)}</p>
+              </span>
+              <span className='flex flex-col items-center'>
+                <Typography variant="small">Você marcou:</Typography>
+                <p> {String.fromCharCode(64 + item.position + 1)}</p>
               </span>
             </div>
           </>
         ))}
-
-        {/* {questionStates && questionStates.map((item, index) => (
-          <>
-            <div key={index}>
-              {item.title}
-            </div>
-          </>
-        ))} */}
       </div>
     </section>
   );

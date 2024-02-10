@@ -153,7 +153,6 @@ function Simulation(): JSX.Element {
 
     setTimeout(() => {
       navigate('/simulation-results');
-      //   localStorage.removeItem('questionStates');
       console.log(data);
     }, 200);
 
