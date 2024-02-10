@@ -89,7 +89,9 @@ function QuestionContainer({ question, questionIndex, onLastQuestion }: IQuestio
       fetch(`${import.meta.env.VITE_API_URL}/alternatives/${currentQuestion.id}`)
         .then(response => response.json())
         .then(data => {
-          const newAlternatives = data.map((item: AlternativeItem) => ({
+          const sortedData = data.sort((a: AlternativeItem, b: AlternativeItem) => a.position - b.position);
+
+          const newAlternatives = sortedData.map((item: AlternativeItem) => ({
             id: item.id,
             position: item.position,
             label: item.text,
@@ -222,9 +224,6 @@ function QuestionContainer({ question, questionIndex, onLastQuestion }: IQuestio
             {currentQuestion.statement.length > 5 &&
             <div className="w-full space-y-8 p-8">
               <div className='select-none text-white' dangerouslySetInnerHTML={{ __html: currentQuestion.statement }}  style={{ fontSize: `${fontSize}px` }}/>
-              {/* <p className={`select-none text-white ${bold && 'font-bold'}`} style={{ fontSize: `${fontSize}px` }}>
-                {currentQuestion.statement}
-              </p> */}
             </div>
             }
             {
