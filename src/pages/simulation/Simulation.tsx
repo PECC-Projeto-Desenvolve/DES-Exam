@@ -7,11 +7,12 @@ import { MapDialog } from '../../components/Dialogs/MapDialog';
 import { useSelector, useDispatch } from 'react-redux';
 import { populateExam } from '../../store/slices/examSlice';
 import { RootState } from '../../store/store';
-import { AccessibilityDialog } from '../../components/Dialogs/AccessibilityDialog';
-import { FinishDialog } from '../../components/Dialogs/FinishDialog';
-import { AbandonDialog } from '../../components/Dialogs/AbandonDialog';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+
+import { AccessibilityDialog } from '../../components/Dialogs/AccessibilityDialog';
+import { FinishDialog } from '../../components/Dialogs/FinishDialogSimulation';
+import { AbandonDialog } from '../../components/Dialogs/AbandonDialog';
 import { TutorialDialog } from '../../components/Dialogs/TutorialDialog';
 
 function Simulation(): JSX.Element {
@@ -20,16 +21,8 @@ function Simulation(): JSX.Element {
   const [openFinishDialog, setOpenFinishDialog] = React.useState(false);
   const [openAbandonDialog, setOpenAbandonDialog] = React.useState(false);
   const [openTutorial, setOpenTutorial] = React.useState<boolean>(false);
-
   const [questions, setQuestions] = React.useState([]);
-
   const [examPosition, setExamPosition] = React.useState(0);
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [data, setData] = React.useState({ name: '', document: '', examId: '', __questions__: [] });
-
-  const [user, setUser] = React.useState<string>('');
-  const [userDocument, setUserDocument] = React.useState<string>('');
 
   const [time, setTime] = React.useState({ minutes: 0, seconds: 0 });
 
@@ -43,11 +36,6 @@ function Simulation(): JSX.Element {
       navigate('/');
       return;
     }
-
-    const authenticatedUser = JSON.parse(authenticatedUserStr);
-
-    setUser(authenticatedUser.name);
-    setUserDocument(authenticatedUser.cpf);
 
     fetch(`${import.meta.env.VITE_API_URL}/exams/${import.meta.env.VITE_SIMULATION_ID}`)
       .then(response => response.json())
@@ -132,28 +120,8 @@ function Simulation(): JSX.Element {
   }, []);
 
   const getUserExam = () => {
-    const storedQuestions = JSON.parse(localStorage.getItem('questionStates'));
-    const storedExamData = JSON.parse(localStorage.getItem('exam_simulation'));
-    const extractedQuestions = storedQuestions
-      ? Object.keys(storedQuestions).map(key => ({
-        questionId: parseInt(key, 10),
-        id: storedQuestions[key].id,
-        position: storedQuestions[key].position,
-        rightAnswer: storedQuestions[key].rightAnswer
-      }))
-      : [];
-
-    setData(
-      {
-        name: user,
-        document: userDocument,
-        examId: storedExamData.id,
-        __questions__: extractedQuestions
-      });
-
     setTimeout(() => {
       navigate('/simulation-results');
-      console.log(data);
     }, 200);
 
   };
@@ -207,7 +175,8 @@ function Simulation(): JSX.Element {
         questions={questions}
         handleQuestionIndex={handleQuestionIndex}
         handleFinish={() => getUserExam()}
-        disableBtn={false}
+        handlePartial={() => console.log('hue')}
+        disableBtn={true}
       />
 
       <AbandonDialog
