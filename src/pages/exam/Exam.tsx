@@ -29,6 +29,8 @@ function Exam(): JSX.Element {
 
   const [disableFetchButton, setDisableFetchButton] = React.useState(true);
 
+  const [onEnd, setOnEnd] = React.useState<boolean>(false);
+
   const [time, setTime] = React.useState({ minutes: 0, seconds: 0 });
 
   const credential = `${import.meta.env.VITE_TUTOR_CREDENTIAL}#0B`;
@@ -109,8 +111,6 @@ function Exam(): JSX.Element {
 
     setExamPosition(index);
   };
-
-  const [onEnd, setOnEnd] = React.useState<boolean>(false);
 
   const handleEnd = () => {
     setOnEnd(!onEnd);
