@@ -7,6 +7,7 @@ import Login from '../pages/login/Login';
 import { useLocation } from 'react-router-dom';
 import Mobile from '../pages/mobile/Mobile';
 import SimulationResult from '../pages/simulationResult/SimulationResult';
+import Tag from '../pages/tag/Tag';
 
 
 function AppRoutes(): JSX.Element {
@@ -24,6 +25,7 @@ function AppRoutes(): JSX.Element {
         <Route path="/simulation-results" element={<SimulationResult />}/>
         <Route path="/login" element={<Login />}/>
         <Route path="/" element={<RedirectComponent />} />
+        <Route path="/tag" element={<Tag />} />
         <Route path='/home' element={
           <>
             <div className='h-full w-full py-5'>
