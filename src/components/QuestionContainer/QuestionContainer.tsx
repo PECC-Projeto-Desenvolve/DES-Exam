@@ -83,7 +83,8 @@ function QuestionContainer({ question, questionIndex, onLastQuestion }: IQuestio
   const currentQuestion = question[questionIndex];
 
   React.useEffect(() => {
-    let isMounted = true;
+    // let isMounted = true;
+    const abortController = new AbortController();
 
     if (currentQuestion && currentQuestion.id) {
       fetch(`${import.meta.env.VITE_API_URL}/alternatives/${currentQuestion.id}`)
@@ -101,9 +102,7 @@ function QuestionContainer({ question, questionIndex, onLastQuestion }: IQuestio
             saved: false
           }));
 
-          if (isMounted) {
-            setAlternatives(newAlternatives);
-          }
+          setAlternatives(newAlternatives);
         })
         .catch(error => {
           console.error('Erro ao buscar alternativas:', error);
@@ -111,7 +110,8 @@ function QuestionContainer({ question, questionIndex, onLastQuestion }: IQuestio
     }
 
     return () => {
-      isMounted = false;
+      abortController.abort();
+    //   isMounted = false;
     };
   }, [currentQuestion]);
 
@@ -132,7 +132,7 @@ function QuestionContainer({ question, questionIndex, onLastQuestion }: IQuestio
     } else if (localStorage.getItem('IsBoldActive') == 'false') {
       setBold(false);
     }
-  }, [localStorage.getItem('IsBoldActive')]);
+  }, []);
 
   /**
  * Handles state changes for checkboxes related to a question.
@@ -172,7 +172,7 @@ function QuestionContainer({ question, questionIndex, onLastQuestion }: IQuestio
       questionId={currentQuestion}
       bold={bold}
     />
-  ), [fontSize, alternatives, handleCheckboxStateChange]);
+  ), [fontSize, alternatives, handleCheckboxStateChange, currentQuestion, bold]);
 
   /**
  * Conditional rendering based on the availability of the current question.
@@ -181,9 +181,7 @@ function QuestionContainer({ question, questionIndex, onLastQuestion }: IQuestio
  * @returns {JSX.Element|String} The MultiCheckboxes component or a loading message.
  */
   if (!currentQuestion) {
-    return (
-      <QuestionContainerSkelleton />
-    );
+    return <QuestionContainerSkelleton />;
   }
 
   return (

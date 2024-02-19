@@ -51,26 +51,25 @@ function Exam(): JSX.Element {
     setUserDocument(authenticatedUser.cpf);
 
     const abortController = new AbortController();
+    const signal = abortController.signal;
 
     if (!localStorage.getItem('exam')) {
-      fetch(`${import.meta.env.VITE_API_URL}/exams/${import.meta.env.VITE_EXAM_ID}`, {
-        signal: abortController.signal
-      })
+      fetch(`${import.meta.env.VITE_API_URL}/exams/${import.meta.env.VITE_EXAM_ID}`, { signal })
         .then(response => response.json())
         .then(data => {
-          const shuffledQuestions = data.__questions__.sort(() => Math.random() - 0.5);
-
+          const shuffledQuestions = data.__questions__.sort(() => 0.5 - Math.random());
           const shuffledData = { ...data, __questions__: shuffledQuestions };
-
           dispatch(populateExam(shuffledData));
           localStorage.setItem('exam', JSON.stringify(shuffledData));
         })
-        .catch(error => console.error('Erro ao buscar exames:', error));
+        .catch(error => {
+          if (error.name !== 'AbortError') {
+            console.error('Erro ao buscar exames:', error);
+          }
+        });
     }
 
-    return () => {
-      abortController.abort();
-    };
+    return () => abortController.abort();
   }, [dispatch]);
 
 

@@ -37,13 +37,18 @@ function Simulation(): JSX.Element {
       return;
     }
 
-    fetch(`${import.meta.env.VITE_API_URL}/exams/${import.meta.env.VITE_SIMULATION_ID}`)
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+
+    fetch(`${import.meta.env.VITE_API_URL}/exams/${import.meta.env.VITE_SIMULATION_ID}`, { signal })
       .then(response => response.json())
       .then(data => {
         dispatch(populateExam(data));
         localStorage.setItem('exam_simulation', JSON.stringify(data));
       })
       .catch(error => console.error('Erro ao buscar exames:', error));
+
+    return () => abortController.abort();
   }, [dispatch]);
 
   //   @ts-ignore
