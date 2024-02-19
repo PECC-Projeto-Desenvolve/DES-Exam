@@ -1,5 +1,4 @@
 import { Button, Chip } from '@material-tailwind/react';
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function Tag() {
