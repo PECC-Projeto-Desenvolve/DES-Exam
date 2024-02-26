@@ -36,9 +36,14 @@ function Home() {
   const [openSettings, setOpenSettings] = React.useState<boolean>(false);
   const [openTutorial, setOpenTutorial] = React.useState<boolean>(false);
 
+  const [testerMode, setTesterMode] = React.useState('');
+
   React.useEffect(() => {
     const newFont = localStorage.getItem('confirmedFont');
     const newUser = JSON.parse(localStorage.getItem('authenticated_user') || '{}' );
+
+    const testerMode = localStorage.getItem('tester-mode');
+    setTesterMode(testerMode);
 
     localStorage.setItem('mapOpened', '1');
 
@@ -184,6 +189,16 @@ function Home() {
         <Typography variant="lead" color="white" className='text-2xl'>Seja bem vindo(a) <b>{user.name}</b></Typography>
       </div>
 
+      {testerMode == 'on' &&
+
+
+      <Card className='mb-4 flex flex-row justify-between rounded-md p-2'>
+        <Typography>Resultado</Typography>
+
+        <Button onClick={ () => navigate('/result') } color='light-green'>Ver seu resultado</Button>
+      </Card>
+      }
+
       <div className='h-fit w-full rounded-md border bg-white shadow-md'>
 
         <div className='flex w-full items-end justify-end '>
@@ -214,8 +229,8 @@ function Home() {
         </Typography>
 
         <Button className='flex items-center gap-2' onClick={handleOpenTutorial} color='green'>
-          <HelpCircle size={18}/>
             Tutorial
+          <HelpCircle size={18}/>
         </Button>
       </div>
 

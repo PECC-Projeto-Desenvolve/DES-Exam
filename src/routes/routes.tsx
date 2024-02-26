@@ -8,13 +8,21 @@ import { useLocation } from 'react-router-dom';
 import Mobile from '../pages/mobile/Mobile';
 import SimulationResult from '../pages/simulationResult/SimulationResult';
 import Tag from '../pages/tag/Tag';
+import Result from '../pages/result/Result';
 
 
 function AppRoutes(): JSX.Element {
 
   const handleLocation = () => {
     const location = useLocation();
-    return location.pathname === '/practice' || location.pathname === '/exam' ? 'bg-[#435969]' : 'bg-[#0094FF]';
+
+    if (location.pathname === '/practice' || location.pathname === '/exam') {
+      return 'bg-[#435969]';
+    } else if (location.pathname === '/result') {
+      return 'bg-[#eeeeee]';
+    } else {
+      return 'bg-[#0094FF]';
+    }
   };
 
   return (
@@ -23,6 +31,7 @@ function AppRoutes(): JSX.Element {
       <Routes>
         <Route path="/mobile" element={<Mobile />}/>
         <Route path="/simulation-results" element={<SimulationResult />}/>
+        <Route path="/result" element={<Result />}/>
         <Route path="/login" element={<Login />}/>
         <Route path="/" element={<RedirectComponent />} />
         <Route path="/tag" element={<Tag />} />
