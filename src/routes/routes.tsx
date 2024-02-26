@@ -19,7 +19,7 @@ function AppRoutes(): JSX.Element {
     if (location.pathname === '/practice' || location.pathname === '/exam') {
       return 'bg-[#435969]';
     } else if (location.pathname === '/result') {
-      return 'bg-[#eee]';
+      return 'bg-[#eeeeee]';
     } else {
       return 'bg-[#0094FF]';
     }

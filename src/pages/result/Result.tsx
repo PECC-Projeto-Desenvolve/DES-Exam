@@ -3,6 +3,7 @@ import React from 'react';
 import { decryptRightAnswer } from '../../utils/cryptoUtils';
 import { Calendar, ChevronLeft, ListChecks } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { formatDate } from '../../utils/formatDate';
 
 /**
  * Defines the structure for User data.
@@ -93,6 +94,11 @@ import { useNavigate } from 'react-router-dom';
 function Result() {
   const [user, setUser] = React.useState<User>({});
   const [userExams, setUserExams] = React.useState<UserExam | null>(null);
+
+  /**
+  * Receive questions Id
+  */
+  const questionsToCancel = [32,36,56];
 
   const navigate = useNavigate();
 
@@ -190,7 +196,7 @@ function Result() {
               <Typography variant="lead">Data de prova: </Typography>
               <Chip value={
                 <span className='flex items-center gap-2'>
-                  <Calendar /> <p className='text-lg'>18/02/2024</p>
+                  <Calendar /> <p className='text-lg'>{formatDate(userExams.createdAt)}</p>
                 </span>
               } size='lg' className='w-fit' color='green'/>
             </span>
@@ -210,8 +216,11 @@ function Result() {
               <>
                 <Card
                   key={index}
-                  className='flex flex-col rounded-md border border-border bg-modal-bg'
+                  className={`flex flex-col rounded-md border border-border bg-modal-bg ${questionsToCancel.includes(userQuestion.questionId) ? 'border-[0.6rem] border-orange-600' : '' }`}
                 >
+                  {questionsToCancel.includes(userQuestion.questionId) &&
+                    <Chip value="questão anulada" className='absolute right-0 rounded-none rounded-bl-md bg-orange-600 text-[16px]'/>
+                  }
                   <div className="flex w-full select-none items-center gap-4 bg-modal-heading p-4">
                     <div className='flex h-[2rem] w-[2rem] items-center justify-center rounded-full bg-white'>
                       <Typography className="font-bold" color="black">{index + 1}</Typography>
@@ -225,6 +234,7 @@ function Result() {
                     <div className="select-none text-white" style={{ whiteSpace: 'pre-wrap'}} dangerouslySetInnerHTML={{ __html: userQuestion.statement }} />
                   </div>
 
+                  {!questionsToCancel.includes(userQuestion.questionId) &&
                   <div className='mb-8 flex w-full flex-col gap-4 px-4'>
                     <Card className={`flex w-full flex-row items-center gap-3 rounded-md border-2  px-2 py-3 text-white ${
                       String.fromCharCode(64 + userQuestion.position + 1) == decryptRightAnswer(userQuestion.rightAnswer) ? 'border-question-selected-100 bg-question-selected-200' : 'border-red-900 bg-red-600'
@@ -259,7 +269,29 @@ function Result() {
                         </div>
                     }
                   </div>
+                  }
+
+                  {questionsToCancel.includes(userQuestion.questionId) &&
+                    <div className='mb-8 flex w-full flex-col gap-4 px-4'>
+                      {(userQuestion.alternatives || []).map((alternative, index) => (
+                        <React.Fragment key={index}>
+                          <Card className={'flex w-full flex-row items-center gap-3 rounded-md border-2  border-red-600 bg-red-500 px-2 py-3 text-white'}>
+                            <div className='flex h-[2rem] w-[2rem] items-center justify-center rounded-full bg-white'>
+                              <p className='text-black'>{String.fromCharCode(64 + userQuestion.position + 1)}</p>
+                            </div>
+                            {alternative.text}
+                          </Card>
+                        </React.Fragment>
+                      ))}
+                    </div>
+                  }
                 </Card>
+
+                <div className='my-2 flex h-fit w-full items-center gap-2'>
+                  <div className=' h-[1px] w-full bg-gray-400' />
+                  <Typography variant="h6" className="text-gray-500"> # </Typography>
+                  <div className=' h-[1px] w-full bg-gray-400' />
+                </div>
               </>
             ))}
           </div>
