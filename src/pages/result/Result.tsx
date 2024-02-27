@@ -211,81 +211,87 @@ function Result() {
             </span>
           </div>
 
-          <div className='flex flex-col gap-2'>
+          <div className='flex flex-col gap-2' id="user-result-card">
             {userExams.questions.map((userQuestion, index) => (
               <>
-                <Card
-                  key={index}
-                  className={`flex flex-col rounded-md border border-border bg-modal-bg ${questionsToCancel.includes(userQuestion.questionId) ? 'border-[0.6rem] border-orange-600' : '' }`}
-                >
-                  {questionsToCancel.includes(userQuestion.questionId) &&
-                    <Chip value="questão anulada" className='absolute right-0 rounded-none rounded-bl-md bg-orange-600 text-[16px]'/>
-                  }
-                  <div className="flex w-full select-none items-center gap-4 bg-modal-heading p-4">
-                    <div className='flex h-[2rem] w-[2rem] items-center justify-center rounded-full bg-white'>
-                      <Typography className="font-bold" color="black">{index + 1}</Typography>
-                    </div>
-                    <Typography className="text-white" variant='h6'>
-                      {userQuestion.title}
-                    </Typography>
+                {!userQuestion ? (
+                  <div>
+                    carregando...
                   </div>
-
-                  <div className="w-full p-4">
-                    <div className="select-none text-white" style={{ whiteSpace: 'pre-wrap'}} dangerouslySetInnerHTML={{ __html: userQuestion.statement }} />
-                  </div>
-
-                  {!questionsToCancel.includes(userQuestion.questionId) &&
-                  <div className='mb-8 flex w-full flex-col gap-4 px-4'>
-                    <Card className={`flex w-full flex-row items-center gap-3 rounded-md border-2  px-2 py-3 text-white ${
-                      String.fromCharCode(64 + userQuestion.position + 1) == decryptRightAnswer(userQuestion.rightAnswer) ? 'border-question-selected-100 bg-question-selected-200' : 'border-red-900 bg-red-600'
-                    }`}>
-                      <div className='flex h-[2rem] w-[2rem] items-center justify-center rounded-full bg-white'>
-                        <p className='text-black'>{String.fromCharCode(64 + userQuestion.position + 1)}</p>
-                      </div>
-                      {userQuestion.alternatives && userQuestion.alternatives
-                        .filter((alternative) => alternative.position === userQuestion.position)
-                        .map((alternative, altIndex) => (
-                          <div key={altIndex}>
-                            {alternative.text}
-                          </div>
-                        ))}
-                    </Card>
-
-                    {String.fromCharCode(64 + userQuestion.position + 1) != decryptRightAnswer(userQuestion.rightAnswer) &&
-                        <div className='rounded-md bg-white/40 p-2'>
-                          <Typography variant="lead" className="mb-2 font-bold" color="white">Alternativa correta:</Typography>
-                          <div className='flex w-full items-center gap-2 rounded-md border bg-modal-heading p-2 text-white'>
-                            <div className='flex h-[2rem] w-[2rem] items-center justify-center rounded-full bg-white text-black'>
-                              <p>{decryptRightAnswer(userQuestion.rightAnswer)}</p>
-                            </div>
-                            {userQuestion.alternatives && userQuestion.alternatives
-                              .filter((alternative) => String.fromCharCode(64 + alternative.position + 1) == decryptRightAnswer(userQuestion.rightAnswer))
-                              .map((alternative, altIndex) => (
-                                <div key={altIndex}>
-                                  {alternative.text}
-                                </div>
-                              ))}
-                          </div>
-                        </div>
+                ):(
+                  <Card
+                    key={index}
+                    className={`flex flex-col rounded-md border border-border bg-modal-bg ${questionsToCancel.includes(userQuestion.questionId) ? 'border-[0.6rem] border-orange-600' : '' }`}
+                  >
+                    {questionsToCancel.includes(userQuestion.questionId) &&
+                  <Chip value="questão anulada" className='absolute right-0 rounded-none rounded-bl-md bg-orange-600 text-[16px]'/>
                     }
-                  </div>
-                  }
-
-                  {questionsToCancel.includes(userQuestion.questionId) &&
-                    <div className='mb-8 flex w-full flex-col gap-4 px-4'>
-                      {(userQuestion.alternatives || []).map((alternative, index) => (
-                        <React.Fragment key={index}>
-                          <Card className={'flex w-full flex-row items-center gap-3 rounded-md border-2  border-red-600 bg-red-500 px-2 py-3 text-white'}>
-                            <div className='flex h-[2rem] w-[2rem] items-center justify-center rounded-full bg-white'>
-                              <p className='text-black'>{String.fromCharCode(64 + userQuestion.position + 1)}</p>
-                            </div>
-                            {alternative.text}
-                          </Card>
-                        </React.Fragment>
-                      ))}
+                    <div className="flex w-full select-none items-center gap-4 bg-modal-heading p-4">
+                      <div className='flex h-[2rem] w-[2rem] items-center justify-center rounded-full bg-white'>
+                        <Typography className="font-bold" color="black">{index + 1}</Typography>
+                      </div>
+                      <Typography className="text-white" variant='h6'>
+                        {userQuestion.title}
+                      </Typography>
                     </div>
+
+                    <div className="w-full p-4">
+                      <div className="select-none text-white" style={{ whiteSpace: 'pre-wrap'}} dangerouslySetInnerHTML={{ __html: userQuestion.statement }} />
+                    </div>
+
+                    {!questionsToCancel.includes(userQuestion.questionId) &&
+                <div className='mb-8 flex w-full flex-col gap-4 px-4'>
+                  <Card className={`flex w-full flex-row items-center gap-3 rounded-md border-2  px-2 py-3 text-white ${
+                    String.fromCharCode(64 + userQuestion.position + 1) == decryptRightAnswer(userQuestion.rightAnswer) ? 'border-question-selected-100 bg-question-selected-200' : 'border-red-900 bg-red-600'
+                  }`}>
+                    <div className='flex h-[2rem] w-[2rem] items-center justify-center rounded-full bg-white'>
+                      <p className='text-black'>{String.fromCharCode(64 + userQuestion.position + 1)}</p>
+                    </div>
+                    {userQuestion.alternatives && userQuestion.alternatives
+                      .filter((alternative) => alternative.position === userQuestion.position)
+                      .map((alternative, altIndex) => (
+                        <div key={altIndex}>
+                          {alternative.text}
+                        </div>
+                      ))}
+                  </Card>
+
+                  {String.fromCharCode(64 + userQuestion.position + 1) != decryptRightAnswer(userQuestion.rightAnswer) &&
+                      <div className='rounded-md bg-white/40 p-2'>
+                        <Typography variant="lead" className="mb-2 font-bold" color="white">Alternativa correta:</Typography>
+                        <div className='flex w-full items-center gap-2 rounded-md border bg-modal-heading p-2 text-white'>
+                          <div className='flex h-[2rem] w-[2rem] items-center justify-center rounded-full bg-white text-black'>
+                            <p>{decryptRightAnswer(userQuestion.rightAnswer)}</p>
+                          </div>
+                          {userQuestion.alternatives && userQuestion.alternatives
+                            .filter((alternative) => String.fromCharCode(64 + alternative.position + 1) == decryptRightAnswer(userQuestion.rightAnswer))
+                            .map((alternative, altIndex) => (
+                              <div key={altIndex}>
+                                {alternative.text}
+                              </div>
+                            ))}
+                        </div>
+                      </div>
                   }
-                </Card>
+                </div>
+                    }
+
+                    {questionsToCancel.includes(userQuestion.questionId) &&
+                  <div className='mb-8 flex w-full flex-col gap-4 px-4'>
+                    {(userQuestion.alternatives || []).map((alternative, index) => (
+                      <React.Fragment key={index}>
+                        <Card className={'flex w-full flex-row items-center gap-3 rounded-md border-2  border-red-600 bg-red-500 px-2 py-3 text-white'}>
+                          <div className='flex h-[2rem] w-[2rem] items-center justify-center rounded-full bg-white'>
+                            <p className='text-black'>{String.fromCharCode(64 + userQuestion.position + 1)}</p>
+                          </div>
+                          {alternative.text}
+                        </Card>
+                      </React.Fragment>
+                    ))}
+                  </div>
+                    }
+                  </Card>
+                )}
 
                 <div className='my-2 flex h-fit w-full items-center gap-2'>
                   <div className=' h-[1px] w-full bg-gray-400' />

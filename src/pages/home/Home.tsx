@@ -7,6 +7,7 @@ import { Navbar, Typography,   Button,
   CardFooter,
   DialogBody,
   DialogFooter,
+  Badge,
 } from '@material-tailwind/react';
 import { HelpCircle, LogOut, Settings } from 'lucide-react';
 import { Banner } from '../../components';
@@ -36,14 +37,9 @@ function Home() {
   const [openSettings, setOpenSettings] = React.useState<boolean>(false);
   const [openTutorial, setOpenTutorial] = React.useState<boolean>(false);
 
-  const [testerMode, setTesterMode] = React.useState('');
-
   React.useEffect(() => {
     const newFont = localStorage.getItem('confirmedFont');
     const newUser = JSON.parse(localStorage.getItem('authenticated_user') || '{}' );
-
-    const testerMode = localStorage.getItem('tester-mode');
-    setTesterMode(testerMode);
 
     localStorage.setItem('mapOpened', '1');
 
@@ -189,15 +185,18 @@ function Home() {
         <Typography variant="lead" color="white" className='text-2xl'>Seja bem vindo(a) <b>{user.name}</b></Typography>
       </div>
 
-      {testerMode == 'on' &&
+      {/* {testerMode == 'on' && */}
+      <Card className='mb-4 flex w-full flex-row justify-between rounded-md p-5'>
+        <span>
+          <Typography variant="h5" color="black">Resultado</Typography>
+          <Typography variant="lead" color="black">Confira agora os resultados!</Typography>
+        </span>
 
-
-      <Card className='mb-4 flex flex-row justify-between rounded-md p-2'>
-        <Typography>Resultado</Typography>
-
-        <Button onClick={ () => navigate('/result') } color='light-green'>Ver seu resultado</Button>
+        <Badge content="!" withBorder className='' color='orange'>
+          <Button onClick={ () => navigate('/result') } color='light-green'>Ver seu resultado</Button>
+        </Badge>
       </Card>
-      }
+      {/* } */}
 
       <div className='h-fit w-full rounded-md border bg-white shadow-md'>
 
