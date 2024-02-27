@@ -235,8 +235,11 @@ function Result() {
                       </Typography>
                     </div>
 
-                    <div className="w-full p-4">
+                    <div className="w-full items-center p-4">
                       <div className="select-none text-white" style={{ whiteSpace: 'pre-wrap'}} dangerouslySetInnerHTML={{ __html: userQuestion.statement }} />
+                      <span className='flex  w-full items-center justify-center'>
+                        <img src={userQuestion.image} className='my-2 max-h-[30rem] rounded-md'/>
+                      </span>
                     </div>
 
                     {!questionsToCancel.includes(userQuestion.questionId) &&
