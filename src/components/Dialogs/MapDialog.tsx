@@ -109,7 +109,7 @@ function MapDialog({
 
             <div className='flex w-full justify-between' >
               <Typography variant='lead' className='text-blue-gray-300'>
-            Processo seletivo <strong className='text-blue-gray-300'>Bom Despacho</strong> - {getActualDate()}
+            Processo seletivo <strong className='text-blue-gray-300'>Pequi</strong> - {getActualDate()}
               </Typography>
 
               <>

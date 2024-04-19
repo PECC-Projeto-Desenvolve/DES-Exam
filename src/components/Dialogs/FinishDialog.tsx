@@ -117,7 +117,7 @@ function FinishDialog({
 
             <div className='flex w-full justify-between' >
               <Typography variant='lead' className='text-blue-gray-300'>
-                <strong className='text-blue-gray-300'>Bom Despacho</strong> - {getActualDate()}
+                <strong className='text-blue-gray-300'>Pequi</strong> - {getActualDate()}
               </Typography>
 
             </div>

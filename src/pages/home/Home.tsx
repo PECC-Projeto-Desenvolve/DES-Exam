@@ -185,7 +185,8 @@ function Home() {
         <Typography variant="lead" color="white" className='text-2xl'>Seja bem vindo(a) <b>{user.name}</b></Typography>
       </div>
 
-      {/* {testerMode == 'on' && */}
+{/*
+
       <Card className='mb-4 flex w-full flex-row justify-between rounded-md p-5'>
         <span>
           <Typography variant="h5" color="black">Resultado</Typography>
@@ -196,7 +197,8 @@ function Home() {
           <Button onClick={ () => navigate('/result') } color='light-green'>Ver seu resultado</Button>
         </Badge>
       </Card>
-      {/* } */}
+
+*/}
 
       <div className='h-fit w-full rounded-md border bg-white shadow-md'>
 

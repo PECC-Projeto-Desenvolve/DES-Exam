@@ -33,7 +33,7 @@ function Exam(): JSX.Element {
 
   const [time, setTime] = React.useState({ minutes: 0, seconds: 0 });
 
-  const credential = `${import.meta.env.VITE_TUTOR_CREDENTIAL}#0B`;
+  const credential = `${import.meta.env.VITE_TUTOR_CREDENTIAL}`;
 
   const dispatch = useDispatch();
 

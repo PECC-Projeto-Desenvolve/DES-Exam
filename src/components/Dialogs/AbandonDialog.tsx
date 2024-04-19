@@ -50,7 +50,7 @@ function AbandonDialog({
 
             <div className='flex w-full justify-between' >
               <Typography variant='lead' className='text-blue-gray-700'>
-                <strong className='text-blue-gray-700'>Bom Despacho</strong> - {getActualDate()}
+                <strong className='text-blue-gray-700'>Pequi</strong> - {getActualDate()}
               </Typography>
 
             </div>

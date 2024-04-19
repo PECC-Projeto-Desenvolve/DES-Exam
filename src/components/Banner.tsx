@@ -57,7 +57,7 @@ function Banner({ title, content, btnDisabled, buttonLabel, hasCountdown, schedu
         </DialogBody>
 
         <DialogFooter className='-mt-4'>
-          <Button color='green' disabled={token !== `${import.meta.env.VITE_TUTOR_CREDENTIAL}#8Z`} onClick={() => {
+          <Button color='green' disabled={token !== `${import.meta.env.VITE_TUTOR_CREDENTIAL}`} onClick={() => {
             localStorage.removeItem('disqualified');
             setOpen(false);
             window.location.reload();
