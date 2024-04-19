@@ -7,7 +7,6 @@ import { Navbar, Typography,   Button,
   CardFooter,
   DialogBody,
   DialogFooter,
-  Badge,
 } from '@material-tailwind/react';
 import { HelpCircle, LogOut, Settings } from 'lucide-react';
 import { Banner } from '../../components';
